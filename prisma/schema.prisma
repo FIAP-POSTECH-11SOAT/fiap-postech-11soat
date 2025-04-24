@@ -1,0 +1,116 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Customer {
+  id        String          @id @default(uuid())
+  name      String
+  document  String
+  email     String
+  createdAt DateTime        @map("created_at")
+  updatedAt DateTime        @map("updated_at")
+  orders    CustomerOrder[]
+
+  @@map("customers")
+}
+
+model CustomerOrder {
+  customerId String @map("customer_id")
+  orderId    String @map("order_id")
+
+  customer Customer @relation(fields: [customerId], references: [id])
+  order    Order    @relation(fields: [orderId], references: [id])
+
+  @@id([customerId, orderId])
+  @@map("customer_order")
+}
+
+enum OrderStatus {
+  AWAITING
+  TO_PREPARE
+  IN_PREPARE
+  FINISHED
+  PICKUPED
+  CANCELLED
+}
+
+model Order {
+  id        String          @id @default(uuid())
+  total     Decimal
+  status    OrderStatus
+  createdAt DateTime        @map("created_at")
+  updatedAt DateTime        @map("updated_at")
+  customers CustomerOrder[]
+  items     OrderItem[]
+  payments  Payment[]
+
+  @@map("orders")
+}
+
+model OrderItem {
+  orderId  String  @map("order_id")
+  itemId   String  @map("item_id")
+  price    Decimal
+  quantity Int
+
+  order Order @relation(fields: [orderId], references: [id])
+  item  Item  @relation(fields: [itemId], references: [id])
+
+  @@id([orderId, itemId])
+  @@map("order_item")
+}
+
+model Item {
+  id          String    @id @default(uuid())
+  name        String
+  description String
+  price       Decimal
+  image       String
+  categoryId  String    @map("category_id")
+  createdAt   DateTime  @map("created_at")
+  updatedAt   DateTime  @map("updated_at")
+  deletedAt   DateTime? @map("deleted_at")
+
+  category Category    @relation(fields: [categoryId], references: [id])
+  orders   OrderItem[]
+
+  @@map("items")
+}
+
+model Category {
+  id        String    @id @default(uuid())
+  name      String
+  createdAt DateTime  @map("created_at")
+  updatedAt DateTime  @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+  items     Item[]
+
+  @@map("categories")
+}
+
+enum PaymentStatus {
+  PENDING
+  APPROVED
+  FAILED
+  REFUNDED
+}
+
+model Payment {
+  id         String        @id @default(uuid())
+  orderId    String        @map("order_id")
+  externalId String        @map("external_id")
+  qrCode     String        @map("qr_code")
+  status     PaymentStatus
+  retries    Int
+  createdAt  DateTime      @map("created_at")
+  updatedAt  DateTime      @map("updated_at")
+
+  order Order @relation(fields: [orderId], references: [id])
+
+  @@map("payments")
+}
