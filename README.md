@@ -73,97 +73,63 @@ A aplicação estará disponível em `http://localhost:3000` (ou a porta configu
 
 ```bash
 docker-compose down
-
+```
 🛠️ Desenvolvimento Local (Alternativa)
 
 Se você preferir rodar a aplicação diretamente na sua máquina (fora do Docker) para desenvolvimento ou depuração:
 
 Instale as dependências:
-
+```bash
 npm install
 # ou
 yarn install
-IGNORE_WHEN_COPYING_START
-content_copy
-download
-Use code with caution.
-Bash
-IGNORE_WHEN_COPYING_END
+```
 
 Certifique-se que o Banco de Dados está rodando: Você pode usar o container do Postgres iniciado com o Docker Compose (docker-compose up -d postgres_db) ou ter uma instância local do PostgreSQL. Ajuste a DATABASE_URL no seu arquivo .env para apontar para localhost se estiver usando uma instância local fora do Docker Compose.
 
 # .env (Exemplo para DB local fora do Docker)
+```bash
 DATABASE_URL="postgresql://postgres:postgres@localhost:5432/rms?schema=public"
-IGNORE_WHEN_COPYING_START
-content_copy
-download
-Use code with caution.
-Dotenv
-IGNORE_WHEN_COPYING_END
+```
 
 Execute as migrações do Prisma manualmente:
-
+```bash
 npx prisma migrate dev
-IGNORE_WHEN_COPYING_START
-content_copy
-download
-Use code with caution.
-Bash
-IGNORE_WHEN_COPYING_END
+```
 
 Inicie a aplicação em modo de desenvolvimento:
-
+```bash
 npm run start:dev
-
-IGNORE_WHEN_COPYING_START
-content_copy
-download
-Use code with caution.
-Bash
-IGNORE_WHEN_COPYING_END
+```
 
 A aplicação estará disponível em http://localhost:3000 (ou a porta definida em .env).
 
-✅ Rodando os Testes (Ambiente Local)
+## ✅ Rodando os Testes (Ambiente Local)
 
 Certifique-se de ter as dependências de desenvolvimento instaladas (npm install ou yarn install).
 
 Testes Unitários:
-
+```bash
 npm run test
-IGNORE_WHEN_COPYING_START
-content_copy
-download
-Use code with caution.
-Bash
-IGNORE_WHEN_COPYING_END
+```
 
 Testes com Cobertura:
-
+```bash
 npm run test:cov
-IGNORE_WHEN_COPYING_START
-content_copy
-download
-Use code with caution.
-Bash
-IGNORE_WHEN_COPYING_END
+```
 
 Testes End-to-End (se configurados):
 
 Geralmente requerem um banco de dados de teste. Verifique a configuração específica dos testes E2E.
-
+```bash
 npm run test:e2e
-IGNORE_WHEN_COPYING_START
-content_copy
-download
-Use code with caution.
-Bash
-IGNORE_WHEN_COPYING_END
-🔄 CI/CD (GitHub Actions)
+```
+
+## 🔄 CI/CD (GitHub Actions)
 
 Este projeto está configurado (ou será configurado) com GitHub Actions para automação de build, testes e (opcionalmente) deploy. Verifique a pasta .github/workflows.
 
-📄 Documentação da API (Swagger)
+## 📄 Documentação da API (Swagger)
 
 Se habilitado, a documentação da API gerada pelo Swagger pode ser acessada em:
 
@@ -173,11 +139,11 @@ http://localhost:3000/api
 
 (Veja o código para a estrutura detalhada)
 
-🤝 Contribuição
+## 🤝 Contribuição
 
 Contribuições são bem-vindas! Por favor, abra uma issue ou envie um pull request.
 
-📜 Licença
+## 📜 Licença
 
 Este projeto está licenciado sob a Licença MIT. Veja o arquivo LICENSE para mais detalhes.
 
@@ -190,9 +156,3 @@ Este projeto está licenciado sob a Licença MIT. Veja o arquivo LICENSE para ma
 5.  **Clareza:** A separação entre o método principal (Docker) e o alternativo (Local) está mais explícita.
 
 Lembre-se de garantir que seu `Dockerfile` ou `docker-compose.yml` realmente execute `npx prisma migrate deploy` (ou similar) na inicialização do container da aplicação para que a experiência do "Quick Start" funcione como descrito.
-IGNORE_WHEN_COPYING_START
-content_copy
-download
-Use code with caution.
-IGNORE_WHEN_COPYING_END
-```
