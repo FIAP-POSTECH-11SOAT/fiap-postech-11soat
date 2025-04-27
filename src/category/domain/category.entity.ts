@@ -1,15 +1,13 @@
-import { Injectable } from '@nestjs/common';
 import { Optional } from 'src/shared/@types/optional';
 import { UniqueEntityID } from 'src/shared/entities/unique-entity-id';
 
 export type CategoryProps = {
   name: string;
   createdAt: Date;
-  updatedAt?: Date | null;
+  updatedAt: Date;
   deletedAt?: Date | null;
 };
 
-@Injectable()
 export class Category {
   private _id: UniqueEntityID;
   private props: CategoryProps;
@@ -31,7 +29,7 @@ export class Category {
     return this.props.createdAt;
   }
 
-  get updatedAt(): Date | null | undefined {
+  get updatedAt(): Date {
     return this.props.updatedAt;
   }
 
@@ -40,13 +38,14 @@ export class Category {
   }
 
   static create(
-    props: Optional<CategoryProps, 'createdAt'>,
+    props: Optional<CategoryProps, 'createdAt' | 'updatedAt'>,
     id?: UniqueEntityID,
   ): Category {
     const category = new Category(
       {
         ...props,
         createdAt: props.createdAt ?? new Date(),
+        updatedAt: props.updatedAt ?? new Date(),
       },
       id,
     );

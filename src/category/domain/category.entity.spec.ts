@@ -18,6 +18,7 @@ describe('Category Entity', () => {
       {
         name: 'Test Category',
         createdAt: new Date(),
+        updatedAt: new Date(),
       },
       new UniqueEntityID(id),
     );
