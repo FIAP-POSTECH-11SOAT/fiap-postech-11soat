@@ -17,7 +17,7 @@ const createCategoryBodySchema = z.object({
 
 type CreateCategoryBodySchema = z.infer<typeof createCategoryBodySchema>;
 
-@Controller('categories')
+@Controller('/categories')
 @ApiTags('Categories')
 export class CreateCategoryController {
   constructor(private createCategory: CreateCategoryUseCase) {}
