@@ -13,7 +13,7 @@ export class CreateCustomerUseCase {
   constructor(private readonly customersRepository: CustomersRepository) {}
 
   async execute({ name: name, document: document, email: email }: CreateCustomerUseCaseInput): Promise<void> {
-    const hasCustomer = await this.customersRepository.existsByDocumentOrEmail({ document: document, email: email });
+    const hasCustomer = await this.customersRepository.existsByDocumentOrEmail(document, email);
 
     if (hasCustomer) throw new Error(`Client with document ${document} or email ${email} already exists`);
 

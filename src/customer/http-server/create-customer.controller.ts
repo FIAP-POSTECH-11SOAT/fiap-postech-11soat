@@ -13,6 +13,8 @@ import {
   
   const createCustomerBodySchema = z.object({
     name: z.string().min(1, { message: 'Name must not be empty' }),
+    document: z.string().min(11, { message: 'Document must not be empty' }),
+    email: z.string().email().min(5, { message: 'Email must not be empty' })
   });
   
   type CreateCustomerBodySchema = z.infer<typeof createCustomerBodySchema>;
