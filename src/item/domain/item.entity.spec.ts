@@ -1,28 +1,24 @@
-import { Price } from '../../shared/entities/price';
-import { UniqueEntityID } from '../../shared/entities/unique-entity-id';
-import { ValidString } from '../../shared/entities/valid-string';
 import { CreateItemProps, Item } from './item.entity';
 import { randomUUID } from 'node:crypto';
 
 const itemProps: CreateItemProps = {
-  name: ValidString.create('Test Name'),
-  description: ValidString.create('Test Description'),
-  price: Price.create(10),
-  image: ValidString.create('Test Image'),
-  categoryId: new UniqueEntityID(),
+  name: 'Test Name',
+  description: 'Test Description',
+  price: 10,
+  image: '/public/test.png',
+  categoryId: randomUUID(),
   createdAt: new Date(),
   updatedAt: new Date(),
 };
 describe('ItemEntity', () => {
   it('should create an item', () => {
     const item = Item.create(itemProps);
-
     expect(item).toBeDefined();
-    expect(item.name).toBe(itemProps.name.value());
-    expect(item.description).toBe(itemProps.description.value());
-    expect(item.price).toBe(itemProps.price.value());
-    expect(item.image).toBe(itemProps.image?.value());
-    expect(item.categoryId).toBe(itemProps.categoryId.toString());
+    expect(item.name).toBe(itemProps.name);
+    expect(item.description).toBe(itemProps.description);
+    expect(item.price).toBe(itemProps.price);
+    expect(item.image).toBe(itemProps.image);
+    expect(item.categoryId).toBe(itemProps.categoryId);
     expect(item.createdAt).toBe(itemProps.createdAt);
     expect(item.updatedAt).toBe(itemProps.updatedAt);
     expect(item.deletedAt).toBe(null);
@@ -39,7 +35,10 @@ describe('ItemEntity', () => {
   });
   it('should restore an item', () => {
     const id = randomUUID();
-    const item = Item.create(itemProps, new UniqueEntityID(id));
+    const item = Item.create({
+      ...itemProps,
+      id,
+    });
     expect(item).toBeDefined();
     expect(item.id).toBe(id);
   });

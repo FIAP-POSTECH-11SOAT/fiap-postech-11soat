@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { UniqueEntityID } from '../../shared/entities/unique-entity-id';
-import { Optional } from '../../shared/@types/optional';
 import { Price } from '../../shared/entities/price';
 import { ValidString } from '../../shared/entities/valid-string';
 
@@ -15,7 +14,19 @@ type ItemProps = {
   deletedAt: Date | null;
 };
 
-export type CreateItemProps = Optional<ItemProps, 'deletedAt' | 'image'>;
+// export type CreateItemProps = Optional<ItemProps, 'deletedAt' | 'image'>;
+
+export type CreateItemProps = {
+  id?: string;
+  name: string;
+  description: string;
+  price: number;
+  image?: string | null;
+  categoryId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt?: Date | null;
+};
 
 @Injectable()
 export class Item {
@@ -62,15 +73,19 @@ export class Item {
     return this.props.deletedAt ?? null;
   }
 
-  static create(props: CreateItemProps, id?: UniqueEntityID): Item {
-    return new Item(
-      {
-        ...props,
-        image: props.image ?? null,
-        deletedAt: props.deletedAt ?? null,
-      },
-      id ?? new UniqueEntityID(),
-    );
+  static create(props: CreateItemProps): Item {
+    const itemProps: ItemProps = {
+      name: ValidString.create(props.name),
+      description: ValidString.create(props.description),
+      price: Price.create(props.price),
+      image: props.image ? ValidString.create(props.image) : null,
+      categoryId: new UniqueEntityID(props.categoryId),
+      createdAt: props.createdAt ?? new Date(),
+      updatedAt: props.updatedAt ?? new Date(),
+      deletedAt: props.deletedAt ?? null,
+    };
+    const id = props.id ? new UniqueEntityID(props.id) : new UniqueEntityID();
+    return new Item(itemProps, id);
   }
 
   toJSON() {
