@@ -1,11 +1,27 @@
+import { Injectable } from '@nestjs/common';
 import { CreateItemProps, Item } from '../item.entity';
+import { CreateItemPort } from '../ports/create-item.port';
 import { ItemsRepository } from '../ports/items.repository';
+import { CategoriesRepository } from '../../../category/domain/ports/categories.repository';
 
-export class CreateItemUseCase {
-  constructor(private itemsRepository: ItemsRepository) {}
+@Injectable()
+export class CreateItemUseCase implements CreateItemPort {
+  constructor(
+    private itemsRepository: ItemsRepository,
+    private categoriesRepository: CategoriesRepository,
+  ) {}
   async execute(createItem: CreateItemProps): Promise<Item> {
+    //validate name
     const hasItem = await this.itemsRepository.findByName(createItem.name);
-    if (hasItem) throw new Error('Item already exists');
+    if (hasItem) throw new Error('Item with this name already exists');
+
+    //validate category
+    const category = await this.categoriesRepository.findById(
+      createItem.categoryId,
+    );
+    if (!category) throw new Error('Category does not exist');
+
+    //create item
     const newItem = Item.create(createItem);
     await this.itemsRepository.save(newItem);
     return newItem;

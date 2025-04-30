@@ -50,7 +50,7 @@ describe('Create Item Use Case', () => {
     };
     await sut.execute(createItemProps);
     await expect(() => sut.execute(createItemProps)).rejects.toThrow(
-      new Error('Item already exists'),
+      new Error('Item with this name already exists'),
     );
   });
 });

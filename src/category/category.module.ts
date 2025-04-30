@@ -15,5 +15,6 @@ import { PrismaCategoriesRepository } from './persistence/database/prisma/prisma
       useClass: PrismaCategoriesRepository,
     },
   ],
+  exports: [CategoriesRepository],
 })
 export class CategoryModule {}

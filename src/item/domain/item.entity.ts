@@ -23,8 +23,8 @@ export type CreateItemProps = {
   price: number;
   image?: string | null;
   categoryId: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
   deletedAt?: Date | null;
 };
 
