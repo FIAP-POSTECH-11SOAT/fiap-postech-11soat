@@ -1,6 +1,7 @@
 import { UniqueEntityID } from 'src/shared/entities/unique-entity-id';
 import { Category } from './category.entity';
 import { randomUUID } from 'node:crypto';
+import { cpf } from 'cpf-cnpj-validator';
 
 describe('Category Entity', () => {
   it('should create a category', () => {
