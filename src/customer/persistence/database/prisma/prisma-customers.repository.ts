@@ -26,4 +26,15 @@ export class PrismaCustomersRepository implements CustomersRepository {
 
     await this.prisma.customer.create({ data });
   }
+
+  async findByDocument(document: string): Promise<Customer | null> {
+    const customer = await this.prisma.customer.findUnique({
+      where: {
+        document: document,
+      }
+    });
+
+    if (!customer) return null;
+    return PrismaCustomerMapper.toDomain(customer);
+  }
 }
