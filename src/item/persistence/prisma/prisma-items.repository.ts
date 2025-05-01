@@ -7,6 +7,13 @@ import PrismaItemsMapper from './mappers/prisma-items.mapper';
 @Injectable()
 export class PrismaItemsRepository implements ItemsRepository {
   constructor(private prismaService: PrismaService) {}
+  async findById(id: string): Promise<Item | null> {
+    const item = await this.prismaService.item.findUnique({
+      where: { id },
+    });
+    if (!item) return null;
+    return PrismaItemsMapper.toDomain(item);
+  }
   async findAll(): Promise<Item[]> {
     const items = await this.prismaService.item.findMany();
     return items.map((item) => PrismaItemsMapper.toDomain(item));
