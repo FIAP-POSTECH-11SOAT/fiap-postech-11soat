@@ -8,6 +8,16 @@ import { Category } from 'src/category/domain/category.entity';
 export class PrismaCategoriesRepository implements CategoriesRepository {
   constructor(private prisma: PrismaService) { }
 
+  async findAll(): Promise<Category[]> {
+    const categories = await this.prisma.category.findMany({
+      where: {
+        deletedAt: null,
+      },
+    });
+
+    return categories.map((category) => PrismaCategoryMapper.toDomain(category));
+  }
+
   async findById(id: string): Promise<Category | null> {
     const category = await this.prisma.category.findUnique({
       where: {

@@ -1,6 +1,7 @@
 import { Category } from 'src/category/domain/category.entity';
 
 export abstract class CategoriesRepository {
+  abstract findAll(): Promise<Category[]>;
   abstract findByName(name: string): Promise<Category | null>;
   abstract save(category: Category): Promise<void>;
   abstract delete(category: Category): Promise<void>;

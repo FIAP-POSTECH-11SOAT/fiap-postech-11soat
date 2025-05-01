@@ -5,12 +5,15 @@ import { CategoriesRepository } from './domain/ports/categories.repository';
 import { PrismaCategoriesRepository } from './persistence/database/prisma/prisma-categories.repository';
 import { DeleteCategoryController } from './http-server/delete-category.controller';
 import { DeleteCategoryUseCase } from './domain/use-cases/delete-category.service';
+import { GetCategoriesController } from './http-server/get-categories.controller';
+import { GetCategoriesUseCase } from './domain/use-cases/get-categories.service';
 
 @Module({
-  controllers: [CreateCategoryController, DeleteCategoryController],
+  controllers: [CreateCategoryController, DeleteCategoryController, GetCategoriesController],
   providers: [
     CreateCategoryUseCase,
     DeleteCategoryUseCase,
+    GetCategoriesUseCase,
     {
       provide: CategoriesRepository,
       useClass: PrismaCategoriesRepository,
