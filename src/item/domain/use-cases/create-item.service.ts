@@ -19,7 +19,7 @@ export class CreateItemUseCase implements CreateItemPort {
     const category = await this.categoriesRepository.findById(
       createItem.categoryId,
     );
-    if (!category) throw new Error('Category does not exist');
+    if (!category || category.deletedAt) throw new Error('Invalid category');
 
     //create item
     const newItem = Item.create(createItem);
