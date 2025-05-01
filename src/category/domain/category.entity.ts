@@ -1,33 +1,21 @@
-import { cpf } from 'cpf-cnpj-validator';
 import { Optional } from 'src/shared/@types/optional';
 import { UniqueEntityID } from 'src/shared/entities/unique-entity-id';
 
-export type CustomerProps = {
+export type CategoryProps = {
   name: string;
-  document: string;
-  email: string;
   createdAt: Date;
   updatedAt: Date;
   deletedAt?: Date | null;
 };
 
-export class Customer {
+export class Category {
   private _id: UniqueEntityID;
-  private props: CustomerProps;
+  private props: CategoryProps;
 
-  constructor(props: CustomerProps, id?: UniqueEntityID) {
-    this.validateDocument(props.document);
+  constructor(props: CategoryProps, id?: UniqueEntityID) {
     this.props = props;
     this._id = id ? id : new UniqueEntityID();
   }
-
-  private validateDocument(document: string): void {
-    const cleanDocument = document.replace(/\D/g, '');
-    
-    if (!cpf.isValid(cleanDocument)) {
-      throw new Error('Invalid CPF document');
-    }
-  }  
 
   get id(): string {
     return this._id.toString();
@@ -35,14 +23,6 @@ export class Customer {
 
   get name(): string {
     return this.props.name;
-  }
-
-  get document(): string {
-    return this.props.document
-  }
-
-  get email(): string {
-    return this.props.email
   }
 
   get createdAt(): Date {
@@ -58,10 +38,10 @@ export class Customer {
   }
 
   static create(
-    props: Optional<CustomerProps, 'createdAt' | 'updatedAt'>,
+    props: Optional<CategoryProps, 'createdAt' | 'updatedAt'>,
     id?: UniqueEntityID,
-  ): Customer {
-    const customer = new Customer(
+  ): Category {
+    const category = new Category(
       {
         ...props,
         createdAt: props.createdAt ?? new Date(),
@@ -69,6 +49,11 @@ export class Customer {
       },
       id,
     );
-    return customer;
+    return category;
+  }
+
+  softDelete(date: Date = new Date()) {
+    if (this.deletedAt) throw new Error('Category already deleted');
+    this.props.deletedAt = date;
   }
 }
