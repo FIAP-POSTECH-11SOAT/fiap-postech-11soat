@@ -51,4 +51,9 @@ export class Category {
     );
     return category;
   }
+
+  softDelete(date: Date = new Date()) {
+    if (this.deletedAt) throw new Error('Category already deleted');
+    this.props.deletedAt = date;
+  }
 }
