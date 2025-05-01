@@ -18,7 +18,9 @@ describe('Soft Delete Category Use Case', () => {
 
     await sut.execute({ id: 'category-1' });
 
-    expect(inMemoryCategoriesRepository.categories).toHaveLength(0);
+    expect(newCategory.deletedAt).toBeDefined();
+    expect(inMemoryCategoriesRepository.categories).toHaveLength(1);
+    expect(inMemoryCategoriesRepository.categories[0].deletedAt).toBeDefined();
   });
 
   it('should not be able to delete non-existent category', async () => {
