@@ -48,6 +48,15 @@ export class PrismaCategoriesRepository implements CategoriesRepository {
     await this.prisma.category.create({ data });
   }
 
+  async update(category: Category): Promise<void> {
+    const data = PrismaCategoryMapper.toPrisma(category);
+
+    await this.prisma.category.update({
+      where: { id: category.id },
+      data,
+    });
+  }
+
   async delete(category: Category): Promise<void> {
     const data = PrismaCategoryMapper.toPrisma(category);
 

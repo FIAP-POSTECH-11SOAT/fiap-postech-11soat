@@ -24,6 +24,11 @@ export class InMemoryCategoriesRepository implements CategoriesRepository {
     this.categories.push(category);
   }
 
+  async update(category: Category): Promise<void> {
+    const index = this.categories.findIndex((c) => c.id === category.id);
+    if (index >= 0) this.categories[index] = category;
+  }
+
   async delete(category: Category): Promise<void> {
     const index = this.categories.findIndex((c) => c.id === category.id);
     if (index >= 0) this.categories[index] = category;

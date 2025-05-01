@@ -12,7 +12,7 @@ describe('Soft Delete Category Use Case', () => {
     sut = new DeleteCategoryUseCase(inMemoryCategoriesRepository);
   });
 
-  it('should be able to create an category', async () => {
+  it('should be able to delete an category', async () => {
     const newCategory = makeCategory({}, new UniqueEntityID('category-1'));
     await inMemoryCategoriesRepository.save(newCategory);
 
