@@ -4,6 +4,10 @@ import { CategoriesRepository } from 'src/category/domain/ports/categories.repos
 export class InMemoryCategoriesRepository implements CategoriesRepository {
   categories: Category[] = [];
 
+  async findAll(): Promise<Category[]> {
+    return this.categories.filter((category) => !category.deletedAt);
+  }
+
   async findById(id: string): Promise<Category | null> {
     const category = this.categories.find((category) => category.id === id);
     if (!category) return null;
