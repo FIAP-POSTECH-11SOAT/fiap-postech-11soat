@@ -13,4 +13,9 @@ export class InMemoryItemsRepository implements ItemsRepository {
     await new Promise((resolve) => setTimeout(resolve, 1));
     this.items.push(item);
   }
+
+  async findAll(): Promise<Item[]> {
+    await new Promise((resolve) => setTimeout(resolve, 1));
+    return this.items;
+  }
 }

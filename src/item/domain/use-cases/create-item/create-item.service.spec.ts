@@ -1,10 +1,10 @@
 import { randomUUID } from 'node:crypto';
-import { Category } from '../../../category/domain/category.entity';
-import { InMemoryCategoriesRepository } from '../../../category/persistence/database/in-memory/in-memory-categories.repository';
-import { InMemoryItemsRepository } from '../../persistence/in-memory/in-memory-items.repository';
-import { CreateItemProps } from '../item.entity';
+import { Category } from '../../../../category/domain/category.entity';
+import { InMemoryCategoriesRepository } from '../../../../category/persistence/database/in-memory/in-memory-categories.repository';
+import { InMemoryItemsRepository } from '../../../persistence/in-memory/in-memory-items.repository';
+import { CreateItemProps } from '../../item.entity';
 import { CreateItemUseCase } from './create-item.service';
-import { UniqueEntityID } from '../../../shared/entities/unique-entity-id';
+import { UniqueEntityID } from '../../../../shared/entities/unique-entity-id';
 
 describe('Create Item Use Case', () => {
   let inMemoryItemsRepository: InMemoryItemsRepository;
