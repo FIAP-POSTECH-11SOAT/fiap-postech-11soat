@@ -23,11 +23,11 @@ export class Customer {
 
   private validateDocument(document: string): void {
     const cleanDocument = document.replace(/\D/g, '');
-    
+
     if (!cpf.isValid(cleanDocument)) {
       throw new Error('Invalid CPF document');
     }
-  }  
+  }
 
   get id(): string {
     return this._id.toString();
@@ -38,11 +38,11 @@ export class Customer {
   }
 
   get document(): string {
-    return this.props.document
+    return this.props.document;
   }
 
   get email(): string {
-    return this.props.email
+    return this.props.email;
   }
 
   get createdAt(): Date {

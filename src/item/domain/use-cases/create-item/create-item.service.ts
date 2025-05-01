@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { CreateItemProps, Item } from '../item.entity';
-import { CreateItemPort } from '../ports/create-item.port';
-import { ItemsRepository } from '../ports/items.repository';
-import { CategoriesRepository } from '../../../category/domain/ports/categories.repository';
+import { CreateItemProps, Item } from '../../item.entity';
+import { CreateItemPort } from '../../ports/create-item.port';
+import { ItemsRepository } from '../../ports/items.repository';
+import { CategoriesRepository } from '../../../../category/domain/ports/categories.repository';
 
 @Injectable()
 export class CreateItemUseCase implements CreateItemPort {
