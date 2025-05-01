@@ -7,6 +7,15 @@ import { Category } from 'src/category/domain/category.entity';
 @Injectable()
 export class PrismaCategoriesRepository implements CategoriesRepository {
   constructor(private prisma: PrismaService) {}
+  async findById(id: string): Promise<Category | null> {
+    const category = await this.prisma.category.findUnique({
+      where: {
+        id,
+      },
+    });
+    if (!category) return null;
+    return PrismaCategoryMapper.toDomain(category);
+  }
 
   async findByName(name: string): Promise<Category | null> {
     const category = await this.prisma.category.findUnique({
