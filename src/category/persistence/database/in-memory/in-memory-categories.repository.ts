@@ -2,6 +2,11 @@ import { Category } from 'src/category/domain/category.entity';
 import { CategoriesRepository } from 'src/category/domain/ports/categories.repository';
 
 export class InMemoryCategoriesRepository implements CategoriesRepository {
+  async findById(id: string): Promise<Category | null> {
+    const category = this.categories.find((category) => category.id === id);
+    if (!category) return null;
+    return category;
+  }
   categories: Category[] = [];
 
   async findByName(name: string): Promise<Category | null> {
