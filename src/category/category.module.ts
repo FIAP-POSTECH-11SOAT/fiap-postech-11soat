@@ -7,13 +7,16 @@ import { DeleteCategoryController } from './http-server/delete-category.controll
 import { DeleteCategoryUseCase } from './domain/use-cases/delete-category.service';
 import { GetCategoriesController } from './http-server/get-categories.controller';
 import { GetCategoriesUseCase } from './domain/use-cases/get-categories.service';
+import { UpdateCategoryUseCase } from './domain/use-cases/update-category.service';
+import { UpdateCategoryController } from './http-server/update-category.controller';
 
 @Module({
-  controllers: [CreateCategoryController, DeleteCategoryController, GetCategoriesController],
+  controllers: [CreateCategoryController, DeleteCategoryController, GetCategoriesController, UpdateCategoryController],
   providers: [
     CreateCategoryUseCase,
     DeleteCategoryUseCase,
     GetCategoriesUseCase,
+    UpdateCategoryUseCase,
     {
       provide: CategoriesRepository,
       useClass: PrismaCategoriesRepository,
