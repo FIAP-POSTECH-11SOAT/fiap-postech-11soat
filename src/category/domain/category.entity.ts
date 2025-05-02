@@ -25,6 +25,12 @@ export class Category {
     return this.props.name;
   }
 
+  set name(name: string) {
+    if (!name) throw new Error('Name is required');
+    this.props.name = name;
+    this.touch
+  }
+
   get createdAt(): Date {
     return this.props.createdAt;
   }
@@ -35,6 +41,10 @@ export class Category {
 
   get deletedAt(): Date | null | undefined {
     return this.props.deletedAt;
+  }
+
+  touch() {
+    this.props.updatedAt = new Date();
   }
 
   static create(
@@ -50,5 +60,10 @@ export class Category {
       id,
     );
     return category;
+  }
+
+  softDelete(date: Date = new Date()) {
+    if (this.deletedAt) throw new Error('Category already deleted');
+    this.props.deletedAt = date;
   }
 }
