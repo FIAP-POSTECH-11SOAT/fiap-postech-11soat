@@ -1,10 +1,11 @@
 import { randomUUID } from 'node:crypto';
-import { InMemoryItemsRepository } from '../../../persistence/in-memory/in-memory-items.repository';
 import { GetItemByIdUseCase } from './get-item-by-id.service';
 import { CreateItemProps, Item } from '../../item.entity';
+import { ItemsRepository } from '../../ports/items.repository';
+import { Test } from '@nestjs/testing';
 
 describe('Get Item by ID Use Case', () => {
-  let inMemoryItemsRepository: InMemoryItemsRepository;
+  let itemsRepository: ItemsRepository;
   let sut: GetItemByIdUseCase;
 
   const createItemProps: CreateItemProps = {
@@ -18,9 +19,21 @@ describe('Get Item by ID Use Case', () => {
     updatedAt: new Date(),
   };
 
-  beforeEach(() => {
-    inMemoryItemsRepository = new InMemoryItemsRepository();
-    sut = new GetItemByIdUseCase(inMemoryItemsRepository);
+  beforeEach(async () => {
+    const moduleRef = await Test.createTestingModule({
+      providers: [
+        GetItemByIdUseCase,
+        {
+          provide: ItemsRepository,
+          useValue: {
+            findById: jest.fn(),
+          },
+        },
+      ],
+    }).compile();
+
+    itemsRepository = moduleRef.get<ItemsRepository>(ItemsRepository);
+    sut = moduleRef.get<GetItemByIdUseCase>(GetItemByIdUseCase);
   });
 
   it('should be defined', () => {
@@ -29,14 +42,14 @@ describe('Get Item by ID Use Case', () => {
 
   it('should get an item by id', async () => {
     jest
-      .spyOn(inMemoryItemsRepository, 'findById')
+      .spyOn(itemsRepository, 'findById')
       .mockResolvedValue(Item.create(createItemProps));
     const item = await sut.execute(createItemProps.id as string);
     expect(item).toBeDefined();
   });
 
   it('should throw an error if item does not exist', async () => {
-    jest.spyOn(inMemoryItemsRepository, 'findById').mockResolvedValue(null);
+    jest.spyOn(itemsRepository, 'findById').mockResolvedValue(null);
     await expect(() =>
       sut.execute(createItemProps.id as string),
     ).rejects.toThrow(new Error('Item not found'));
