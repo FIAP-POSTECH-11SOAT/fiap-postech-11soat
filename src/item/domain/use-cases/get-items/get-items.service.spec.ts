@@ -1,15 +1,28 @@
 import { GetItemsUseCase } from './get-items.service';
-import { InMemoryItemsRepository } from '../../../persistence/in-memory/in-memory-items.repository';
 import { Item } from '../../item.entity';
 import { randomUUID } from 'node:crypto';
+import { ItemsRepository } from '../../ports/items.repository';
+import { Test } from '@nestjs/testing';
 
 describe('GetItemsService', () => {
   let service: GetItemsUseCase;
-  let inMemoryItemsRepository: InMemoryItemsRepository;
+  let itemsRepository: ItemsRepository;
 
-  beforeEach(() => {
-    inMemoryItemsRepository = new InMemoryItemsRepository();
-    service = new GetItemsUseCase(inMemoryItemsRepository);
+  beforeEach(async () => {
+    const moduleRef = await Test.createTestingModule({
+      providers: [
+        GetItemsUseCase,
+        {
+          provide: ItemsRepository,
+          useValue: {
+            findAll: jest.fn(),
+          },
+        },
+      ],
+    }).compile();
+
+    service = moduleRef.get<GetItemsUseCase>(GetItemsUseCase);
+    itemsRepository = moduleRef.get<ItemsRepository>(ItemsRepository);
   });
 
   it('should be defined', () => {
@@ -17,12 +30,13 @@ describe('GetItemsService', () => {
   });
 
   it('should get any items', async () => {
+    jest.spyOn(itemsRepository, 'findAll').mockResolvedValue([]);
     const items = await service.execute();
     expect(items.length).toBe(0);
   });
 
   it('should get items', async () => {
-    jest.spyOn(inMemoryItemsRepository, 'findAll').mockResolvedValue([
+    jest.spyOn(itemsRepository, 'findAll').mockResolvedValue([
       Item.create({
         name: 'Test Name',
         description: 'Test Description',
