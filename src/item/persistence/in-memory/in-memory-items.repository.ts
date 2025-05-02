@@ -2,6 +2,9 @@ import { Item } from '../../domain/item.entity';
 import { ItemsRepository } from '../../domain/ports/items.repository';
 
 export class InMemoryItemsRepository implements ItemsRepository {
+  findByCategoryId(categoryId: string): Promise<Item[]> {
+    throw new Error('Method not implemented.');
+  }
   async findById(id: string): Promise<Item | null> {
     await new Promise((resolve) => setTimeout(resolve, 1));
     const item = this.items.find((item) => item.id === id);

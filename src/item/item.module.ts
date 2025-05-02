@@ -11,6 +11,9 @@ import { GetItemsController } from './http-server/get-items/get-items.controller
 import { GetItemByIdController } from './http-server/get-item-by-id/get-item-by-id.controller';
 import { GetItemByIdPort } from './domain/ports/get-item-by-id.port';
 import { GetItemByIdUseCase } from './domain/use-cases/get-item-by-id/get-item-by-id.service';
+import { GetItemByCategoryIdController } from './http-server/get-item-by-category-id/get-item-by-category-id.controller';
+import { GetItemByCategoryIdPort } from './domain/ports/get-item-by-category-id.port';
+import { GetItemByCategoryIdUseCase } from './domain/use-cases/get-item-by-category-id/get-item-by-category-id.service';
 
 @Module({
   imports: [CategoryModule],
@@ -18,6 +21,7 @@ import { GetItemByIdUseCase } from './domain/use-cases/get-item-by-id/get-item-b
     CreateItemController,
     GetItemsController,
     GetItemByIdController,
+    GetItemByCategoryIdController,
   ],
   providers: [
     {
@@ -35,6 +39,10 @@ import { GetItemByIdUseCase } from './domain/use-cases/get-item-by-id/get-item-b
     {
       provide: GetItemByIdPort,
       useClass: GetItemByIdUseCase,
+    },
+    {
+      provide: GetItemByCategoryIdPort,
+      useClass: GetItemByCategoryIdUseCase,
     },
   ],
 })
