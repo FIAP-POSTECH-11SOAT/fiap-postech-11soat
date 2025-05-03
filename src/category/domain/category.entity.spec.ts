@@ -26,7 +26,7 @@ describe('Category Entity', () => {
     expect(category.id).toBe('category-1');
   });
 
-  it('should soft delete the category', () => {
+  it('should softDelete a category', () => {
     const category = new Category(
       {
         name: 'Test Category',
@@ -39,5 +39,20 @@ describe('Category Entity', () => {
     category.softDelete();
 
     expect(category.deletedAt).toBeDefined();
+  });
+
+  it('should throw an error when softDelete is called on an already deleted category', () => {
+    const category = new Category(
+      {
+        name: 'Test Category',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      new UniqueEntityID('category-1'),
+    );
+
+    category.softDelete();
+
+    expect(() => category.softDelete()).toThrow(new Error('Category already deleted'));
   });
 });
