@@ -9,6 +9,8 @@ import { GetCategoriesController } from './http-server/get-categories.controller
 import { GetCategoriesUseCase } from './domain/use-cases/get-categories.service';
 import { UpdateCategoryUseCase } from './domain/use-cases/update-category.service';
 import { UpdateCategoryController } from './http-server/update-category.controller';
+import { ItemsRepository } from 'src/item/domain/ports/items.repository';
+import { PrismaItemsRepository } from 'src/item/persistence/prisma/prisma-items.repository';
 
 @Module({
   controllers: [CreateCategoryController, DeleteCategoryController, GetCategoriesController, UpdateCategoryController],
@@ -20,6 +22,10 @@ import { UpdateCategoryController } from './http-server/update-category.controll
     {
       provide: CategoriesRepository,
       useClass: PrismaCategoriesRepository,
+    },
+    {
+      provide: ItemsRepository,
+      useClass: PrismaItemsRepository,
     },
   ],
   exports: [CategoriesRepository],
