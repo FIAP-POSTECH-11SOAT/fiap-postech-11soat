@@ -37,5 +37,6 @@ import { GetItemByIdUseCase } from './domain/use-cases/get-item-by-id/get-item-b
       useClass: GetItemByIdUseCase,
     },
   ],
+  exports: [ItemsRepository], // Exporta o ItemsRepository, se necessário
 })
 export class ItemModule {}
