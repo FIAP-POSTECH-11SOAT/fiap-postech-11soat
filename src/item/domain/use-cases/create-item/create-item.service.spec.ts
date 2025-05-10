@@ -53,8 +53,7 @@ describe('Create Item Use Case', () => {
       .spyOn(categoriesRepository, 'findById')
       .mockResolvedValue(
         Category.create(
-          { name: 'Test Category' },
-          new UniqueEntityID(createItemProps.categoryId),
+          { id: createItemProps.categoryId, name: 'Test Category' }
         ),
       );
     const item = await sut.execute(createItemProps);
@@ -66,8 +65,7 @@ describe('Create Item Use Case', () => {
       .spyOn(categoriesRepository, 'findById')
       .mockResolvedValue(
         Category.create(
-          { name: 'Test Category' },
-          new UniqueEntityID(createItemProps.categoryId),
+          { id: createItemProps.categoryId, name: 'Test Category' }
         ),
       );
     delete createItemProps.image;
@@ -96,8 +94,7 @@ describe('Create Item Use Case', () => {
       .spyOn(categoriesRepository, 'findById')
       .mockResolvedValue(
         Category.create(
-          { name: 'Test Category', deletedAt: new Date() },
-          new UniqueEntityID(createItemProps.categoryId),
+          { id: createItemProps.categoryId, name: 'Test Category', deletedAt: new Date() }
         ),
       );
 

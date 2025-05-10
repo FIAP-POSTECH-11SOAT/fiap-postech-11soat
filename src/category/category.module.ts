@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { CreateCategoryController } from './http-server/create-category.controller';
-import { CreateCategoryUseCase } from './domain/use-cases/create-category.service';
+import { CreateCategoryUseCase } from './domain/use-cases/create-category/create-category.service';
 import { CategoriesRepository } from './domain/ports/categories.repository';
 import { PrismaCategoriesRepository } from './persistence/database/prisma/prisma-categories.repository';
 import { DeleteCategoryController } from './http-server/delete-category/delete-category.controller';
@@ -14,11 +14,15 @@ import { PrismaItemsRepository } from 'src/item/persistence/prisma/prisma-items.
 import { DeleteCategoryPort } from './domain/ports/delete-category.port';
 import { GetCategoriesPort } from './domain/ports/get-categories.port';
 import { UpdateCategoryPort } from './domain/ports/update-category.port';
+import { CreateCategoryPort } from './domain/ports/create-category.port';
 
 @Module({
   controllers: [CreateCategoryController, DeleteCategoryController, GetCategoriesController, UpdateCategoryController],
   providers: [
-    CreateCategoryUseCase,
+    {
+      provide: CreateCategoryPort,
+      useClass: CreateCategoryUseCase,
+    },
     {
       provide: DeleteCategoryPort,
       useClass: DeleteCategoryUseCase,
