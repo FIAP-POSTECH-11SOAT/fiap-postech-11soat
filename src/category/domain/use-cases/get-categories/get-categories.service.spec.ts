@@ -6,7 +6,7 @@ import { makeCategory } from 'test/factories/make-category';
 let inMemoryCategoriesRepository: InMemoryCategoriesRepository;
 let sut: GetCategoriesUseCase;
 
-describe('Soft Delete Category Use Case', () => {
+describe('Get Categories Use Case', () => {
   beforeEach(() => {
     inMemoryCategoriesRepository = new InMemoryCategoriesRepository();
     sut = new GetCategoriesUseCase(inMemoryCategoriesRepository);
