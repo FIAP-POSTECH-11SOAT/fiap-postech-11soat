@@ -7,12 +7,13 @@ import { DeleteCategoryController } from './http-server/delete-category/delete-c
 import { DeleteCategoryUseCase } from './domain/use-cases/delete-category/delete-category.service';
 import { GetCategoriesController } from './http-server/get-categories/get-categories.controller';
 import { GetCategoriesUseCase } from './domain/use-cases/get-categories/get-categories.service';
-import { UpdateCategoryUseCase } from './domain/use-cases/update-category.service';
-import { UpdateCategoryController } from './http-server/update-category.controller';
+import { UpdateCategoryUseCase } from './domain/use-cases/update-category/update-category.service';
+import { UpdateCategoryController } from './http-server/update-category/update-category.controller';
 import { ItemsRepository } from 'src/item/domain/ports/items.repository';
 import { PrismaItemsRepository } from 'src/item/persistence/prisma/prisma-items.repository';
 import { DeleteCategoryPort } from './domain/ports/delete-category.port';
 import { GetCategoriesPort } from './domain/ports/get-categories.port';
+import { UpdateCategoryPort } from './domain/ports/update-category.port';
 
 @Module({
   controllers: [CreateCategoryController, DeleteCategoryController, GetCategoriesController, UpdateCategoryController],
@@ -26,7 +27,10 @@ import { GetCategoriesPort } from './domain/ports/get-categories.port';
       provide: GetCategoriesPort,
       useClass: GetCategoriesUseCase,
     },
-    UpdateCategoryUseCase,
+    {
+      provide: UpdateCategoryPort,
+      useClass: UpdateCategoryUseCase,
+    },
     {
       provide: CategoriesRepository,
       useClass: PrismaCategoriesRepository,
