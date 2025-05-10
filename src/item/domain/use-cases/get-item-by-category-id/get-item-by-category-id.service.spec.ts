@@ -2,7 +2,6 @@ import { randomUUID } from 'node:crypto';
 import { GetItemByCategoryIdUseCase } from './get-item-by-category-id.service';
 import { Item } from '../../item.entity';
 import { Category } from '../../../../category/domain/category.entity';
-import { UniqueEntityID } from '../../../../shared/entities/unique-entity-id';
 import { ItemsRepository } from '../../ports/items.repository';
 import { CategoriesRepository } from '../../../../category/domain/ports/categories.repository';
 import { Test } from '@nestjs/testing';
@@ -12,10 +11,7 @@ describe('Get Item by Category Id Use Case', () => {
   let itemsRepository: ItemsRepository;
   let categoriesRepository: CategoriesRepository;
 
-  const category = Category.create(
-    { name: 'Test Category' },
-    new UniqueEntityID(),
-  );
+  const category = Category.create({ name: 'Test Category' });
 
   const item = Item.create({
     name: 'Test Name',

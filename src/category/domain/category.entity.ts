@@ -1,10 +1,18 @@
-import { Optional } from 'src/shared/@types/optional';
 import { UniqueEntityID } from 'src/shared/entities/unique-entity-id';
+import { ValidString } from 'src/shared/entities/valid-string';
 
-export type CategoryProps = {
-  name: string;
+type CategoryProps = {
+  name: ValidString;
   createdAt: Date;
   updatedAt: Date;
+  deletedAt?: Date | null;
+};
+
+export type CreateCategoryProps = {
+  id?: string;
+  name: string;
+  createdAt?: Date;
+  updatedAt?: Date;
   deletedAt?: Date | null;
 };
 
@@ -12,9 +20,9 @@ export class Category {
   private _id: UniqueEntityID;
   private props: CategoryProps;
 
-  constructor(props: CategoryProps, id?: UniqueEntityID) {
+  private constructor(props: CategoryProps, id: UniqueEntityID) {
     this.props = props;
-    this._id = id ? id : new UniqueEntityID();
+    this._id = id;
   }
 
   get id(): string {
@@ -22,12 +30,12 @@ export class Category {
   }
 
   get name(): string {
-    return this.props.name;
+    return this.props.name.value();
   }
 
   set name(name: string) {
     if (!name) throw new Error('Name is required');
-    this.props.name = name;
+    this.props.name = ValidString.create(name);
     this.touch
   }
 
@@ -39,25 +47,23 @@ export class Category {
     return this.props.updatedAt;
   }
 
-  get deletedAt(): Date | null | undefined {
-    return this.props.deletedAt;
+  get deletedAt(): Date | null {
+    return this.props.deletedAt ?? null;
   }
 
   touch() {
     this.props.updatedAt = new Date();
   }
 
-  static create(
-    props: Optional<CategoryProps, 'createdAt' | 'updatedAt'>,
-    id?: UniqueEntityID,
-  ): Category {
+  static create(props: CreateCategoryProps): Category {
     const category = new Category(
       {
-        ...props,
+        name: ValidString.create(props.name),
         createdAt: props.createdAt ?? new Date(),
         updatedAt: props.updatedAt ?? new Date(),
+        deletedAt: props.deletedAt ?? null,
       },
-      id,
+      props.id ? new UniqueEntityID(props.id) : new UniqueEntityID(),
     );
     return category;
   }
