@@ -6,10 +6,10 @@ import {
   UnprocessableEntityException,
   UsePipes,
 } from '@nestjs/common';
-import { CreateCategoryUseCase } from '../domain/use-cases/create-category.service';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { zodToOpenAPI, ZodValidationPipe } from 'nestjs-zod';
 import { z } from 'zod';
+import { CreateCategoryPort } from '../../domain/ports/create-category.port';
 
 const createCategoryBodySchema = z.object({
   name: z.string().min(1, { message: 'Name must not be empty' }),
@@ -20,7 +20,7 @@ type CreateCategoryBodySchema = z.infer<typeof createCategoryBodySchema>;
 @Controller('/categories')
 @ApiTags('Categories')
 export class CreateCategoryController {
-  constructor(private createCategory: CreateCategoryUseCase) {}
+  constructor(private createCategoryPort: CreateCategoryPort) { }
 
   @Post()
   @HttpCode(201)
@@ -36,7 +36,7 @@ export class CreateCategoryController {
   })
   async handle(@Body() body: CreateCategoryBodySchema) {
     try {
-      await this.createCategory.execute(body);
+      await this.createCategoryPort.execute(body);
     } catch (error) {
       throw new UnprocessableEntityException(error.message);
     }

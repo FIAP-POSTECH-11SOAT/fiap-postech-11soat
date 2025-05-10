@@ -1,16 +1,15 @@
 import {
   Body,
   Controller,
-  Delete,
   HttpCode,
   Put,
   UnprocessableEntityException,
   UsePipes,
 } from '@nestjs/common';
-import { UpdateCategoryUseCase } from '../domain/use-cases/update-category.service';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { zodToOpenAPI, ZodValidationPipe } from 'nestjs-zod';
 import { z } from 'zod';
+import { UpdateCategoryPort } from 'src/category/domain/ports/update-category.port';
 
 const updateCategoryBodySchema = z.object({
   id: z.string().uuid(),
@@ -22,7 +21,7 @@ type UpdateCategoryBodySchema = z.infer<typeof updateCategoryBodySchema>;
 @Controller('/categories')
 @ApiTags('Categories')
 export class UpdateCategoryController {
-  constructor(private updateCategory: UpdateCategoryUseCase) { }
+  constructor(private updateCategoryPort: UpdateCategoryPort) { }
 
   @Put()
   @HttpCode(200)
@@ -34,11 +33,11 @@ export class UpdateCategoryController {
   @ApiOperation({
     summary: 'Update a category',
     description:
-      'This endpoint allows you to update the name of an existing category.',
+      'This endpoint allows you to update an existing category.',
   })
   async handle(@Body() body: UpdateCategoryBodySchema) {
     try {
-      await this.updateCategory.execute(body);
+      await this.updateCategoryPort.execute(body);
     } catch (error) {
       throw new UnprocessableEntityException(error.message);
     }

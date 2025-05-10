@@ -6,10 +6,10 @@ import {
   UnprocessableEntityException,
   UsePipes,
 } from '@nestjs/common';
-import { DeleteCategoryUseCase } from '../domain/use-cases/delete-category.service';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { zodToOpenAPI, ZodValidationPipe } from 'nestjs-zod';
 import { z } from 'zod';
+import { zodToOpenAPI, ZodValidationPipe } from 'nestjs-zod';
+import { DeleteCategoryPort } from 'src/category/domain/ports/delete-category.port';
 
 const deleteCategoryBodySchema = z.object({
   id: z.string().uuid(),
@@ -20,7 +20,7 @@ type DeleteCategoryBodySchema = z.infer<typeof deleteCategoryBodySchema>;
 @Controller('/categories')
 @ApiTags('Categories')
 export class DeleteCategoryController {
-  constructor(private deleteCategory: DeleteCategoryUseCase) { }
+  constructor(private deleteCategoryPort: DeleteCategoryPort) { }
 
   @Delete()
   @HttpCode(200)
@@ -36,7 +36,7 @@ export class DeleteCategoryController {
   })
   async handle(@Body() body: DeleteCategoryBodySchema) {
     try {
-      await this.deleteCategory.execute(body);
+      await this.deleteCategoryPort.execute(body);
     } catch (error) {
       throw new UnprocessableEntityException(error.message);
     }
