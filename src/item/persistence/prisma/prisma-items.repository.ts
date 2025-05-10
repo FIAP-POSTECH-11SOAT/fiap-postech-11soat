@@ -9,7 +9,7 @@ export class PrismaItemsRepository implements ItemsRepository {
   constructor(private prismaService: PrismaService) {}
   async findByCategoryId(categoryId: string): Promise<Item[]> {
     const items = await this.prismaService.item.findMany({
-      where: { categoryId },
+      where: { AND: [{ deletedAt: null }, { categoryId }] },
     });
     return items.map((item) => PrismaItemsMapper.toDomain(item));
   }
@@ -21,7 +21,9 @@ export class PrismaItemsRepository implements ItemsRepository {
     return PrismaItemsMapper.toDomain(item);
   }
   async findAll(): Promise<Item[]> {
-    const items = await this.prismaService.item.findMany();
+    const items = await this.prismaService.item.findMany({
+      where: { deletedAt: null },
+    });
     return items.map((item) => PrismaItemsMapper.toDomain(item));
   }
   async findByName(name: string): Promise<Item | null> {
