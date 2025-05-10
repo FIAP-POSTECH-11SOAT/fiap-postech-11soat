@@ -1,19 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { CategoriesRepository } from '../ports/categories.repository';
+import { CategoriesRepository } from '../../ports/categories.repository';
 import { ItemsRepository } from 'src/item/domain/ports/items.repository';
-
-type DeleteCategoryUseCaseInput = {
-  id: string;
-};
+import { DeleteCategoryPort, DeleteCategoryInput } from '../../ports/delete-category.port';
 
 @Injectable()
-export class DeleteCategoryUseCase {
+export class DeleteCategoryUseCase implements DeleteCategoryPort {
   constructor(
     private readonly categoriesRepository: CategoriesRepository,
     private readonly itemsRepository: ItemsRepository,
   ) { }
 
-  async execute({ id }: DeleteCategoryUseCaseInput): Promise<void> {
+  async execute({ id }: DeleteCategoryInput): Promise<void> {
     const category = await this.categoriesRepository.findById(id);
     if (!category) throw new Error('Category not found');
 
