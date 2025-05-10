@@ -14,6 +14,9 @@ import { GetItemByIdUseCase } from './domain/use-cases/get-item-by-id/get-item-b
 import { GetItemByCategoryIdController } from './http-server/get-item-by-category-id/get-item-by-category-id.controller';
 import { GetItemByCategoryIdPort } from './domain/ports/get-item-by-category-id.port';
 import { GetItemByCategoryIdUseCase } from './domain/use-cases/get-item-by-category-id/get-item-by-category-id.service';
+import { GetDeletedItemsPort } from './domain/ports/get-deleted-items.port';
+import { GetDeletedItemsUseCase } from './domain/use-cases/get-deleted-items/get-deleted-items.service';
+import { GetDeletedItemsController } from './http-server/get-deleted-items/get-deleted-items.controller';
 
 @Module({
   imports: [CategoryModule],
@@ -22,6 +25,7 @@ import { GetItemByCategoryIdUseCase } from './domain/use-cases/get-item-by-categ
     GetItemsController,
     GetItemByIdController,
     GetItemByCategoryIdController,
+    GetDeletedItemsController,
   ],
   providers: [
     {
@@ -43,6 +47,10 @@ import { GetItemByCategoryIdUseCase } from './domain/use-cases/get-item-by-categ
     {
       provide: GetItemByCategoryIdPort,
       useClass: GetItemByCategoryIdUseCase,
+    },
+    {
+      provide: GetDeletedItemsPort,
+      useClass: GetDeletedItemsUseCase,
     },
   ],
 })

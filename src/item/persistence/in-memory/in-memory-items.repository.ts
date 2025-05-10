@@ -2,6 +2,9 @@ import { Item } from '../../domain/item.entity';
 import { ItemsRepository } from '../../domain/ports/items.repository';
 
 export class InMemoryItemsRepository implements ItemsRepository {
+  findDeleted(): Promise<Item[]> {
+    throw new Error('Method not implemented.');
+  }
   async findByCategoryId(categoryId: string): Promise<Item[]> {
     return this.items.filter((item) => item.categoryId === categoryId);
   }

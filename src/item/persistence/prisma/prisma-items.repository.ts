@@ -7,6 +7,14 @@ import PrismaItemsMapper from './mappers/prisma-items.mapper';
 @Injectable()
 export class PrismaItemsRepository implements ItemsRepository {
   constructor(private prismaService: PrismaService) {}
+
+  async findDeleted(): Promise<Item[]> {
+    const items = await this.prismaService.item.findMany({
+      where: { deletedAt: { not: null } },
+    });
+    return items.map((item) => PrismaItemsMapper.toDomain(item));
+  }
+
   async findByCategoryId(categoryId: string): Promise<Item[]> {
     const items = await this.prismaService.item.findMany({
       where: { AND: [{ deletedAt: null }, { categoryId }] },
