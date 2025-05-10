@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { CreateCategoryController } from './http-server/create-category.controller';
+import { CreateCategoryController } from './http-server/create-category/create-category.controller';
 import { CreateCategoryUseCase } from './domain/use-cases/create-category/create-category.service';
 import { CategoriesRepository } from './domain/ports/categories.repository';
 import { PrismaCategoriesRepository } from './persistence/database/prisma/prisma-categories.repository';

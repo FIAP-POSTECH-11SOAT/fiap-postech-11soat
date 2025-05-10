@@ -9,7 +9,7 @@ import {
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { zodToOpenAPI, ZodValidationPipe } from 'nestjs-zod';
 import { z } from 'zod';
-import { CreateCategoryPort } from '../domain/ports/create-category.port';
+import { CreateCategoryPort } from '../../domain/ports/create-category.port';
 
 const createCategoryBodySchema = z.object({
   name: z.string().min(1, { message: 'Name must not be empty' }),
