@@ -6,21 +6,19 @@ import {
   UnprocessableEntityException,
   UsePipes,
 } from '@nestjs/common';
-import { CreateOrderUseCase } from '../domain/use-cases/create-order.service';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { zodToOpenAPI, ZodValidationPipe } from 'nestjs-zod';
+import { CreateOrderPort } from '../domain/ports/create-order.port';
 
 const createOrderBodySchema = z.object({
   customerId: z.string().uuid({ message: 'Item ID must be a valid UUID' }),
 });
 
-type CreateOrderBodySchema = z.infer<typeof createOrderBodySchema>;
-
 @Controller('/orders')
 @ApiTags('Orders')
 export class CreateOrderController {
-  constructor(private createOrder: CreateOrderUseCase) { }
+  constructor(private createOrderPort: CreateOrderPort) { }
 
   @Post()
   @HttpCode(201)
@@ -33,9 +31,9 @@ export class CreateOrderController {
     summary: 'Creates a new order',
     description: 'This endpoint creates a new order. It requires the customer ID.',
   })
-  async handle(@Body() body: CreateOrderBodySchema) {
+  async handle(@Body() body: z.infer<typeof createOrderBodySchema>) {
     try {
-      const id = await this.createOrder.execute(body);
+      const id = await this.createOrderPort.execute(body.customerId);
       return { id };
     } catch (error) {
       throw new UnprocessableEntityException(error.message);

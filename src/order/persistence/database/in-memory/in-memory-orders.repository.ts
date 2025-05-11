@@ -35,24 +35,23 @@ export class InMemoryOrdersRepository implements OrdersRepository {
 
   async createOrderItem(orderItem: OrderItem): Promise<void> {
     this.orderItems.push(orderItem);
-    this.orders.map(order => {
-      if (order.id === orderItem.orderId) {
-        order.total.add((orderItem.price.toNumber() * orderItem.quantity));
-      }
-    });
+    const orderIndex = this.orders.findIndex(order => order.id === orderItem.orderId);
+    if (orderIndex !== -1) {
+      this.orders[orderIndex].total = this.orders[orderIndex].total.add(orderItem.price.toNumber() * orderItem.quantity);
+    }
   }
 
-  async deleteOrderItem(itemId: string, orderId: string): Promise<void> {
-    const index = this.orderItems.findIndex(item => item.itemId === itemId && item.orderId === orderId);
-    if (index !== -1) {
-      const orderItem = this.orderItems[index];
-      this.orderItems.splice(index, 1);
+  async deleteOrderItem(orderId: string, itemId: string): Promise<void> {
+    const index = this.orderItems.findIndex(item => (item.itemId.toString() === itemId) && (item.orderId.toString() === orderId));
+    if (index === -1) {
+      throw new Error('Order item not found');
+    }
+    const orderItem = this.orderItems[index];
+    this.orderItems.splice(index, 1);
 
-      this.orders.map(order => {
-        if (order.id === orderId) {
-          order.total.sub((orderItem.price.toNumber() * orderItem.quantity));
-        }
-      });
+    const orderIndex = this.orders.findIndex(order => order.id === orderItem.orderId);
+    if (orderIndex !== -1) {
+      this.orders[orderIndex].total = this.orders[orderIndex].total.sub((orderItem.price.toNumber() * orderItem.quantity));
     }
   }
 }

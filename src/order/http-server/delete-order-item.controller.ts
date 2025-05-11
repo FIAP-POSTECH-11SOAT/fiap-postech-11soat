@@ -9,19 +9,17 @@ import {
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { zodToOpenAPI, ZodValidationPipe } from 'nestjs-zod';
 import { z } from 'zod';
-import { DeleteOrderItemUseCase } from '../domain/use-cases/delete-order-item.service';
+import { DeleteOrderItemPort } from '../domain/ports/delete-order-item.port';
 
 const deleteOrderItemBodySchema = z.object({
   itemId: z.string().uuid({ message: 'Item ID must be a valid UUID' }),
   orderId: z.string().uuid({ message: 'Order ID must be a valid UUID' }),
 });
 
-type DeleteOrderItemBodySchema = z.infer<typeof deleteOrderItemBodySchema>;
-
 @Controller('/orders/items')
 @ApiTags('Orders')
 export class DeleteOrderItemController {
-  constructor(private deleteOrderItem: DeleteOrderItemUseCase) { }
+  constructor(private deleteOrderItemPort: DeleteOrderItemPort) { }
 
   @Delete()
   @HttpCode(200)
@@ -35,9 +33,9 @@ export class DeleteOrderItemController {
     description:
       'This endpoint allows you to delete an item from an order. It requires the item ID and order ID.',
   })
-  async handle(@Body() body: DeleteOrderItemBodySchema) {
+  async handle(@Body() body: z.infer<typeof deleteOrderItemBodySchema>) {
     try {
-      await this.deleteOrderItem.execute(body);
+      await this.deleteOrderItemPort.execute(body.orderId, body.itemId);
     } catch (error) {
       throw new UnprocessableEntityException(error.message);
     }

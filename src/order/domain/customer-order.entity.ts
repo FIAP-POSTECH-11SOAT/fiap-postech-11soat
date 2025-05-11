@@ -1,11 +1,11 @@
 import { UniqueEntityID } from "src/shared/entities/unique-entity-id";
 
-export type CustomerOrderProps = {
+type CustomerOrderProps = {
   orderId: UniqueEntityID;
   customerId: UniqueEntityID;
 };
 
-type CreateCustomerOrderProps = {
+export type CreateCustomerOrderProps = {
   orderId: string;
   customerId: string;
 };

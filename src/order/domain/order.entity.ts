@@ -1,13 +1,20 @@
 import { Decimal } from "@prisma/client/runtime/library";
-import { Optional } from "src/shared/@types/optional";
-import { OrderStatus } from "@prisma/client";
+import { OrderStatus } from "src/shared/@types/OrderStatus";
 import { UniqueEntityID } from "src/shared/entities/unique-entity-id";
 
-export type OrderProps = {
+type OrderProps = {
   total: Decimal;
   status: OrderStatus;
   createdAt: Date;
   updatedAt: Date;
+};
+
+export type CreateOrderProps = {
+  id?: string;
+  total: Decimal;
+  status: OrderStatus;
+  createdAt?: Date;
+  updatedAt?: Date;
 };
 
 export class Order {
@@ -27,6 +34,10 @@ export class Order {
     return this.props.total;
   }
 
+  set total(value: Decimal) {
+    this.props.total = value;
+  }
+
   get status(): OrderStatus {
     return this.props.status;
   }
@@ -39,10 +50,8 @@ export class Order {
     return this.props.updatedAt;
   }
 
-  static create(
-    props: Optional<OrderProps, 'createdAt' | 'updatedAt'>,
-    id?: UniqueEntityID,
-  ): Order {
+  static create(props: CreateOrderProps): Order {
+    const id = props.id ? new UniqueEntityID(props.id) : new UniqueEntityID();
     const order = new Order(
       {
         ...props,

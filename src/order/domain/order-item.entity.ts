@@ -1,14 +1,14 @@
 import { Decimal } from "@prisma/client/runtime/library";
 import { UniqueEntityID } from "src/shared/entities/unique-entity-id";
 
-export type OrderItemProps = {
+type OrderItemProps = {
   orderId: UniqueEntityID;
   itemId: UniqueEntityID;
   price: Decimal;
   quantity: number;
 };
 
-type CreateOrderItemProps = {
+export type CreateOrderItemProps = {
   orderId: string;
   itemId: string;
   price: Decimal;

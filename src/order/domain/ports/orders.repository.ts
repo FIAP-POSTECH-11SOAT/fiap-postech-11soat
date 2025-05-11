@@ -6,5 +6,5 @@ export abstract class OrdersRepository {
   abstract save(order: Order, customerId: string): Promise<string>;
   abstract findById(orderId: string): Promise<FullOrder | null>
   abstract createOrderItem(orderItem: OrderItem): Promise<void>
-  abstract deleteOrderItem(itemId: string, orderId: string): Promise<void>
+  abstract deleteOrderItem(orderId: string, itemId: string): Promise<void>
 }

@@ -10,7 +10,7 @@ import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { zodToOpenAPI, ZodValidationPipe } from 'nestjs-zod';
 import { z } from 'zod';
 import { Decimal } from '@prisma/client/runtime/library';
-import { CreateOrderItemUseCase } from '../domain/use-cases/create-order-item.service';
+import { CreateOrderItemPort } from '../domain/ports/create-order-item.port';
 
 const createOrderItemBodySchema = z.object({
   itemId: z.string().uuid({ message: 'Item ID must be a valid UUID' }),
@@ -19,12 +19,10 @@ const createOrderItemBodySchema = z.object({
   price: z.number().gte(0, { message: 'Price must be greater than or equal to zero' }).transform((value) => new Decimal(value)),
 });
 
-type CreateOrderItemBodySchema = z.infer<typeof createOrderItemBodySchema>;
-
 @Controller('/orders/items')
 @ApiTags('Orders')
 export class CreateOrderItemController {
-  constructor(private createOrderItem: CreateOrderItemUseCase) { }
+  constructor(private createOrderItemPort: CreateOrderItemPort) { }
 
   @Post()
   @HttpCode(201)
@@ -37,9 +35,9 @@ export class CreateOrderItemController {
     summary: 'Creates a new order item',
     description: 'This endpoint creates a new order item. It requires the item ID, order ID, quantity, and price.',
   })
-  async handle(@Body() body: CreateOrderItemBodySchema) {
+  async handle(@Body() body: z.infer<typeof createOrderItemBodySchema>) {
     try {
-      await this.createOrderItem.execute(body);
+      await this.createOrderItemPort.execute(body);
     } catch (error) {
       console.log(error)
       throw new UnprocessableEntityException(error.message);
