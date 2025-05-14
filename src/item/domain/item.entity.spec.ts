@@ -42,4 +42,11 @@ describe('ItemEntity', () => {
     expect(item).toBeDefined();
     expect(item.id).toBe(id);
   });
+  it('should softDelete an item', () => {
+    const item = Item.create({
+      ...itemProps,
+    });
+    item.softDelete();
+    expect(item.deletedAt).toBeDefined();
+  });
 });
