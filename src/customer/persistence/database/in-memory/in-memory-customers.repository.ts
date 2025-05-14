@@ -13,4 +13,10 @@ export class InMemoryCustomersRepository implements CustomersRepository {
   async save(customer: Customer): Promise<void> {
     this.customers.push(customer);
   }
+
+  async findByDocument(document: string): Promise<Customer | null> {
+    const customer = this.customers.find((customer) => customer.document === document);
+    if (!customer) return null;
+    return customer;
+  }
 }
