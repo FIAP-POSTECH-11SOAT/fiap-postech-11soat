@@ -53,5 +53,6 @@ import { GetDeletedItemsController } from './http-server/get-deleted-items/get-d
       useClass: GetDeletedItemsUseCase,
     },
   ],
+  exports: [ItemsRepository], // Exporta o ItemsRepository, se necessário
 })
 export class ItemModule {}

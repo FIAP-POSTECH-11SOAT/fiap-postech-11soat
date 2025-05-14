@@ -1,0 +1,42 @@
+import { CreateOrderController } from './http-server/create-order.controller';
+import { CreateOrderItemController } from './http-server/create-order-item.controller';
+import { CreateOrderItemPort } from './domain/ports/create-order-item.port';
+import { CreateOrderItemUseCase } from './domain/use-cases/create-order-item/create-order-item.service';
+import { CreateOrderPort } from './domain/ports/create-order.port';
+import { CreateOrderUseCase } from './domain/use-cases/create-order/create-order.service';
+import { DeleteOrderItemController } from './http-server/delete-order-item.controller';
+import { DeleteOrderItemPort } from './domain/ports/delete-order-item.port';
+import { DeleteOrderItemUseCase } from './domain/use-cases/delete-order-item/delete-order-item.service';
+import { ItemModule } from '../item/item.module';
+import { Module } from '@nestjs/common';
+import { OrdersRepository } from './domain/ports/orders.repository';
+import { PrismaOrdersRepository } from './persistence/database/prisma/prisma-orders.repository';
+
+@Module({
+  imports: [ItemModule],
+  controllers: [
+    CreateOrderController,
+    CreateOrderItemController,
+    DeleteOrderItemController
+  ],
+  providers: [
+    {
+      provide: CreateOrderPort,
+      useClass: CreateOrderUseCase,
+    },
+    {
+      provide: CreateOrderItemPort,
+      useClass: CreateOrderItemUseCase,
+    },
+    {
+      provide: DeleteOrderItemPort,
+      useClass: DeleteOrderItemUseCase,
+    },
+    {
+      provide: OrdersRepository,
+      useClass: PrismaOrdersRepository,
+    }
+  ],
+  exports: [OrdersRepository]
+})
+export class OrderModule { }
