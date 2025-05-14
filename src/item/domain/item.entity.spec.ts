@@ -42,4 +42,18 @@ describe('ItemEntity', () => {
     expect(item).toBeDefined();
     expect(item.id).toBe(id);
   });
+  it('should softDelete an item', () => {
+    const item = Item.create({
+      ...itemProps,
+    });
+    item.softDelete();
+    expect(item.deletedAt).toBeDefined();
+  });
+  it('should throw an error when trying to softDelete an item that is already deleted', () => {
+    const item = Item.create({
+      ...itemProps,
+      deletedAt: new Date(),
+    });
+    expect(() => item.softDelete()).toThrow(new Error('Item already deleted'));
+  });
 });

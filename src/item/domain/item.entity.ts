@@ -88,6 +88,11 @@ export class Item {
     return new Item(itemProps, id);
   }
 
+  softDelete() {
+    if (this.deletedAt) throw new Error('Item already deleted');
+    this.props.deletedAt = new Date();
+  }
+
   toJSON() {
     return {
       id: this.id,

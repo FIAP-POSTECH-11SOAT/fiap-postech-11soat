@@ -17,6 +17,9 @@ import { GetItemByCategoryIdUseCase } from './domain/use-cases/get-item-by-categ
 import { GetDeletedItemsPort } from './domain/ports/get-deleted-items.port';
 import { GetDeletedItemsUseCase } from './domain/use-cases/get-deleted-items/get-deleted-items.service';
 import { GetDeletedItemsController } from './http-server/get-deleted-items/get-deleted-items.controller';
+import { DeleteItemPort } from './domain/ports/delete-item.port';
+import { DeleteItemUseCase } from './domain/use-cases/delete-item/delete-item.service';
+import { DeleteItemController } from './http-server/delete-item/delete-item.controller';
 
 @Module({
   imports: [CategoryModule],
@@ -26,6 +29,7 @@ import { GetDeletedItemsController } from './http-server/get-deleted-items/get-d
     GetItemByIdController,
     GetItemByCategoryIdController,
     GetDeletedItemsController,
+    DeleteItemController,
   ],
   providers: [
     {
@@ -51,6 +55,10 @@ import { GetDeletedItemsController } from './http-server/get-deleted-items/get-d
     {
       provide: GetDeletedItemsPort,
       useClass: GetDeletedItemsUseCase,
+    },
+    {
+      provide: DeleteItemPort,
+      useClass: DeleteItemUseCase,
     },
   ],
   exports: [ItemsRepository], // Exporta o ItemsRepository, se necessário

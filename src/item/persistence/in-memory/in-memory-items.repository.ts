@@ -2,6 +2,9 @@ import { Item } from '../../domain/item.entity';
 import { ItemsRepository } from '../../domain/ports/items.repository';
 
 export class InMemoryItemsRepository implements ItemsRepository {
+  delete(item: Item): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
   findDeleted(): Promise<Item[]> {
     throw new Error('Method not implemented.');
   }
