@@ -9,9 +9,11 @@ export class InMemoryOrdersRepository implements OrdersRepository {
   orderItems: OrderItem[] = [];
   customerOrders: CustomerOrder[] = [];
 
-  async save(order: Order, customerId: string): Promise<string> {
+  async save(order: Order, customerOrder?: CustomerOrder): Promise<string> {
     this.orders.push(order);
-    this.customerOrders.push(CustomerOrder.create({ customerId, orderId: order.id }));
+    if (customerOrder) {
+      this.customerOrders.push(customerOrder);
+    }
     return order.id;
   }
 

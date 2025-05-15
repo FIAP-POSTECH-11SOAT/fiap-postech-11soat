@@ -13,20 +13,15 @@ import { PrismaService } from 'src/infra/database/prisma/prisma.service';
 export class PrismaOrdersRepository implements OrdersRepository {
   constructor(private prisma: PrismaService) { }
 
-  async save(order: Order, customerId: string): Promise<string> {
-    const orderData = PrismaOrderMapper.toPrisma(order);
-
+  async save(order: Order, customerOrder?: CustomerOrder): Promise<string> {
+    const prismaOrder = PrismaOrderMapper.toPrisma(order);
     return await this.prisma.$transaction(async (tx) => {
-      const storedOrder = await tx.order.create({ data: orderData });
-
-      const customerOrder = CustomerOrder.create({
-        customerId: customerId,
-        orderId: storedOrder.id,
-      });
-      const customerOrderData = PrismaCustomerOrderMapper.toPrisma(customerOrder);
-      await tx.customerOrder.create({ data: customerOrderData });
-
-      return storedOrder.id;
+      const newOrder = await tx.order.create({ data: prismaOrder });
+      if (customerOrder) {
+        const prismaCustomerOrder = PrismaCustomerOrderMapper.toPrisma(customerOrder);
+        await tx.customerOrder.create({ data: prismaCustomerOrder });
+      }
+      return newOrder.id;
     });
   }
 
