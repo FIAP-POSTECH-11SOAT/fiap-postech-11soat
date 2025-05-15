@@ -73,6 +73,35 @@ export class Item {
     return this.props.deletedAt ?? null;
   }
 
+  set name(name: string) {
+    this.props.name = ValidString.create(name);
+    this.touch();
+  }
+
+  set description(description: string) {
+    this.props.description = ValidString.create(description);
+    this.touch();
+  }
+
+  set price(price: number) {
+    this.props.price = Price.create(price);
+    this.touch();
+  }
+
+  set image(image: string | null) {
+    this.props.image = image ? ValidString.create(image) : null;
+    this.touch();
+  }
+
+  set categoryId(categoryId: string) {
+    this.props.categoryId = new UniqueEntityID(categoryId);
+    this.touch();
+  }
+
+  touch() {
+    this.props.updatedAt = new Date();
+  }
+
   static create(props: CreateItemProps): Item {
     const itemProps: ItemProps = {
       name: ValidString.create(props.name),

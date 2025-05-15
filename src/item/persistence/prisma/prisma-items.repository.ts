@@ -7,6 +7,15 @@ import PrismaItemsMapper from './mappers/prisma-items.mapper';
 @Injectable()
 export class PrismaItemsRepository implements ItemsRepository {
   constructor(private prismaService: PrismaService) {}
+  async update(item: Item): Promise<void> {
+    const data = PrismaItemsMapper.toPrisma(item);
+    await this.prismaService.item.update({
+      where: {
+        id: item.id,
+      },
+      data,
+    });
+  }
   async delete(item: Item): Promise<void> {
     await this.prismaService.item.update({
       where: {

@@ -8,4 +8,5 @@ export abstract class ItemsRepository {
   abstract findByCategoryId(categoryId: string): Promise<Item[]>;
   abstract findDeleted(): Promise<Item[]>;
   abstract delete(item: Item): Promise<void>;
+  abstract update(item: Item): Promise<void>;
 }
