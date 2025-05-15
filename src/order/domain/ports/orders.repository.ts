@@ -1,10 +1,12 @@
-import { FullOrder } from 'src/shared/@types/FullOrder';
-import { Order } from 'src/order/domain/order.entity';
-import { OrderItem } from '@prisma/client';
+import { CustomerOrder } from '../customer-order.entity';
+import { Order } from '../order.entity';
+import { OrderItem } from '../order-item.entity';
 
 export abstract class OrdersRepository {
-  abstract save(order: Order, customerId: string): Promise<string>;
-  abstract findById(orderId: string): Promise<FullOrder | null>
+  abstract save(order: Order, customerOrder?: CustomerOrder): Promise<string>;
   abstract createOrderItem(orderItem: OrderItem): Promise<void>
-  abstract deleteOrderItem(orderId: string, itemId: string): Promise<void>
+  abstract deleteOrderItem(orderItem: OrderItem): Promise<void>
+  abstract findById(orderId: string): Promise<Order | null>
+  abstract findCustomerOrder(orderId: string): Promise<CustomerOrder | null>
+  abstract findOrderItems(orderId: string): Promise<OrderItem[]>
 }

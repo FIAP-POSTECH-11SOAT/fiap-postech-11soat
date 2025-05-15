@@ -26,28 +26,18 @@ describe('Create Order Item Use Case', () => {
     inMemoryOrdersRepository = new InMemoryOrdersRepository();
     inMemoryItemsRepository = new InMemoryItemsRepository();
 
-    jest.spyOn(inMemoryOrdersRepository, 'findById').mockResolvedValue({
-      customerId: randomUUID(),
-      items: [],
-      orderDetails: Order.create({
-        id: orderId,
-        total: new Decimal(0),
-        status: 'AWAITING',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      })
-    });
-    jest.spyOn(inMemoryItemsRepository, 'findById').mockResolvedValue(
-      Item.create({
-        id: itemId,
-        name: 'Test Item',
-        price: 10.00,
-        description: 'Test Description',
-        categoryId: randomUUID(),
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      })
-    )
+    jest.spyOn(inMemoryOrdersRepository, 'findById').mockResolvedValue(Order.create({
+      id: orderId,
+      total: new Decimal(0),
+      status: 'AWAITING'
+    }));
+    jest.spyOn(inMemoryItemsRepository, 'findById').mockResolvedValue(Item.create({
+      id: itemId,
+      name: 'Test Item',
+      price: 10.00,
+      description: 'Test Description',
+      categoryId: randomUUID()
+    }));
     useCase = new CreateOrderItemUseCase(inMemoryOrdersRepository, inMemoryItemsRepository);
   });
 

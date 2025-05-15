@@ -12,7 +12,7 @@ import { zodToOpenAPI, ZodValidationPipe } from 'nestjs-zod';
 import { CreateOrderPort } from '../domain/ports/create-order.port';
 
 const createOrderBodySchema = z.object({
-  customerId: z.string().uuid({ message: 'Item ID must be a valid UUID' }),
+  customerId: z.string().uuid({ message: 'Item ID must be a valid UUID' }).optional(),
 });
 
 @Controller('/orders')
@@ -29,7 +29,7 @@ export class CreateOrderController {
   @ApiResponse({ status: 422, description: 'Unprocessable Entity' })
   @ApiOperation({
     summary: 'Creates a new order',
-    description: 'This endpoint creates a new order. It requires the customer ID.',
+    description: 'This endpoint creates a new order. The customer ID is optional.',
   })
   async handle(@Body() body: z.infer<typeof createOrderBodySchema>) {
     try {
