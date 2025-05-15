@@ -13,8 +13,8 @@ export class PrismaOrdersRepository implements OrdersRepository {
   constructor(private prisma: PrismaService) { }
 
   async save(order: Order, customerOrder?: CustomerOrder): Promise<string> {
-    const prismaOrder = PrismaOrderMapper.toPrisma(order);
     return await this.prisma.$transaction(async (tx) => {
+      const prismaOrder = PrismaOrderMapper.toPrisma(order);
       const newOrder = await tx.order.create({ data: prismaOrder });
       if (customerOrder) {
         const prismaCustomerOrder = PrismaCustomerOrderMapper.toPrisma(customerOrder);
@@ -25,8 +25,8 @@ export class PrismaOrdersRepository implements OrdersRepository {
   }
 
   async createOrderItem(orderItem: OrderItem): Promise<void> {
-    const prismaOrderItem = PrismaOrderItemMapper.toPrisma(orderItem);
     await this.prisma.$transaction(async (tx) => {
+      const prismaOrderItem = PrismaOrderItemMapper.toPrisma(orderItem);
       await tx.orderItem.create({ data: prismaOrderItem });
       await tx.order.update({
         where: { id: orderItem.orderId },
@@ -37,9 +37,9 @@ export class PrismaOrdersRepository implements OrdersRepository {
 
   async deleteOrderItem(orderItem: OrderItem): Promise<void> {
     await this.prisma.$transaction(async (tx) => {
-      const deletedItem = await tx.orderItem.delete(
-        { where: { orderId_itemId: { orderId: orderItem.orderId, itemId: orderItem.itemId } }, }
-      );
+      const deletedItem = await tx.orderItem.delete({
+        where: { orderId_itemId: { orderId: orderItem.orderId, itemId: orderItem.itemId } },
+      });
       await tx.order.update({
         where: { id: orderItem.orderId },
         data: { total: { decrement: (deletedItem.price.toNumber() * deletedItem.quantity) } },
