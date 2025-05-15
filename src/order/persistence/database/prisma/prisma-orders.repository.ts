@@ -1,5 +1,4 @@
 import { CustomerOrder } from 'src/order/domain/customer-order.entity';
-import { FullOrder } from 'src/shared/@types/FullOrder';
 import { Injectable } from '@nestjs/common';
 import { Order } from 'src/order/domain/order.entity';
 import { OrderItem } from 'src/order/domain/order-item.entity';
@@ -25,31 +24,10 @@ export class PrismaOrdersRepository implements OrdersRepository {
     });
   }
 
-  async findById(orderId: string): Promise<FullOrder | null> {
-    return await this.prisma.$transaction(async (tx) => {
-      const existingOrder = await tx.order.findUnique({ where: { id: orderId } });
-      if (!existingOrder) return null;
-
-      const orderItems = await tx.orderItem.findMany({ where: { orderId }, });
-      const customerOrders = await tx.customerOrder.findFirst({ where: { orderId }, });
-
-      return {
-        orderDetails: PrismaOrderMapper.toDomain(existingOrder),
-        items: orderItems.map(item => ({
-          itemId: item.itemId,
-          quantity: item.quantity,
-          price: item.price,
-        })),
-        customerId: customerOrders?.customerId || null,
-      };
-    });
-  }
-
   async createOrderItem(orderItem: OrderItem): Promise<void> {
-    const data = PrismaOrderItemMapper.toPrisma(orderItem);
+    const prismaOrderItem = PrismaOrderItemMapper.toPrisma(orderItem);
     await this.prisma.$transaction(async (tx) => {
-      await tx.orderItem.create({ data });
-
+      await tx.orderItem.create({ data: prismaOrderItem });
       await tx.order.update({
         where: { id: orderItem.orderId },
         data: { total: { increment: (orderItem.price.toNumber() * orderItem.quantity) } },
@@ -57,14 +35,32 @@ export class PrismaOrdersRepository implements OrdersRepository {
     });
   }
 
-  async deleteOrderItem(orderId: string, itemId: string): Promise<void> {
+  async deleteOrderItem(orderItem: OrderItem): Promise<void> {
     await this.prisma.$transaction(async (tx) => {
-      const deletedItem = await tx.orderItem.delete({ where: { orderId_itemId: { orderId, itemId } }, });
-
+      const deletedItem = await tx.orderItem.delete(
+        { where: { orderId_itemId: { orderId: orderItem.orderId, itemId: orderItem.itemId } }, }
+      );
       await tx.order.update({
-        where: { id: orderId },
+        where: { id: orderItem.orderId },
         data: { total: { decrement: (deletedItem.price.toNumber() * deletedItem.quantity) } },
       });
     });
+  }
+
+  async findById(orderId: string): Promise<Order | null> {
+    const order = await this.prisma.order.findUnique({ where: { id: orderId } });
+    if (!order) return null;
+    return PrismaOrderMapper.toDomain(order);
+  }
+
+  async findCustomerOrder(orderId: string): Promise<CustomerOrder | null> {
+    const customerOrder = await this.prisma.customerOrder.findFirst({ where: { orderId } });
+    if (!customerOrder) return null;
+    return PrismaCustomerOrderMapper.toDomain(customerOrder);
+  }
+
+  async findOrderItems(orderId: string): Promise<OrderItem[]> {
+    const items = await this.prisma.orderItem.findMany({ where: { orderId }, });
+    return items.map(item => PrismaOrderItemMapper.toDomain(item));
   }
 }

@@ -1,6 +1,8 @@
+import { Decimal } from '@prisma/client/runtime/library';
 import { DeleteOrderItemPort } from '../../ports/delete-order-item.port';
 import { Injectable } from '@nestjs/common';
 import { ItemsRepository } from 'src/item/domain/ports/items.repository';
+import { OrderItem } from '../../order-item.entity';
 import { OrdersRepository } from '../../ports/orders.repository';
 
 @Injectable()
@@ -17,6 +19,7 @@ export class DeleteOrderItemUseCase implements DeleteOrderItemPort {
     const order = await this.ordersRepository.findById(orderId);
     if (!order) throw new Error('Invalid order');
 
-    await this.ordersRepository.deleteOrderItem(orderId, itemId);
+    const orderItem = OrderItem.create({ orderId, itemId, quantity: 0, price: new Decimal(0) });
+    await this.ordersRepository.deleteOrderItem(orderItem);
   }
 }

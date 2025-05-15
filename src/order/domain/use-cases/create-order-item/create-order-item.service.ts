@@ -22,7 +22,8 @@ export class CreateOrderItemUseCase implements CreateOrderItemPort {
     const order = await this.ordersRepository.findById(orderId);
     if (!order) throw new Error('Invalid order');
 
-    if(order.items.some(existingItem => existingItem.itemId === itemId)) throw new Error('The order already has this item'); 
+    const items = await this.ordersRepository.findOrderItems(orderId);
+    if (items.some(existingItem => existingItem.itemId === itemId)) throw new Error('The order already has this item');
 
     const orderItemObj = OrderItem.create({ orderId, itemId, quantity, price });
     await this.ordersRepository.createOrderItem(orderItemObj);
