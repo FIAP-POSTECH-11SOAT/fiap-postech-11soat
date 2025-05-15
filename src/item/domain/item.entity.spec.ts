@@ -56,4 +56,23 @@ describe('ItemEntity', () => {
     });
     expect(() => item.softDelete()).toThrow(new Error('Item already deleted'));
   });
+  it('should update an item', () => {
+    const item = Item.create({
+      ...itemProps,
+    });
+
+    const newCategoryId = randomUUID();
+
+    item.name = 'Updated Name';
+    item.description = 'Updated Description';
+    item.price = 20;
+    item.image = '/public/updated.png';
+    item.categoryId = newCategoryId;
+
+    expect(item.name).toBe('Updated Name');
+    expect(item.description).toBe('Updated Description');
+    expect(item.price).toBe(20);
+    expect(item.image).toBe('/public/updated.png');
+    expect(item.categoryId).toBe(newCategoryId);
+  });
 });
