@@ -18,6 +18,7 @@ export class DeleteOrderItemUseCase implements DeleteOrderItemPort {
 
     const order = await this.ordersRepository.findById(orderId);
     if (!order) throw new Error('Invalid order');
+    if (order.status !== 'AWAITING') throw new Error('This order cannot be updated')
 
     const orderItem = OrderItem.create({ orderId, itemId, quantity: 0, price: new Decimal(0) });
     await this.ordersRepository.deleteOrderItem(orderItem);
