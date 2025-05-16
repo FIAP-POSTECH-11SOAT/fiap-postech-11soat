@@ -34,10 +34,6 @@ export class Order {
     return this.props.total;
   }
 
-  set total(value: Decimal) {
-    this.props.total = value;
-  }
-
   get status(): OrderStatus {
     return this.props.status;
   }
@@ -48,6 +44,20 @@ export class Order {
 
   get updatedAt(): Date {
     return this.props.updatedAt;
+  }
+
+  set total(value: Decimal) {
+    this.props.total = value;
+    this.touch();
+  }
+
+  set status(value: OrderStatus) {
+    this.props.status = value;
+    this.touch();
+  }
+
+  touch() {
+    this.props.updatedAt = new Date();
   }
 
   static create(props: CreateOrderProps): Order {
