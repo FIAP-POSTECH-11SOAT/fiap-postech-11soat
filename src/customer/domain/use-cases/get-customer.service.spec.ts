@@ -2,6 +2,7 @@ import { InMemoryCustomersRepository } from 'src/customer/persistence/database/i
 import { GetCustomerUseCase } from './get-customer.service';
 import { CreateCustomerUseCase } from './create-customer.service';
 import { cpf as cpfGenerator } from 'cpf-cnpj-validator';
+import { NotFoundException } from '@nestjs/common';
 
 let inMemoryCustomersRepository: InMemoryCustomersRepository;
 let getCustomerUseCase: GetCustomerUseCase;
@@ -19,15 +20,16 @@ describe('Get Customer Use Case', () => {
   });
 
   it('should be able to retrive a customer', async () => {
-    const customer = await getCustomerUseCase.execute({ document: cpf });
+    const customer = await getCustomerUseCase.execute(cpf);
 
     expect(customer?.document).toEqual(cpf);
   });
 
   it('should not be able to retrive a customer with wrong document', async () => {
     const wrong_document = cpfGenerator.generate();
-    const customer = await getCustomerUseCase.execute({ document: wrong_document });
 
-    expect(customer).toBeNull
+    await expect(getCustomerUseCase.execute(wrong_document)).rejects.toThrow(
+      new NotFoundException(`Customer with document ${wrong_document} not found`)
+    );
   });
 });
