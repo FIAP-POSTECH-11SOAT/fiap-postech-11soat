@@ -1,20 +1,25 @@
 import { Module } from '@nestjs/common';
 import { CreatePaymentUseCase } from './domain/use-cases/create-payment/create-payment.service';
 import { UpdatePaymentUseCase } from './domain/use-cases/update-payment/update-payment.service';
+import { GetPaymentByOrderIdUseCase } from './domain/use-cases/get-payment-by-order-id/get-payment-by-order-id.service';
+import { SearchPaymentsUseCase } from './domain/use-cases/search-payments/search-payments.service';
 import { PaymentsRepository } from './domain/ports/payments.repository';
 import { PrismaPaymentsRepository } from './persistence/prisma/prisma-payments.repository';
 import { PaymentsController } from './http-server/payments.controller';
+import { PrismaService } from 'src/infra/database/prisma/prisma.service';
 
 @Module({
   controllers: [PaymentsController],
   providers: [
+    PrismaService,
     CreatePaymentUseCase,
     UpdatePaymentUseCase,
+    GetPaymentByOrderIdUseCase,
+    SearchPaymentsUseCase,
     {
       provide: PaymentsRepository,
       useClass: PrismaPaymentsRepository,
     },
   ],
-  exports: [CreatePaymentUseCase, UpdatePaymentUseCase],
 })
 export class PaymentsModule {}

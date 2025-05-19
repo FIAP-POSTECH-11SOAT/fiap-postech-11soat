@@ -1,7 +1,8 @@
 import { Decimal } from '@prisma/client/runtime/library';
 import { UniqueEntityID } from 'src/shared/entities/unique-entity-id';
+import { PaymentStatus as PrismaPaymentStatus } from '@prisma/client';
 
-export type PaymentStatus = 'PENDING' | 'COMPLETED' | 'FAILED';
+export type PaymentStatus = PrismaPaymentStatus;
 
 export type PaymentProps = {
   orderId: UniqueEntityID;
@@ -19,6 +20,11 @@ export type CreatePaymentProps = {
   qrCode: string;
   amount: Decimal;
   createdAt?: Date;
+  updatedAt?: Date;
+};
+
+export type UpdatePaymentProps = {
+  status: PaymentStatus;
   updatedAt?: Date;
 };
 
@@ -61,6 +67,12 @@ export class Payment {
 
   set status(value: PaymentStatus) {
     this.props.status = value;
+    this.props.updatedAt = new Date();
+  }
+
+  update(props: UpdatePaymentProps): void {
+    if (props.status) this.props.status = props.status;
+    this.props.updatedAt = props.updatedAt ?? new Date();
   }
 
   static create(props: CreatePaymentProps): Payment {

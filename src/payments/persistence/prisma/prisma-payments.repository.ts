@@ -3,6 +3,7 @@ import { PaymentsRepository } from '../../domain/ports/payments.repository';
 import { Payment } from '../../domain/payment.entity';
 import { PrismaService } from 'src/infra/database/prisma/prisma.service';
 import { PrismaPaymentMapper } from './mappers/prisma-payment-mapper';
+import { SearchPaymentsFilters } from '../../domain/use-cases/search-payments/search-payments.port';
 
 @Injectable()
 export class PrismaPaymentsRepository implements PaymentsRepository {
@@ -16,27 +17,68 @@ export class PrismaPaymentsRepository implements PaymentsRepository {
 
   async findByOrderId(orderId: string): Promise<Payment | null> {
     const found = await this.prisma.payment.findFirst({ where: { orderId } });
-    if (
-      found &&
-      PrismaPaymentMapper instanceof Object &&
-      'toDomain' in PrismaPaymentMapper &&
-      typeof PrismaPaymentMapper.toDomain === 'function'
-    ) {
-      if (typeof PrismaPaymentMapper.toDomain === 'function') {
-        const domainPayment = PrismaPaymentMapper.toDomain(found);
-        if (domainPayment instanceof Payment) {
-          return domainPayment;
-        }
-      }
-      throw new Error('Invalid payment data or mapper function.');
-    }
-    return null;
+    return found ? PrismaPaymentMapper.toDomain(found) : null;
   }
 
   async updateStatus(paymentId: string, status: string): Promise<void> {
     await this.prisma.payment.update({
       where: { id: paymentId },
-      data: { status },
+      data: { status: status as any },
     });
+  }
+
+  async search(
+    filters: SearchPaymentsFilters,
+  ): Promise<{ data: Payment[]; total: number }> {
+    const {
+      status,
+      orderId,
+      cpf,
+      page = 1,
+      pageSize = 10,
+      sortBy = 'createdAt',
+      sortOrder = 'desc',
+    } = filters;
+
+    const where: any = {};
+    if (status) where.status = status;
+    if (orderId) where.orderId = orderId;
+    if (cpf) {
+      where.order = {
+        customers: {
+          some: {
+            customer: {
+              document: cpf,
+            },
+          },
+        },
+      };
+    }
+
+    const [payments, total] = await this.prisma.$transaction([
+      this.prisma.payment.findMany({
+        where,
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+        orderBy: { [sortBy]: sortOrder },
+        include: {
+          order: {
+            include: {
+              customers: {
+                include: {
+                  customer: true,
+                },
+              },
+            },
+          },
+        },
+      }),
+      this.prisma.payment.count({ where }),
+    ]);
+
+    return {
+      data: payments.map(PrismaPaymentMapper.toDomain),
+      total,
+    };
   }
 }

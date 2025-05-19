@@ -23,6 +23,8 @@ export class PrismaPaymentMapper {
       createdAt: payment.createdAt,
       updatedAt: payment.updatedAt,
       amount: payment.amount,
+      externalId: '',
+      retries: 0,
     };
   }
 }

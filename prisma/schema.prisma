@@ -105,7 +105,7 @@ model Payment {
   orderId    String        @map("order_id")
   externalId String        @map("external_id")
   qrCode     String        @map("qr_code")
-  // amount     Decimal        @map("amount")
+  amount     Decimal        @map("amount")
   status     PaymentStatus
   retries    Int
   createdAt  DateTime      @map("created_at")
