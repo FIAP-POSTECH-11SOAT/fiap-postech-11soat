@@ -4,11 +4,11 @@ import { CreateCustomerUseCase } from './domain/use-cases/create-customer.servic
 import { PrismaService } from 'src/infra/database/prisma/prisma.service';
 import { CustomersRepository } from './domain/ports/customers.repository';
 import { PrismaCustomersRepository } from './persistence/database/prisma/prisma-customers.repository';
-import { GetCustomerController } from './http-server/get-customer.controller';
+import { GetCustomerByDocumentController } from './http-server/get-customer-by-document.controller';
 import { GetCustomerUseCase } from './domain/use-cases/get-customer.service';
 
 @Module({
-  controllers: [CreateCustomerController, GetCustomerController],
+  controllers: [CreateCustomerController, GetCustomerByDocumentController],
   providers: [
     CreateCustomerUseCase,
     GetCustomerUseCase,

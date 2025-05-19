@@ -2,6 +2,8 @@ import {
     Controller,
     HttpCode,
     Get,
+    Logger,
+    UnprocessableEntityException,
     NotFoundException,
     Param,
     UsePipes,
@@ -15,7 +17,7 @@ import {
   
   @Controller('/customers')
   @ApiTags('Customers')
-  export class GetCustomerController {
+  export class GetCustomerByDocumentController {
     constructor(private getCustomer: GetCustomerUseCase) {}
   
     @Get(':document')
@@ -31,12 +33,16 @@ import {
         'This endpoint search a customer by document number',
     })
     async handle(@Param('document') document: string) {
-        const customer = await this.getCustomer.execute({ document });
-        
-        if (!customer) {
-        throw new NotFoundException(`Customer with document ${document} not found`);
-        }
-        
-        return customer;
+      try {
+        return await this.getCustomer.execute(document);
+      } catch (error) {
+        Logger.error(error);
+
+        if (error instanceof NotFoundException) { throw error; }
+
+        let message = 'Error get customer';
+        if (error instanceof Error) message = error.message;
+        throw new UnprocessableEntityException(message);        
+      }
     }    
   }
