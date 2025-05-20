@@ -19,7 +19,7 @@ export class UpdateStatusUseCase implements UpdateStatusPort {
     ) {
       return;
     } else {
-      throw new Error('Invalid state transition');
+      throw new Error('Invalid status transition');
     }
   }
 

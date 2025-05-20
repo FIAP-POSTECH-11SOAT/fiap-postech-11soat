@@ -29,7 +29,7 @@ describe('Update Order Status Use Case', () => {
 
   it('should throw an error if status is invalid', async () => {
     await expect(() => sut.execute(order.id, 'PICKUPED')).rejects.toThrow(
-      new Error('Invalid state transition')
+      new Error('Invalid status transition')
     );
   });
 });
