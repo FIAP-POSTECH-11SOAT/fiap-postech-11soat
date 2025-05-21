@@ -9,4 +9,5 @@ export abstract class OrdersRepository {
   abstract findById(orderId: string): Promise<Order | null>
   abstract findCustomerOrder(orderId: string): Promise<CustomerOrder | null>
   abstract findOrderItems(orderId: string): Promise<OrderItem[]>
+  abstract update(order: Order): Promise<void>
 }

@@ -14,11 +14,15 @@ import { ItemModule } from '../item/item.module';
 import { Module } from '@nestjs/common';
 import { OrdersRepository } from './domain/ports/orders.repository';
 import { PrismaOrdersRepository } from './persistence/database/prisma/prisma-orders.repository';
+import { UpdateStatusPort } from './domain/ports/update-status.port';
+import { UpdateStatusUseCase } from './domain/use-cases/update-status/update-status.service';
+import { UpdateStatusController } from './http-server/update-status.controller';
 
 @Module({
   imports: [ItemModule],
   controllers: [
     GetFullOrderByIdController,
+    UpdateStatusController,
     CreateOrderController,
     CreateOrderItemController,
     DeleteOrderItemController
@@ -27,6 +31,9 @@ import { PrismaOrdersRepository } from './persistence/database/prisma/prisma-ord
     {
       provide: GetFullOrderByIdPort,
       useClass: GetFullOrderByIdUseCase,
+    }
+      provide: UpdateStatusPort,
+      useClass: UpdateStatusUseCase,
     },
     {
       provide: CreateOrderPort,
