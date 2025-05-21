@@ -57,6 +57,20 @@ export class Customer {
     return this.props.deletedAt;
   }
 
+  set name(name: string) {
+    this.props.name = name;
+    this.touch();
+  }
+
+  set email(email: string) {
+    this.props.email = email;
+    this.touch();
+  }  
+
+  touch() {
+    this.props.updatedAt = new Date();
+  }
+
   static create(
     props: Optional<CustomerProps, 'createdAt' | 'updatedAt'>,
     id?: UniqueEntityID,
