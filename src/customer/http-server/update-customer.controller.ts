@@ -6,7 +6,6 @@ import {
     UnprocessableEntityException,
     UsePipes,
   } from '@nestjs/common';
-  import { UpdateCustomerUseCase } from '../domain/use-cases/update-customer.service';
   import {
     UpdateCustomerPort,
     UpdateCustomerProps,
@@ -26,7 +25,7 @@ import {
   @Controller('/customers')
   @ApiTags('Customers')
   export class UpdateCustomerController {
-    constructor(private updateCustomer: UpdateCustomerUseCase) {}
+    constructor(private updateCustomerPort: UpdateCustomerPort) {}
   
     @Put()
     @HttpCode(200)
@@ -41,7 +40,7 @@ import {
     })
     async handle(@Body() { document, ...data }: UpdateCustomerBodySchema) {
       try {
-        await this.updateCustomer.execute(document, data as UpdateCustomerProps);
+        await this.updateCustomerPort.execute(document, data as UpdateCustomerProps);
       } catch (error) {
         throw new UnprocessableEntityException(error.message);
       }

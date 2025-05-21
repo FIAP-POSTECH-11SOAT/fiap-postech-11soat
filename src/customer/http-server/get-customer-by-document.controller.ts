@@ -8,7 +8,7 @@ import {
     Param,
     UsePipes,
   } from '@nestjs/common';
-  import { GetCustomerUseCase } from '../domain/use-cases/get-customer.service';
+  import { GetCustomerByDocumentPort } from '../domain/ports/get-customer-by-document.port'
   import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
   import { ZodValidationPipe } from 'nestjs-zod';
   import { z } from 'zod';
@@ -18,7 +18,7 @@ import {
   @Controller('/customers')
   @ApiTags('Customers')
   export class GetCustomerByDocumentController {
-    constructor(private getCustomer: GetCustomerUseCase) {}
+    constructor(private getCustomerByDocumentPort: GetCustomerByDocumentPort) {}
   
     @Get(':document')
     @HttpCode(200)
@@ -34,7 +34,7 @@ import {
     })
     async handle(@Param('document') document: string) {
       try {
-        return await this.getCustomer.execute(document);
+        return await this.getCustomerByDocumentPort.execute(document);
       } catch (error) {
         Logger.error(error);
 

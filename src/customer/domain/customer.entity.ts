@@ -11,6 +11,15 @@ export type CustomerProps = {
   deletedAt?: Date | null;
 };
 
+export type CreateCustomerProps = {
+  name: string;
+  document: string;
+  email: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  deletedAt?: Date | null;
+};
+
 export class Customer {
   private _id: UniqueEntityID;
   private props: CustomerProps;

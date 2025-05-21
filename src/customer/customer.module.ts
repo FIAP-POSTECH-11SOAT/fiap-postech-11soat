@@ -12,7 +12,7 @@ import { UpdateCustomerPort } from './domain/ports/update-customer.port'
 
 @Module({
   controllers: [
-    // UpdateCustomerController,
+    UpdateCustomerController,
     CreateCustomerController,
     GetCustomerByDocumentController],
   providers: [
@@ -25,10 +25,14 @@ import { UpdateCustomerPort } from './domain/ports/update-customer.port'
       provide: GetCustomerByDocumentPort,
       useClass: GetCustomerUseCase
     },
-    // {
-    //   provide: UpdateCustomerPort,
-    //   useClass: UpdateCustomerUseCase
-    // },    
+    {
+      provide: UpdateCustomerPort,
+      useClass: UpdateCustomerUseCase
+    },
+    {
+      provide: CreateCustomerUseCase,
+      useClass: CreateCustomerUseCase
+    }
   ],
   exports: [CustomersRepository]
 })
