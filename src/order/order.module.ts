@@ -7,6 +7,9 @@ import { CreateOrderUseCase } from './domain/use-cases/create-order/create-order
 import { DeleteOrderItemController } from './http-server/delete-order-item.controller';
 import { DeleteOrderItemPort } from './domain/ports/delete-order-item.port';
 import { DeleteOrderItemUseCase } from './domain/use-cases/delete-order-item/delete-order-item.service';
+import { GetFullOrderByIdController } from './http-server/get-full-order-by-id.controller';
+import { GetFullOrderByIdPort } from './domain/ports/get-full-order-by-id.port';
+import { GetFullOrderByIdUseCase } from './domain/use-cases/get-full-order-by-id/get-full-order-by-id.service';
 import { ItemModule } from '../item/item.module';
 import { Module } from '@nestjs/common';
 import { OrdersRepository } from './domain/ports/orders.repository';
@@ -18,6 +21,7 @@ import { UpdateStatusController } from './http-server/update-status.controller';
 @Module({
   imports: [ItemModule],
   controllers: [
+    GetFullOrderByIdController,
     UpdateStatusController,
     CreateOrderController,
     CreateOrderItemController,
@@ -25,6 +29,9 @@ import { UpdateStatusController } from './http-server/update-status.controller';
   ],
   providers: [
     {
+      provide: GetFullOrderByIdPort,
+      useClass: GetFullOrderByIdUseCase,
+    }
       provide: UpdateStatusPort,
       useClass: UpdateStatusUseCase,
     },
