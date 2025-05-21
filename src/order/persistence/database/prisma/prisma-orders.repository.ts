@@ -63,4 +63,12 @@ export class PrismaOrdersRepository implements OrdersRepository {
     const items = await this.prisma.orderItem.findMany({ where: { orderId }, });
     return items.map(item => PrismaOrderItemMapper.toDomain(item));
   }
+
+  async update(order: Order): Promise<void> {
+    const prismaOrder = PrismaOrderMapper.toPrisma(order);
+    await this.prisma.order.update({
+      where: { id: order.id },
+      data: prismaOrder,
+    });
+  }
 }
