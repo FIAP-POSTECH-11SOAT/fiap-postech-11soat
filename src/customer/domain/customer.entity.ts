@@ -94,4 +94,16 @@ export class Customer {
     );
     return customer;
   }
+
+  toJSON() {
+    return {
+      id: this.id,
+      name: this.name,
+      document: this.document,
+      email: this.email,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
+      deletedAt: this.deletedAt,
+    };
+  }  
 }
