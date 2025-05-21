@@ -1,23 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { CustomersRepository } from '../ports/customers.repository';
-import { Customer } from '../customer.entity';
+import { Customer, CreateCustomerProps } from '../customer.entity';
+import { CreateCustomerPort } from '../ports/create-customer.port'
 
-type CreateCustomerUseCaseInput = {
-  name: string;
-  document: string;
-  email: string;  
-};
 
 @Injectable()
-export class CreateCustomerUseCase {
+export class CreateCustomerUseCase implements CreateCustomerPort {
   constructor(private readonly customersRepository: CustomersRepository) {}
 
-  async execute({ name: name, document: document, email: email }: CreateCustomerUseCaseInput): Promise<void> {
-    const hasCustomer = await this.customersRepository.existsByDocumentOrEmail(document, email);
+  async execute(customerProps: CreateCustomerProps): Promise<void> {
+    const hasCustomer = await this.customersRepository.existsByDocumentOrEmail(customerProps.document, customerProps.email);
 
-    if (hasCustomer) throw new Error(`Client with document ${document} or email ${email} already exists`);
+    if (hasCustomer) throw new Error(`Client with document ${customerProps.document} or email ${customerProps.email} already exists`);
 
-    const category = Customer.create({ name: name, document: document, email: email });
+    const category = Customer.create(customerProps);
     await this.customersRepository.save(category);
   }
 }

@@ -11,6 +11,15 @@ export type CustomerProps = {
   deletedAt?: Date | null;
 };
 
+export type CreateCustomerProps = {
+  name: string;
+  document: string;
+  email: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  deletedAt?: Date | null;
+};
+
 export class Customer {
   private _id: UniqueEntityID;
   private props: CustomerProps;
@@ -57,6 +66,20 @@ export class Customer {
     return this.props.deletedAt;
   }
 
+  set name(name: string) {
+    this.props.name = name;
+    this.touch();
+  }
+
+  set email(email: string) {
+    this.props.email = email;
+    this.touch();
+  }  
+
+  touch() {
+    this.props.updatedAt = new Date();
+  }
+
   static create(
     props: Optional<CustomerProps, 'createdAt' | 'updatedAt'>,
     id?: UniqueEntityID,
@@ -71,4 +94,16 @@ export class Customer {
     );
     return customer;
   }
+
+  toJSON() {
+    return {
+      id: this.id,
+      name: this.name,
+      document: this.document,
+      email: this.email,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
+      deletedAt: this.deletedAt,
+    };
+  }  
 }

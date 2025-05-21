@@ -37,4 +37,13 @@ export class PrismaCustomersRepository implements CustomersRepository {
     if (!customer) return null;
     return PrismaCustomerMapper.toDomain(customer);
   }
+
+  async update(customer: Customer): Promise<void> {
+    const data = PrismaCustomerMapper.toPrisma(customer);
+
+    await this.prisma.customer.update({
+      where: { document: customer.document },
+      data,
+    });   
+  }
 }
