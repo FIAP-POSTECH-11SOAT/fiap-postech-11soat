@@ -57,8 +57,6 @@ describe('Update Item Use Case', () => {
   });
 
   it('should update an item', async () => {
-    jest.spyOn(itemsRepository, 'findById').mockResolvedValue(item);
-
     const updateItemProps: UpdateItemProps = {
       name: 'Updated Name',
       description: 'Updated Description',
@@ -66,8 +64,6 @@ describe('Update Item Use Case', () => {
       image: '/public/updated.png',
     };
     const lastUpdatedAt = item.updatedAt;
-
-    jest.spyOn(itemsRepository, 'findByName').mockResolvedValue(null);
 
     const itemUpdated = await service.execute(item.id, updateItemProps);
 
@@ -93,8 +89,6 @@ describe('Update Item Use Case', () => {
     ).rejects.toThrow(new Error('Item not found'));
   });
   it('should throw an error when trying to update a item with non-existent category', async () => {
-    jest.spyOn(itemsRepository, 'findById').mockResolvedValue(item);
-
     const updateItemProps: UpdateItemProps = {
       name: 'Updated Name',
       description: 'Updated Description',
@@ -110,8 +104,6 @@ describe('Update Item Use Case', () => {
     );
   });
   it('should throw an error when trying to update an item with existing name', async () => {
-    jest.spyOn(itemsRepository, 'findById').mockResolvedValue(item);
-
     const updateItemProps: UpdateItemProps = {
       name: 'Updated Name',
     };
