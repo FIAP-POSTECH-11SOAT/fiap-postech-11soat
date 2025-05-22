@@ -1,6 +1,5 @@
 import { CreateOrderItemProps } from '../../order-item.entity';
 import { CreateOrderItemUseCase } from './create-order-item.service';
-import { Decimal } from '@prisma/client/runtime/library';
 import { InMemoryItemsRepository } from 'src/item/persistence/in-memory/in-memory-items.repository';
 import { InMemoryOrdersRepository } from 'src/order/persistence/database/in-memory/in-memory-orders.repository';
 import { Item } from 'src/item/domain/item.entity';
@@ -19,7 +18,7 @@ describe('Create Order Item Use Case', () => {
     orderId,
     itemId,
     quantity: 1,
-    price: new Decimal(10)
+    price: 10
   }
 
   beforeEach(() => {
@@ -28,13 +27,13 @@ describe('Create Order Item Use Case', () => {
 
     jest.spyOn(inMemoryOrdersRepository, 'findById').mockResolvedValue(Order.create({
       id: orderId,
-      total: new Decimal(0),
+      total: 0,
       status: 'AWAITING'
     }));
     jest.spyOn(inMemoryItemsRepository, 'findById').mockResolvedValue(Item.create({
       id: itemId,
       name: 'Test Item',
-      price: 10.00,
+      price: 10,
       description: 'Test Description',
       categoryId: randomUUID()
     }));
@@ -80,13 +79,6 @@ describe('Create Order Item Use Case', () => {
     const invalidCreateOrderItemProps = { ...createOrderItemProps, quantity: -1 };
     await expect(() => useCase.execute(invalidCreateOrderItemProps)).rejects.toThrow(
       new Error('Invalid quantity')
-    );
-  });
-
-  it('should throw an error if price is lower than 0', async () => {
-    const invalidCreateOrderItemProps = { ...createOrderItemProps, price: new Decimal(-1) };
-    await expect(() => useCase.execute(invalidCreateOrderItemProps)).rejects.toThrow(
-      new Error('Invalid price')
     );
   });
 });

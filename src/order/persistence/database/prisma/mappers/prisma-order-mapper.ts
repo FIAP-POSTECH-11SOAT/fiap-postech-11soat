@@ -7,7 +7,7 @@ export class PrismaOrderMapper {
   static toDomain(raw: PrismaOrder): Order {
     return new Order(
       {
-        total: raw.total,
+        total: raw.total.toNumber(),
         status: raw.status,
         createdAt: raw.createdAt,
         updatedAt: raw.updatedAt

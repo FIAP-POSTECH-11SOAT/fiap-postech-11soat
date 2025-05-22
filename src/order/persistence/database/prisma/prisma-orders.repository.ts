@@ -30,7 +30,7 @@ export class PrismaOrdersRepository implements OrdersRepository {
       await tx.orderItem.create({ data: prismaOrderItem });
       await tx.order.update({
         where: { id: orderItem.orderId },
-        data: { total: { increment: (orderItem.price.toNumber() * orderItem.quantity) } },
+        data: { total: { increment: (orderItem.price * orderItem.quantity) } },
       });
     });
   }

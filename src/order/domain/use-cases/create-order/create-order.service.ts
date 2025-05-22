@@ -1,6 +1,5 @@
 import { CreateOrderPort } from '../../ports/create-order.port';
 import { CustomerOrder } from '../../customer-order.entity';
-import { Decimal } from '@prisma/client/runtime/library';
 import { Injectable } from '@nestjs/common';
 import { Order } from '../../order.entity';
 import { OrdersRepository } from '../../ports/orders.repository';
@@ -12,7 +11,7 @@ export class CreateOrderUseCase implements CreateOrderPort {
   ) { }
 
   async execute(customerId?: string): Promise<string> {
-    const order = Order.create({ total: new Decimal(0), status: 'AWAITING' });
+    const order = Order.create({ total: 0, status: 'AWAITING' });
     if (customerId) {
       const customerOrder = CustomerOrder.create({
         customerId: customerId,

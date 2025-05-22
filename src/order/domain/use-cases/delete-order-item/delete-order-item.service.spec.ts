@@ -2,7 +2,6 @@ import { CreateItemProps, Item } from 'src/item/domain/item.entity';
 import { CreateOrderItemProps, OrderItem } from '../../order-item.entity';
 import { CreateOrderProps, Order } from '../../order.entity';
 
-import { Decimal } from '@prisma/client/runtime/library';
 import { DeleteOrderItemUseCase } from './delete-order-item.service';
 import { InMemoryItemsRepository } from 'src/item/persistence/in-memory/in-memory-items.repository';
 import { InMemoryOrdersRepository } from 'src/order/persistence/database/in-memory/in-memory-orders.repository';
@@ -22,7 +21,7 @@ describe('Delete Order Item Use Case', () => {
 
     jest.spyOn(inMemoryOrdersRepository, 'findById').mockResolvedValue(Order.create({
       id: orderId,
-      total: new Decimal(0),
+      total: 0,
       status: 'AWAITING'
     }));
     jest.spyOn(inMemoryItemsRepository, 'findById').mockResolvedValue(Item.create({
@@ -37,7 +36,7 @@ describe('Delete Order Item Use Case', () => {
 
   it('should be able to delete an order item', async () => {
     const orderProps: CreateOrderProps = {
-      total: new Decimal(0),
+      total: 0,
       status: 'AWAITING',
     }
     const order = Order.create(orderProps);
@@ -55,7 +54,7 @@ describe('Delete Order Item Use Case', () => {
     const orderItemProps: CreateOrderItemProps = {
       orderId: order.id,
       itemId: item.id,
-      price: new Decimal(20),
+      price: 20,
       quantity: 1
     }
     const orderItem = OrderItem.create(orderItemProps);
@@ -66,12 +65,12 @@ describe('Delete Order Item Use Case', () => {
     expect(inMemoryOrdersRepository.orderItems[0].itemId).toEqual(orderItemProps.itemId);
     expect(inMemoryOrdersRepository.orderItems[0].quantity).toEqual(orderItemProps.quantity);
     expect(inMemoryOrdersRepository.orderItems[0].price).toEqual(orderItemProps.price);
-    expect(inMemoryOrdersRepository.orders[0].total).toEqual(orderItemProps.price.mul(orderItemProps.quantity));
+    expect(inMemoryOrdersRepository.orders[0].total).toEqual(orderItemProps.price * orderItemProps.quantity);
 
     await useCase.execute(order.id, item.id);
 
     expect(inMemoryOrdersRepository.orderItems).toHaveLength(0);
-    expect(inMemoryOrdersRepository.orders[0].total).toEqual(new Decimal(0));
+    expect(inMemoryOrdersRepository.orders[0].total).toEqual(0);
   });
 
   it('should throw an error if the order does not exist', async () => {

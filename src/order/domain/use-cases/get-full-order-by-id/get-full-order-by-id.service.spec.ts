@@ -1,6 +1,5 @@
 import { CreateOrderProps, Order } from '../../order.entity';
 
-import { Decimal } from '@prisma/client/runtime/library';
 import { GetFullOrderByIdUseCase } from './get-full-order-by-id.service';
 import { InMemoryOrdersRepository } from 'src/order/persistence/database/in-memory/in-memory-orders.repository';
 
@@ -15,7 +14,7 @@ describe('Get Orders Use Case', () => {
 
   it('should be able to fetch an order', async () => {
     const orderProps: CreateOrderProps = {
-      total: new Decimal(0),
+      total: 0,
       status: 'AWAITING',
     }
     const order = Order.create(orderProps);

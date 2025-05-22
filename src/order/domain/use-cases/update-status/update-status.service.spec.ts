@@ -1,14 +1,14 @@
+import { CreateOrderProps, Order } from '../../order.entity';
+
 import { InMemoryOrdersRepository } from 'src/order/persistence/database/in-memory/in-memory-orders.repository';
 import { UpdateStatusUseCase } from './update-status.service';
-import { CreateOrderProps, Order } from '../../order.entity';
-import { Decimal } from '@prisma/client/runtime/library';
 
 let inMemoryOrdersRepository: InMemoryOrdersRepository;
 let sut: UpdateStatusUseCase;
 
 describe('Update Order Status Use Case', () => {
   const orderProps: CreateOrderProps = {
-    total: new Decimal(0),
+    total: 0,
     status: 'AWAITING',
   }
   const order = Order.create(orderProps);

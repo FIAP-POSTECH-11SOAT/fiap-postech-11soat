@@ -1,5 +1,4 @@
 import { CreateOrderUseCase } from './create-order.service';
-import { Decimal } from '@prisma/client/runtime/library';
 import { InMemoryOrdersRepository } from 'src/order/persistence/database/in-memory/in-memory-orders.repository';
 import { randomUUID } from 'crypto';
 
@@ -22,7 +21,7 @@ describe('Create Order Use Case', () => {
     expect(inMemoryOrdersRepository.orders).toHaveLength(1);
     expect(inMemoryOrdersRepository.orders[0].id).toEqual(orderId);
     expect(inMemoryOrdersRepository.orders[0].status).toEqual('AWAITING');
-    expect(inMemoryOrdersRepository.orders[0].total).toEqual(new Decimal(0));
+    expect(inMemoryOrdersRepository.orders[0].total).toEqual(0);
   });
 
   it('should be able to create an order without customer id', async () => {
@@ -32,6 +31,6 @@ describe('Create Order Use Case', () => {
     expect(inMemoryOrdersRepository.orders).toHaveLength(1);
     expect(inMemoryOrdersRepository.orders[0].id).toEqual(orderId);
     expect(inMemoryOrdersRepository.orders[0].status).toEqual('AWAITING');
-    expect(inMemoryOrdersRepository.orders[0].total).toEqual(new Decimal(0));
+    expect(inMemoryOrdersRepository.orders[0].total).toEqual(0);
   });
 });
