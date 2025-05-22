@@ -15,6 +15,8 @@ export class UpdateItemUseCase {
     const item = await this.itemsRepository.findById(id);
     if (!item) throw new Error('Item not found');
 
+    if (item.deletedAt) throw new Error('Item deleted');
+
     if (updateItemProps.categoryId) {
       const category = await this.categoriesRepository.findById(
         updateItemProps.categoryId,

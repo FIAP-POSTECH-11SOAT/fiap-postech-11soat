@@ -142,4 +142,23 @@ describe('Update Item Use Case', () => {
       new Error('Invalid category'),
     );
   });
+  it('should throw an error when trying to update a deleted item', async () => {
+    jest.spyOn(itemsRepository, 'findById').mockResolvedValue(
+      Item.create({
+        ...item.toJSON(),
+        deletedAt: new Date(),
+      }),
+    );
+
+    const updateItemProps: UpdateItemProps = {
+      name: 'Updated Name',
+      description: 'Updated Description',
+      price: 20,
+      image: null,
+    };
+
+    await expect(service.execute(item.id, updateItemProps)).rejects.toThrow(
+      new Error('Item deleted'),
+    );
+  });
 });
