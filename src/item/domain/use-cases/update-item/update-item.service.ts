@@ -23,7 +23,15 @@ export class UpdateItemUseCase {
       item.categoryId = updateItemProps.categoryId;
     }
 
-    if (updateItemProps.name) item.name = updateItemProps.name;
+    if (updateItemProps.name) {
+      const hasItemWithName = await this.itemsRepository.findByName(
+        updateItemProps.name,
+      );
+
+      if (hasItemWithName && hasItemWithName.id !== id)
+        throw new Error('Item with this name already exists');
+      item.name = updateItemProps.name;
+    }
 
     if (updateItemProps.description)
       item.description = updateItemProps.description;

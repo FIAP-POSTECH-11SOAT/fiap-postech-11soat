@@ -31,6 +31,7 @@ describe('Update Item Use Case', () => {
           useValue: {
             findById: jest.fn().mockResolvedValue(item),
             update: jest.fn(),
+            findByName: jest.fn(),
           },
         },
         {
@@ -64,6 +65,8 @@ describe('Update Item Use Case', () => {
       image: '/public/updated.png',
     };
     const lastUpdatedAt = item.updatedAt;
+
+    jest.spyOn(itemsRepository, 'findByName').mockResolvedValue(null);
 
     const itemUpdated = await service.execute(item.id, updateItemProps);
 
@@ -103,6 +106,30 @@ describe('Update Item Use Case', () => {
 
     await expect(service.execute(item.id, updateItemProps)).rejects.toThrow(
       new Error('Category not found'),
+    );
+  });
+  it('should throw an error when trying to update an item with existing name', async () => {
+    jest.spyOn(itemsRepository, 'findById').mockResolvedValue(item);
+
+    const updateItemProps: UpdateItemProps = {
+      name: 'Updated Name',
+    };
+
+    jest.spyOn(itemsRepository, 'findByName').mockResolvedValue(
+      Item.create({
+        id: randomUUID(),
+        name: 'Updated Name',
+        description: 'Test Description',
+        price: 10,
+        categoryId: randomUUID(),
+        image: 'Test Image',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }),
+    );
+
+    await expect(service.execute(item.id, updateItemProps)).rejects.toThrow(
+      new Error('Item with this name already exists'),
     );
   });
 });
