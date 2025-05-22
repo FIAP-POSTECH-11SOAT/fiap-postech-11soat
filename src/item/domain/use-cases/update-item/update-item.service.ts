@@ -20,6 +20,7 @@ export class UpdateItemUseCase {
         updateItemProps.categoryId,
       );
       if (!category) throw new Error('Category not found');
+      if (category.deletedAt) throw new Error('Invalid category');
       item.categoryId = updateItemProps.categoryId;
     }
 

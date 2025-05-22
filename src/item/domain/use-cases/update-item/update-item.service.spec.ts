@@ -5,6 +5,7 @@ import { Test } from '@nestjs/testing';
 import { UpdateItemUseCase } from './update-item.service';
 import { UpdateItemProps } from '../../ports/update-item.port';
 import { CategoriesRepository } from '../../../../category/domain/ports/categories.repository';
+import { Category } from '../../../../category/domain/category.entity';
 
 describe('Update Item Use Case', () => {
   let service: UpdateItemUseCase;
@@ -130,6 +131,23 @@ describe('Update Item Use Case', () => {
 
     await expect(service.execute(item.id, updateItemProps)).rejects.toThrow(
       new Error('Item with this name already exists'),
+    );
+  });
+  it('should throw an error when trying to update an item with deleted category', async () => {
+    const updateItemProps: UpdateItemProps = {
+      categoryId: randomUUID(),
+    };
+
+    jest.spyOn(categoriesRepository, 'findById').mockResolvedValue(
+      Category.create({
+        id: updateItemProps.categoryId,
+        name: 'Test Category',
+        deletedAt: new Date(),
+      }),
+    );
+
+    await expect(service.execute(item.id, updateItemProps)).rejects.toThrow(
+      new Error('Invalid category'),
     );
   });
 });
