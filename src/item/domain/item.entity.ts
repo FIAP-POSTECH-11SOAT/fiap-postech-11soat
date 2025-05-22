@@ -122,6 +122,12 @@ export class Item {
     this.props.deletedAt = new Date();
   }
 
+  activate() {
+    if (!this.deletedAt) throw new Error('Item not deleted');
+    this.props.deletedAt = null;
+    this.touch();
+  }
+
   toJSON() {
     return {
       id: this.id,

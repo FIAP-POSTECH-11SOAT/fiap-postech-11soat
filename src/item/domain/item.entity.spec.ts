@@ -75,4 +75,12 @@ describe('ItemEntity', () => {
     expect(item.image).toBe('/public/updated.png');
     expect(item.categoryId).toBe(newCategoryId);
   });
+  it('should activate an item', () => {
+    const item = Item.create({
+      ...itemProps,
+      deletedAt: new Date(),
+    });
+    item.activate();
+    expect(item.deletedAt).toBe(null);
+  });
 });
