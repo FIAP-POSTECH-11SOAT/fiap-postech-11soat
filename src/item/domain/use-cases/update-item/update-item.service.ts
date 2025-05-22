@@ -15,15 +15,26 @@ export class UpdateItemUseCase {
     const item = await this.itemsRepository.findById(id);
     if (!item) throw new Error('Item not found');
 
+    if (item.deletedAt) throw new Error('Item deleted');
+
     if (updateItemProps.categoryId) {
       const category = await this.categoriesRepository.findById(
         updateItemProps.categoryId,
       );
       if (!category) throw new Error('Category not found');
+      if (category.deletedAt) throw new Error('Invalid category');
       item.categoryId = updateItemProps.categoryId;
     }
 
-    if (updateItemProps.name) item.name = updateItemProps.name;
+    if (updateItemProps.name) {
+      const hasItemWithName = await this.itemsRepository.findByName(
+        updateItemProps.name,
+      );
+
+      if (hasItemWithName && hasItemWithName.id !== id)
+        throw new Error('Item with this name already exists');
+      item.name = updateItemProps.name;
+    }
 
     if (updateItemProps.description)
       item.description = updateItemProps.description;
