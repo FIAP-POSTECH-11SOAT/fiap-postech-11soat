@@ -36,7 +36,7 @@ export class Category {
   set name(name: string) {
     if (!name) throw new Error('Name is required');
     this.props.name = ValidString.create(name);
-    this.touch
+    this.touch;
   }
 
   get createdAt(): Date {
@@ -71,5 +71,12 @@ export class Category {
   softDelete(date: Date = new Date()) {
     if (this.deletedAt) throw new Error('Category already deleted');
     this.props.deletedAt = date;
+    this.touch;
+  }
+
+  reactivate(): void {
+    if (!this.deletedAt) throw new Error('Category is already active');
+    this.props.deletedAt = null;
+    this.touch;
   }
 }

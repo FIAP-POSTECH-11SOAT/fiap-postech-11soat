@@ -8,9 +8,16 @@ export class CreateCategoryUseCase implements CreateCategoryPort {
   constructor(private readonly categoriesRepository: CategoriesRepository) { }
 
   async execute({ name }: { name: string }): Promise<void> {
-    const hasCategory = await this.categoriesRepository.findByName(name);
+    const existingCategory = await this.categoriesRepository.findByName(name);
 
-    if (hasCategory) throw new Error('Category already exists');
+    if (existingCategory) {
+      if (existingCategory.deletedAt) {
+        existingCategory.reactivate();
+        await this.categoriesRepository.update(existingCategory);
+        return;
+      }
+      throw new Error('Category already exists');
+    }
 
     const category = Category.create({ name });
     await this.categoriesRepository.save(category);

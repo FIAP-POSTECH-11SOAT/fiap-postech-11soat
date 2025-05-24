@@ -43,4 +43,22 @@ describe('Category Entity', () => {
 
     expect(() => category.softDelete()).toThrow(new Error('Category already deleted'));
   });
+
+  it('should reactivate a category', () => {
+    const category = Category.create({
+      name: 'Test Category',
+    });
+    category.softDelete();
+    category.reactivate();
+
+    expect(category.deletedAt).toBeDefined();
+  });
+
+  it('should throw an error when reactivate is called on an active category', () => {
+    const category = Category.create({
+      name: 'Test Category',
+    });
+
+    expect(() => category.reactivate()).toThrow(new Error('Category is already active'));
+  });
 });
