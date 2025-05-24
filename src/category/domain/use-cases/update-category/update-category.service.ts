@@ -10,9 +10,12 @@ export class UpdateCategoryUseCase implements UpdateCategoryPort {
     const category = await this.categoriesRepository.findById(id);
 
     if (!category) throw new Error('Category not found');
+    if (category.deletedAt) throw new Error('Cannot update a deleted category');
+
+    const existingCategory = await this.categoriesRepository.findByName(name);
+    if (existingCategory) throw new Error('Category already exists');
 
     category.name = name;
-
     await this.categoriesRepository.update(category);
   }
 }
