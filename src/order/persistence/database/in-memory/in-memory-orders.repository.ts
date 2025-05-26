@@ -1,4 +1,5 @@
 import { CustomerOrder } from 'src/order/domain/customer-order.entity';
+import { GetOrdersByFilterParams } from 'src/order/domain/ports/get-orders-by-filter';
 import { Order } from 'src/order/domain/order.entity'
 import { OrderItem } from 'src/order/domain/order-item.entity';
 import { OrdersRepository } from 'src/order/domain/ports/orders.repository';
@@ -54,5 +55,17 @@ export class InMemoryOrdersRepository implements OrdersRepository {
   async update(order: Order): Promise<void> {
     const index = this.orders.findIndex((o) => o.id === order.id);
     if (index >= 0) this.orders[index] = order;
+  }
+
+  async findOrdersByFilter(filter: GetOrdersByFilterParams): Promise<Order[]> {
+    const { orderId, status, customerId, itemId } = filter;
+
+    return this.orders.filter(order => {
+      const matchesOrderId = orderId ? order.id === orderId : true;
+      const matchesStatus = status ? order.status === status : true;
+      const matchesCustomerId = customerId ? this.customerOrders.some(customerOrder => customerOrder.orderId === order.id && customerOrder.customerId === customerId) : true;
+      const matchesItemId = itemId ? this.orderItems.some(item => item.orderId === order.id && item.itemId === itemId) : true;
+      return matchesOrderId && matchesStatus && matchesCustomerId && matchesItemId;
+    });
   }
 }
