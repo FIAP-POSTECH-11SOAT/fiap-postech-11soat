@@ -1,4 +1,3 @@
-import { Decimal } from '@prisma/client/runtime/library';
 import { DeleteOrderItemPort } from '../../ports/delete-order-item.port';
 import { Injectable } from '@nestjs/common';
 import { ItemsRepository } from 'src/item/domain/ports/items.repository';
@@ -20,7 +19,7 @@ export class DeleteOrderItemUseCase implements DeleteOrderItemPort {
     if (!order) throw new Error('Invalid order');
     if (order.status !== 'AWAITING') throw new Error('This order cannot be updated')
 
-    const orderItem = OrderItem.create({ orderId, itemId, quantity: 0, price: new Decimal(0) });
+    const orderItem = OrderItem.create({ orderId, itemId, quantity: 0, price: 0 });
     await this.ordersRepository.deleteOrderItem(orderItem);
   }
 }

@@ -8,7 +8,7 @@ export class PrismaOrderItemMapper {
       {
         orderId: raw.orderId,
         itemId: raw.itemId,
-        price: raw.price,
+        price: raw.price.toNumber(),
         quantity: raw.quantity,
       },
     );

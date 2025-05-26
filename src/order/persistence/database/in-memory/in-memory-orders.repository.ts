@@ -20,7 +20,7 @@ export class InMemoryOrdersRepository implements OrdersRepository {
     this.orderItems.push(orderItem);
     const orderIndex = this.orders.findIndex(order => order.id === orderItem.orderId);
     if (orderIndex !== -1) {
-      this.orders[orderIndex].total = this.orders[orderIndex].total.add(orderItem.price.toNumber() * orderItem.quantity);
+      this.orders[orderIndex].total += (orderItem.price * orderItem.quantity);
     }
   }
 
@@ -31,7 +31,7 @@ export class InMemoryOrdersRepository implements OrdersRepository {
 
     const orderIndex = this.orders.findIndex(order => order.id === removedOrderItem.orderId);
     if (orderIndex !== -1) {
-      this.orders[orderIndex].total = this.orders[orderIndex].total.sub((removedOrderItem.price.toNumber() * removedOrderItem.quantity));
+      this.orders[orderIndex].total -= (removedOrderItem.price * removedOrderItem.quantity);
     }
   }
 

@@ -12,9 +12,8 @@ export class CreateOrderItemUseCase implements CreateOrderItemPort {
     private readonly itemsRepository: ItemsRepository,
   ) { }
 
-  async execute({ orderId, itemId, quantity, price }: CreateOrderItemProps): Promise<void> {
+  async execute({ orderId, itemId, quantity }: CreateOrderItemProps): Promise<void> {
     if (quantity <= 0) throw new Error('Invalid quantity');
-    if (price.lt(0)) throw new Error('Invalid price');
 
     const item = await this.itemsRepository.findById(itemId);
     if (!item || item.deletedAt) throw new Error('Invalid item');
@@ -26,7 +25,7 @@ export class CreateOrderItemUseCase implements CreateOrderItemPort {
     const items = await this.ordersRepository.findOrderItems(orderId);
     if (items.some(existingItem => existingItem.itemId === itemId)) throw new Error('The order already has this item');
 
-    const orderItem = OrderItem.create({ orderId, itemId, quantity, price });
+    const orderItem = OrderItem.create({ orderId, itemId, quantity, price: item.price });
     await this.ordersRepository.createOrderItem(orderItem);
   }
 }

@@ -34,4 +34,11 @@ export class CustomerOrder {
     });
     return customerOrder;
   }
+
+  toJSON() {
+    return {
+      orderId: this.orderId,
+      customerId: this.customerId,
+    };
+  }
 }
