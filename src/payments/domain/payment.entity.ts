@@ -1,7 +1,12 @@
 import { Decimal } from '@prisma/client/runtime/library';
 import { UniqueEntityID } from 'src/shared/entities/unique-entity-id';
 
-export type PaymentStatus = 'PENDING' | 'APPROVED' | 'FAILED' | 'REFUNDED';
+export enum PaymentStatus {
+  PENDING = 'PENDING',
+  APPROVED = 'APPROVED',
+  FAILED = 'FAILED',
+  REFUNDED = 'REFUNDED',
+}
 
 export type PaymentProps = {
   orderId: UniqueEntityID;
@@ -85,7 +90,7 @@ export class Payment {
     return new Payment(
       {
         orderId: new UniqueEntityID(props.orderId),
-        status: props.status ?? 'PENDING',
+        status: props.status ?? PaymentStatus.PENDING,
         qrCode: props.qrCode,
         amount: props.amount,
         externalId: props.externalId,

@@ -7,6 +7,7 @@ import { CategoryModule } from './category/category.module';
 import { ItemModule } from './item/item.module';
 import { PrismaModule } from './infra/database/prisma/prisma.module';
 import { OrderModule } from './order/order.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -16,6 +17,9 @@ import { OrderModule } from './order/order.module';
     ItemModule,
     OrderModule,
     PaymentsModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],

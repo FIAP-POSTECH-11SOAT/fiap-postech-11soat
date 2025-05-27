@@ -1,57 +1,55 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { PaymentsRepository } from '../../ports/payments.repository';
-import { OrdersRepository } from 'src/order/domain/ports/orders.repository';
 import { MercadoPagoService } from 'src/infra/mercadopago/mercado-pago.service';
 import { Payment } from '../../payment.entity';
+import { ORDER_QUERY_PORT, OrderQueryPort } from '../../ports/order-query.port';
+import { Decimal } from '@prisma/client/runtime/library';
+import { PaymentStatusMapper } from '../../mappers/payment-status.mapper';
 
 @Injectable()
 export class CreatePaymentUseCase {
   constructor(
+    @Inject(ORDER_QUERY_PORT)
+    private readonly orderQueryPort: OrderQueryPort,
     private readonly paymentsRepository: PaymentsRepository,
-    private readonly ordersRepository: OrdersRepository,
     private readonly mercadoPagoService: MercadoPagoService,
   ) {}
 
-  async execute(
-    orderId: string,
-  ): Promise<{ paymentId: string; qrCode: string }> {
-    const order = await this.ordersRepository.findById(orderId);
-    if (!order) throw new Error('Order not found');
+  async execute(orderId: string): Promise<string> {
+    const order = await this.orderQueryPort.getOrderStatus(orderId);
 
-    const pixPaymentResponse = await this.mercadoPagoService.createPixPayment(
-      orderId,
-      order.total.toNumber(),
-    );
-
-    if (
-      !pixPaymentResponse ||
-      !pixPaymentResponse.qrCode ||
-      !pixPaymentResponse.externalId
-    ) {
-      throw new Error('Failed to create Pix payment');
+    if (!order) {
+      throw new Error('Order not found');
     }
 
-    const qrCode =
-      typeof pixPaymentResponse?.qrCode === 'string'
-        ? pixPaymentResponse.qrCode
-        : '';
-    const externalId = pixPaymentResponse?.externalId;
+    if (order.status !== 'AWAITING') {
+      throw new Error(
+        `Cannot create payment for order with status ${order.status}`,
+      );
+    }
 
-    if (!qrCode || !externalId) {
-      throw new Error('Failed to create Pix payment');
+    const { qrCode, externalId, status } =
+      await this.mercadoPagoService.createPixPayment(
+        orderId,
+        Number(order.total),
+      );
+
+    if (!qrCode) {
+      throw new Error('QR Code not received from MercadoPago');
+    }
+
+    if (!externalId) {
+      throw new Error('External ID not received from MercadoPago');
     }
 
     const payment = Payment.create({
-      orderId: order.id,
+      orderId,
+      amount: new Decimal(order.total),
       qrCode,
-      amount: order.total,
+      externalId,
+      status: status ? PaymentStatusMapper.toDomain(status) : undefined,
     });
 
-    const paymentId = await this.paymentsRepository.save(payment);
-
-    return {
-      paymentId,
-      qrCode,
-    };
+    return await this.paymentsRepository.save(payment);
   }
 }

@@ -18,15 +18,18 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { zodToOpenAPI, ZodValidationPipe } from 'nestjs-zod';
 import { z } from 'zod';
+import { ZodValidationPipe, zodToOpenAPI } from 'nestjs-zod';
+
 import { CreatePaymentUseCase } from '../domain/use-cases/create-payment/create-payment.service';
 import { UpdatePaymentUseCase } from '../domain/use-cases/update-payment/update-payment.service';
 import { GetPaymentByOrderIdUseCase } from '../domain/use-cases/get-payment-by-order-id/get-payment-by-order-id.service';
 import { SearchPaymentsUseCase } from '../domain/use-cases/search-payments/search-payments.service';
+import { HandlePaymentWebhookUseCase } from '../domain/use-cases/handle-payment-webhook/handle-payment-webhook.service';
+
 import { Decimal } from '@prisma/client/runtime/library';
-import { PaymentStatus, PaymentStatus as PrismaPaymentStatus } from '@prisma/client';
-import { PaymentsRepository } from '../domain/ports/payments.repository';
+import { PaymentStatus as PrismaPaymentStatus } from '@prisma/client';
+import { PaymentStatusMapper } from '../domain/mappers/payment-status.mapper';
 
 const createPaymentBodySchema = z.object({
   orderId: z.string().uuid({ message: 'Order ID must be a valid UUID' }),
@@ -49,7 +52,7 @@ export class PaymentsController {
     private readonly updatePaymentUseCase: UpdatePaymentUseCase,
     private readonly getPaymentByOrderIdUseCase: GetPaymentByOrderIdUseCase,
     private readonly searchPaymentsUseCase: SearchPaymentsUseCase,
-    private readonly paymentsRepository: PaymentsRepository,
+    private readonly handlePaymentWebhookUseCase: HandlePaymentWebhookUseCase,
   ) {}
 
   @Post()
@@ -59,7 +62,7 @@ export class PaymentsController {
   @ApiResponse({ status: 201, description: 'Created' })
   @ApiOperation({
     summary: 'Creates a new payment',
-    description: 'Creates a new payment with orderId, amount, and qrCode.',
+    description: 'Creates a new payment for the given orderId.',
   })
   async create(@Body() body: z.infer<typeof createPaymentBodySchema>) {
     try {
@@ -73,6 +76,18 @@ export class PaymentsController {
 
   @Post('/webhook')
   @HttpCode(200)
+  @ApiOperation({
+    summary: 'Receives payment updates from MercadoPago',
+    description: `
+This endpoint is called by MercadoPago when there are changes in the status of a payment.
+
+- The 'data.id' field is used to search for the payment.
+- The 'type' field defines the type of event (e.g. payment.approved).
+- Updates the payment status in the system according to the event.
+
+⚠️ Important: This endpoint is used exclusively for integration with MercadoPago webhooks.`,
+  })
+  @ApiResponse({ status: 200, description: 'Webhook processado com sucesso' })
   async handleWebhook(@Body() body: { data: { id: string }; type: string }) {
     console.log('Webhook recebido:', JSON.stringify(body));
 
@@ -84,39 +99,12 @@ export class PaymentsController {
         throw new Error('Payload inválido');
       }
 
-      const payment = await this.paymentsRepository.findByExternalId(
-        String(externalId),
+      const result = await this.handlePaymentWebhookUseCase.execute(
+        externalId,
+        eventType,
       );
 
-      if (!payment) {
-        console.warn(`Pagamento com externalId ${externalId} não encontrado.`);
-        return { message: 'Pagamento não encontrado' };
-      }
-
-      const statusMap: Record<string, string> = {
-        'payment.created': 'PENDING',
-        'payment.updated': 'PENDING',
-        'payment.pre_authorized': 'PENDING',
-        'payment.in_process': 'PENDING',
-        'payment.authorized': 'APPROVED',
-        'payment.approved': 'APPROVED',
-        'payment.cancelled': 'FAILED',
-        'payment.refunded': 'REFUNDED',
-        'payment.rejected': 'FAILED',
-      };
-
-      const newStatus = statusMap[eventType];
-
-      if (!newStatus) {
-        console.warn(`Evento ${eventType} não mapeado.`);
-        return { message: 'Evento não processado' };
-      }
-
-      await this.updatePaymentUseCase.execute(payment.id, {
-        status: newStatus as PaymentStatus,
-      });
-
-      return { message: 'Status atualizado com sucesso' };
+      return result;
     } catch (error) {
       console.error('Erro no webhook:', error);
       throw new UnprocessableEntityException(error.message);
@@ -138,7 +126,9 @@ export class PaymentsController {
     @Body() body: z.infer<typeof updatePaymentBodySchema>,
   ) {
     try {
-      await this.updatePaymentUseCase.execute(id, body);
+      await this.updatePaymentUseCase.execute(id, {
+        status: PaymentStatusMapper.toDomain(body.status),
+      });
     } catch (error) {
       console.error(error);
       throw new UnprocessableEntityException(error.message);
