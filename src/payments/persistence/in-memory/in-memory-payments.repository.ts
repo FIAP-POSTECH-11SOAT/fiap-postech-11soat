@@ -21,6 +21,10 @@ export class InMemoryPaymentsRepository implements PaymentsRepository {
     }
   }
 
+  async findByExternalId(externalId: string): Promise<Payment | null> {
+    return this.payments.find((p) => p.externalId === externalId) || null;
+  }
+
   async search(
     filters: SearchPaymentsFilters,
   ): Promise<{ data: Payment[]; total: number }> {

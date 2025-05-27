@@ -27,6 +27,13 @@ export class PrismaPaymentsRepository implements PaymentsRepository {
     });
   }
 
+  async findByExternalId(externalId: string): Promise<Payment | null> {
+    const result = await this.prisma.payment.findFirst({
+      where: { externalId },
+    });
+    return result ? PrismaPaymentMapper.toDomain(result) : null;
+  }
+
   async search(
     filters: SearchPaymentsFilters,
   ): Promise<{ data: Payment[]; total: number }> {
@@ -77,7 +84,7 @@ export class PrismaPaymentsRepository implements PaymentsRepository {
     ]);
 
     return {
-      data: payments.map(PrismaPaymentMapper.toDomain),
+      data: payments.map((payment) => PrismaPaymentMapper.toDomain(payment)),
       total,
     };
   }

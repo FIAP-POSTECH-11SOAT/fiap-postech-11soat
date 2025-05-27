@@ -7,8 +7,12 @@ import { PaymentsRepository } from './domain/ports/payments.repository';
 import { PrismaPaymentsRepository } from './persistence/prisma/prisma-payments.repository';
 import { PaymentsController } from './http-server/payments.controller';
 import { PrismaService } from 'src/infra/database/prisma/prisma.service';
+import { MercadoPagoService } from 'src/infra/mercadopago/mercado-pago.service';
+import { PrismaModule } from 'src/infra/database/prisma/prisma.module';
+import { OrderModule } from 'src/order/order.module';
 
 @Module({
+  imports: [PrismaModule, OrderModule],
   controllers: [PaymentsController],
   providers: [
     PrismaService,
@@ -16,6 +20,7 @@ import { PrismaService } from 'src/infra/database/prisma/prisma.service';
     UpdatePaymentUseCase,
     GetPaymentByOrderIdUseCase,
     SearchPaymentsUseCase,
+    MercadoPagoService,
     {
       provide: PaymentsRepository,
       useClass: PrismaPaymentsRepository,

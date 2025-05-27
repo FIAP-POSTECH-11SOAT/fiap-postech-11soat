@@ -1,8 +1,7 @@
 import { Decimal } from '@prisma/client/runtime/library';
 import { UniqueEntityID } from 'src/shared/entities/unique-entity-id';
-import { PaymentStatus as PrismaPaymentStatus } from '@prisma/client';
 
-export type PaymentStatus = PrismaPaymentStatus;
+export type PaymentStatus = 'PENDING' | 'APPROVED' | 'FAILED' | 'REFUNDED';
 
 export type PaymentProps = {
   orderId: UniqueEntityID;
@@ -11,6 +10,7 @@ export type PaymentProps = {
   createdAt: Date;
   updatedAt: Date;
   amount: Decimal;
+  externalId?: string;
 };
 
 export type CreatePaymentProps = {
@@ -21,6 +21,7 @@ export type CreatePaymentProps = {
   amount: Decimal;
   createdAt?: Date;
   updatedAt?: Date;
+  externalId?: string;
 };
 
 export type UpdatePaymentProps = {
@@ -65,6 +66,10 @@ export class Payment {
     return this.props.amount;
   }
 
+  get externalId(): string | undefined {
+    return this.props.externalId;
+  }
+
   set status(value: PaymentStatus) {
     this.props.status = value;
     this.props.updatedAt = new Date();
@@ -83,6 +88,7 @@ export class Payment {
         status: props.status ?? 'PENDING',
         qrCode: props.qrCode,
         amount: props.amount,
+        externalId: props.externalId,
         createdAt: props.createdAt ?? new Date(),
         updatedAt: props.updatedAt ?? new Date(),
       },

@@ -6,11 +6,12 @@ export class PrismaPaymentMapper {
     return Payment.create({
       id: raw.id,
       orderId: raw.orderId,
-      status: raw.status as any,
+      status: raw.status,
       qrCode: raw.qrCode,
       createdAt: raw.createdAt,
       updatedAt: raw.updatedAt,
-      amount: new Prisma.Decimal(raw.amount),
+      amount: raw.amount,
+      externalId: raw.externalId,
     });
   }
 
@@ -18,12 +19,12 @@ export class PrismaPaymentMapper {
     return {
       id: payment.id,
       orderId: payment.orderId,
-      status: payment.status as any,
+      status: payment.status,
       qrCode: payment.qrCode,
       createdAt: payment.createdAt,
       updatedAt: payment.updatedAt,
       amount: payment.amount,
-      externalId: '',
+      externalId: payment.externalId ?? '',
       retries: 0,
     };
   }

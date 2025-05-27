@@ -25,7 +25,8 @@ import { UpdatePaymentUseCase } from '../domain/use-cases/update-payment/update-
 import { GetPaymentByOrderIdUseCase } from '../domain/use-cases/get-payment-by-order-id/get-payment-by-order-id.service';
 import { SearchPaymentsUseCase } from '../domain/use-cases/search-payments/search-payments.service';
 import { Decimal } from '@prisma/client/runtime/library';
-import { Prisma, PaymentStatus as PrismaPaymentStatus } from '@prisma/client';
+import { PaymentStatus, PaymentStatus as PrismaPaymentStatus } from '@prisma/client';
+import { PaymentsRepository } from '../domain/ports/payments.repository';
 
 const createPaymentBodySchema = z.object({
   orderId: z.string().uuid({ message: 'Order ID must be a valid UUID' }),
@@ -48,6 +49,7 @@ export class PaymentsController {
     private readonly updatePaymentUseCase: UpdatePaymentUseCase,
     private readonly getPaymentByOrderIdUseCase: GetPaymentByOrderIdUseCase,
     private readonly searchPaymentsUseCase: SearchPaymentsUseCase,
+    private readonly paymentsRepository: PaymentsRepository,
   ) {}
 
   @Post()
@@ -61,10 +63,62 @@ export class PaymentsController {
   })
   async create(@Body() body: z.infer<typeof createPaymentBodySchema>) {
     try {
-      const paymentId = await this.createPaymentUseCase.execute(body);
+      const paymentId = await this.createPaymentUseCase.execute(body.orderId);
       return { paymentId };
     } catch (error) {
       console.error(error);
+      throw new UnprocessableEntityException(error.message);
+    }
+  }
+
+  @Post('/webhook')
+  @HttpCode(200)
+  async handleWebhook(@Body() body: { data: { id: string }; type: string }) {
+    console.log('Webhook recebido:', JSON.stringify(body));
+
+    try {
+      const { id: externalId } = body.data;
+      const eventType = body.type;
+
+      if (!externalId || !eventType) {
+        throw new Error('Payload inválido');
+      }
+
+      const payment = await this.paymentsRepository.findByExternalId(
+        String(externalId),
+      );
+
+      if (!payment) {
+        console.warn(`Pagamento com externalId ${externalId} não encontrado.`);
+        return { message: 'Pagamento não encontrado' };
+      }
+
+      const statusMap: Record<string, string> = {
+        'payment.created': 'PENDING',
+        'payment.updated': 'PENDING',
+        'payment.pre_authorized': 'PENDING',
+        'payment.in_process': 'PENDING',
+        'payment.authorized': 'APPROVED',
+        'payment.approved': 'APPROVED',
+        'payment.cancelled': 'FAILED',
+        'payment.refunded': 'REFUNDED',
+        'payment.rejected': 'FAILED',
+      };
+
+      const newStatus = statusMap[eventType];
+
+      if (!newStatus) {
+        console.warn(`Evento ${eventType} não mapeado.`);
+        return { message: 'Evento não processado' };
+      }
+
+      await this.updatePaymentUseCase.execute(payment.id, {
+        status: newStatus as PaymentStatus,
+      });
+
+      return { message: 'Status atualizado com sucesso' };
+    } catch (error) {
+      console.error('Erro no webhook:', error);
       throw new UnprocessableEntityException(error.message);
     }
   }
