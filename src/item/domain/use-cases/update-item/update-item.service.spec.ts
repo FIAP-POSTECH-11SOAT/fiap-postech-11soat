@@ -5,6 +5,7 @@ import { Test } from '@nestjs/testing';
 import { UpdateItemUseCase } from './update-item.service';
 import { UpdateItemProps } from '../../ports/update-item.port';
 import { CategoriesRepository } from '../../../../category/domain/ports/categories.repository';
+import { Category } from '../../../../category/domain/category.entity';
 
 describe('Update Item Use Case', () => {
   let service: UpdateItemUseCase;
@@ -31,6 +32,7 @@ describe('Update Item Use Case', () => {
           useValue: {
             findById: jest.fn().mockResolvedValue(item),
             update: jest.fn(),
+            findByName: jest.fn(),
           },
         },
         {
@@ -55,8 +57,6 @@ describe('Update Item Use Case', () => {
   });
 
   it('should update an item', async () => {
-    jest.spyOn(itemsRepository, 'findById').mockResolvedValue(item);
-
     const updateItemProps: UpdateItemProps = {
       name: 'Updated Name',
       description: 'Updated Description',
@@ -89,8 +89,6 @@ describe('Update Item Use Case', () => {
     ).rejects.toThrow(new Error('Item not found'));
   });
   it('should throw an error when trying to update a item with non-existent category', async () => {
-    jest.spyOn(itemsRepository, 'findById').mockResolvedValue(item);
-
     const updateItemProps: UpdateItemProps = {
       name: 'Updated Name',
       description: 'Updated Description',
@@ -103,6 +101,64 @@ describe('Update Item Use Case', () => {
 
     await expect(service.execute(item.id, updateItemProps)).rejects.toThrow(
       new Error('Category not found'),
+    );
+  });
+  it('should throw an error when trying to update an item with existing name', async () => {
+    const updateItemProps: UpdateItemProps = {
+      name: 'Updated Name',
+    };
+
+    jest.spyOn(itemsRepository, 'findByName').mockResolvedValue(
+      Item.create({
+        id: randomUUID(),
+        name: 'Updated Name',
+        description: 'Test Description',
+        price: 10,
+        categoryId: randomUUID(),
+        image: 'Test Image',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }),
+    );
+
+    await expect(service.execute(item.id, updateItemProps)).rejects.toThrow(
+      new Error('Item with this name already exists'),
+    );
+  });
+  it('should throw an error when trying to update an item with deleted category', async () => {
+    const updateItemProps: UpdateItemProps = {
+      categoryId: randomUUID(),
+    };
+
+    jest.spyOn(categoriesRepository, 'findById').mockResolvedValue(
+      Category.create({
+        id: updateItemProps.categoryId,
+        name: 'Test Category',
+        deletedAt: new Date(),
+      }),
+    );
+
+    await expect(service.execute(item.id, updateItemProps)).rejects.toThrow(
+      new Error('Invalid category'),
+    );
+  });
+  it('should throw an error when trying to update a deleted item', async () => {
+    jest.spyOn(itemsRepository, 'findById').mockResolvedValue(
+      Item.create({
+        ...item.toJSON(),
+        deletedAt: new Date(),
+      }),
+    );
+
+    const updateItemProps: UpdateItemProps = {
+      name: 'Updated Name',
+      description: 'Updated Description',
+      price: 20,
+      image: null,
+    };
+
+    await expect(service.execute(item.id, updateItemProps)).rejects.toThrow(
+      new Error('Item deleted'),
     );
   });
 });

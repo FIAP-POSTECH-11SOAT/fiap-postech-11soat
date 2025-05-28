@@ -1,4 +1,5 @@
 import { CustomerOrder } from 'src/order/domain/customer-order.entity';
+import { GetOrdersByFilterParams } from 'src/order/domain/ports/get-orders-by-filter';
 import { Injectable } from '@nestjs/common';
 import { Order } from 'src/order/domain/order.entity';
 import { OrderItem } from 'src/order/domain/order-item.entity';
@@ -30,7 +31,7 @@ export class PrismaOrdersRepository implements OrdersRepository {
       await tx.orderItem.create({ data: prismaOrderItem });
       await tx.order.update({
         where: { id: orderItem.orderId },
-        data: { total: { increment: (orderItem.price.toNumber() * orderItem.quantity) } },
+        data: { total: { increment: (orderItem.price * orderItem.quantity) } },
       });
     });
   }
@@ -62,5 +63,43 @@ export class PrismaOrdersRepository implements OrdersRepository {
   async findOrderItems(orderId: string): Promise<OrderItem[]> {
     const items = await this.prisma.orderItem.findMany({ where: { orderId }, });
     return items.map(item => PrismaOrderItemMapper.toDomain(item));
+  }
+
+  async update(order: Order): Promise<void> {
+    const prismaOrder = PrismaOrderMapper.toPrisma(order);
+    await this.prisma.order.update({
+      where: { id: order.id },
+      data: prismaOrder,
+    });
+  }
+
+  async findOrdersByFilter(params: GetOrdersByFilterParams): Promise<Order[]> {
+    const { orderId, status, customerId, itemId, page, pageSize, sortBy, sortOrder } = params;
+    const where: any = {
+      ...(orderId && { id: orderId }),
+      ...(status && { status }),
+      ...(customerId && {
+        customers: {
+          some: { customerId },
+        },
+      }),
+      ...(itemId && {
+        items: {
+          some: { itemId },
+        },
+      }),
+    };
+
+    const query: any = {
+      where,
+      orderBy: {
+        [sortBy || 'createdAt']: sortOrder || 'asc',
+      },
+      take: pageSize || 10,
+      skip: page ? (page - 1) * (pageSize || 10) : 0,
+    };
+
+    const orders = await this.prisma.order.findMany(query);
+    return orders.map(order => PrismaOrderMapper.toDomain(order));
   }
 }

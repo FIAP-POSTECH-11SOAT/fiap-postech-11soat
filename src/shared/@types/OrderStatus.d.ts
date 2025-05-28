@@ -1,1 +1,3 @@
-export type OrderStatus = "AWAITING" | "TO_PREPARE" | "IN_PREPARE" | "FINISHED" | "PICKUPED" | "CANCELLED";
+import { orderStatusValues } from "../constants/order-status";
+
+export type OrderStatus = typeof orderStatusValues[number];

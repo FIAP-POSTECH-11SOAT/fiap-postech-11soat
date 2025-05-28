@@ -1,9 +1,8 @@
-import { Decimal } from "@prisma/client/runtime/library";
 import { OrderStatus } from "src/shared/@types/OrderStatus";
 import { UniqueEntityID } from "src/shared/entities/unique-entity-id";
 
 type OrderProps = {
-  total: Decimal;
+  total: number;
   status: OrderStatus;
   createdAt: Date;
   updatedAt: Date;
@@ -11,7 +10,7 @@ type OrderProps = {
 
 export type CreateOrderProps = {
   id?: string;
-  total: Decimal;
+  total: number;
   status: OrderStatus;
   createdAt?: Date;
   updatedAt?: Date;
@@ -30,12 +29,8 @@ export class Order {
     return this._id.toString();
   }
 
-  get total(): Decimal {
+  get total(): number {
     return this.props.total;
-  }
-
-  set total(value: Decimal) {
-    this.props.total = value;
   }
 
   get status(): OrderStatus {
@@ -50,6 +45,20 @@ export class Order {
     return this.props.updatedAt;
   }
 
+  set total(value: number) {
+    this.props.total = value;
+    this.touch();
+  }
+
+  set status(value: OrderStatus) {
+    this.props.status = value;
+    this.touch();
+  }
+
+  touch() {
+    this.props.updatedAt = new Date();
+  }
+
   static create(props: CreateOrderProps): Order {
     const id = props.id ? new UniqueEntityID(props.id) : new UniqueEntityID();
     const order = new Order(
@@ -61,5 +70,15 @@ export class Order {
       id,
     );
     return order;
+  }
+
+  toJSON() {
+    return {
+      id: this.id,
+      total: this.total,
+      status: this.status,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
+    };
   }
 }

@@ -2,11 +2,13 @@ import {
     Controller,
     HttpCode,
     Get,
+    Logger,
+    UnprocessableEntityException,
     NotFoundException,
     Param,
     UsePipes,
   } from '@nestjs/common';
-  import { GetCustomerUseCase } from '../domain/use-cases/get-customer.service';
+  import { GetCustomerByDocumentPort } from '../domain/ports/get-customer-by-document.port'
   import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
   import { ZodValidationPipe } from 'nestjs-zod';
   import { z } from 'zod';
@@ -15,8 +17,8 @@ import {
   
   @Controller('/customers')
   @ApiTags('Customers')
-  export class GetCustomerController {
-    constructor(private getCustomer: GetCustomerUseCase) {}
+  export class GetCustomerByDocumentController {
+    constructor(private getCustomerByDocumentPort: GetCustomerByDocumentPort) {}
   
     @Get(':document')
     @HttpCode(200)
@@ -31,12 +33,16 @@ import {
         'This endpoint search a customer by document number',
     })
     async handle(@Param('document') document: string) {
-        const customer = await this.getCustomer.execute({ document });
-        
-        if (!customer) {
-        throw new NotFoundException(`Customer with document ${document} not found`);
-        }
-        
-        return customer;
+      try {
+        return await this.getCustomerByDocumentPort.execute(document);
+      } catch (error) {
+        Logger.error(error);
+
+        if (error instanceof NotFoundException) { throw error; }
+
+        let message = 'Error get customer';
+        if (error instanceof Error) message = error.message;
+        throw new UnprocessableEntityException(message);        
+      }
     }    
   }

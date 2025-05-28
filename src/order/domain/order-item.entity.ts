@@ -1,17 +1,16 @@
-import { Decimal } from "@prisma/client/runtime/library";
 import { UniqueEntityID } from "src/shared/entities/unique-entity-id";
 
 type OrderItemProps = {
   orderId: UniqueEntityID;
   itemId: UniqueEntityID;
-  price: Decimal;
+  price: number;
   quantity: number;
 };
 
 export type CreateOrderItemProps = {
   orderId: string;
   itemId: string;
-  price: Decimal;
+  price: number;
   quantity: number;
 };
 
@@ -30,7 +29,7 @@ export class OrderItem {
     return this.props.itemId.toString();
   }
 
-  get price(): Decimal {
+  get price(): number {
     return this.props.price;
   }
 
@@ -48,5 +47,14 @@ export class OrderItem {
       quantity: props.quantity,
     });
     return orderItem;
+  }
+
+  toJSON() {
+    return {
+      orderId: this.orderId,
+      itemId: this.itemId,
+      price: this.price,
+      quantity: this.quantity
+    };
   }
 }

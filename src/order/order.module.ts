@@ -7,19 +7,43 @@ import { CreateOrderUseCase } from './domain/use-cases/create-order/create-order
 import { DeleteOrderItemController } from './http-server/delete-order-item.controller';
 import { DeleteOrderItemPort } from './domain/ports/delete-order-item.port';
 import { DeleteOrderItemUseCase } from './domain/use-cases/delete-order-item/delete-order-item.service';
+import { GetFullOrderByIdController } from './http-server/get-full-order-by-id.controller';
+import { GetFullOrderByIdPort } from './domain/ports/get-full-order-by-id.port';
+import { GetFullOrderByIdUseCase } from './domain/use-cases/get-full-order-by-id/get-full-order-by-id.service';
+import { GetOrdersByFilterController } from './http-server/get-orders-by-filter.controller';
+import { GetOrdersByFilterPort } from './domain/ports/get-orders-by-filter';
+import { GetOrdersByFilterUseCase } from './domain/use-cases/get-orders-by-filter/get-full-order-by-id.service';
 import { ItemModule } from '../item/item.module';
 import { Module } from '@nestjs/common';
 import { OrdersRepository } from './domain/ports/orders.repository';
 import { PrismaOrdersRepository } from './persistence/database/prisma/prisma-orders.repository';
+import { UpdateStatusController } from './http-server/update-status.controller';
+import { UpdateStatusPort } from './domain/ports/update-status.port';
+import { UpdateStatusUseCase } from './domain/use-cases/update-status/update-status.service';
 
 @Module({
   imports: [ItemModule],
   controllers: [
+    GetOrdersByFilterController,
+    GetFullOrderByIdController,
+    UpdateStatusController,
     CreateOrderController,
     CreateOrderItemController,
     DeleteOrderItemController
   ],
   providers: [
+    {
+      provide: GetOrdersByFilterPort,
+      useClass: GetOrdersByFilterUseCase,
+    },
+    {
+      provide: GetFullOrderByIdPort,
+      useClass: GetFullOrderByIdUseCase,
+    },
+    {
+      provide: UpdateStatusPort,
+      useClass: UpdateStatusUseCase,
+    },
     {
       provide: CreateOrderPort,
       useClass: CreateOrderUseCase,

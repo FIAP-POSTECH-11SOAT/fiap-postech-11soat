@@ -1,11 +1,9 @@
 import { CreateOrderProps, Order } from './order.entity';
 
-import { Decimal } from '@prisma/client/runtime/library';
-
 describe('Order Entity', () => {
 
   const orderProps: CreateOrderProps = {
-    total: new Decimal(3.14),
+    total: 3.14,
     status: 'AWAITING',
     createdAt: new Date(),
     updatedAt: new Date()

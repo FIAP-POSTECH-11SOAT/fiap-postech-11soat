@@ -19,4 +19,16 @@ export class InMemoryCustomersRepository implements CustomersRepository {
     if (!customer) return null;
     return customer;
   }
+
+  async update(customer: Customer): Promise<void> {
+    const document = customer.document;
+    const customer_founded = this.customers.find((customer) => customer.document === document);
+
+    if(!customer_founded) return 
+
+    customer_founded.email = customer.email
+    customer_founded.name = customer.name
+
+    return
+  }  
 }
