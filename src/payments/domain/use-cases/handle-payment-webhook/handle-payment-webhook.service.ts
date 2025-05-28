@@ -8,7 +8,7 @@ export class HandlePaymentWebhookUseCase {
   constructor(
     private readonly paymentsRepository: PaymentsRepository,
     private readonly updatePaymentUseCase: UpdatePaymentUseCase,
-  ) {}
+  ) { }
 
   async execute(externalId: string, eventType: string) {
     const payment = await this.paymentsRepository.findByExternalId(externalId);

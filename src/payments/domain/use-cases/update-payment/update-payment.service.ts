@@ -5,13 +5,13 @@ import { UpdatePaymentPort } from './update-payment.port';
 
 @Injectable()
 export class UpdatePaymentUseCase implements UpdatePaymentPort {
-  constructor(private readonly paymentsRepository: PaymentsRepository) {}
+  constructor(private readonly paymentsRepository: PaymentsRepository) { }
 
   async execute(
     id: string,
     { status }: { status: PaymentStatus },
   ): Promise<void> {
-    if (!['PENDING', 'COMPLETED', 'FAILED'].includes(status)) {
+    if (!['PENDING', 'COMPLETED', 'APPROVED', 'FAILED'].includes(status)) {
       throw new Error('Invalid payment status');
     }
 

@@ -53,7 +53,7 @@ export class PaymentsController {
     private readonly getPaymentByOrderIdUseCase: GetPaymentByOrderIdUseCase,
     private readonly searchPaymentsUseCase: SearchPaymentsUseCase,
     private readonly handlePaymentWebhookUseCase: HandlePaymentWebhookUseCase,
-  ) {}
+  ) { }
 
   @Post()
   @HttpCode(201)
@@ -89,8 +89,6 @@ This endpoint is called by MercadoPago when there are changes in the status of a
   })
   @ApiResponse({ status: 200, description: 'Webhook processado com sucesso' })
   async handleWebhook(@Body() body: { data: { id: string }; type: string }) {
-    console.log('Webhook recebido:', JSON.stringify(body));
-
     try {
       const { id: externalId } = body.data;
       const eventType = body.type;
