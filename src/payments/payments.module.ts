@@ -12,9 +12,11 @@ import { PaymentsController } from './http-server/payments.controller';
 import { PrismaModule } from 'src/infra/database/prisma/prisma.module';
 import { MercadoPagoService } from 'src/infra/mercadopago/mercado-pago.service';
 import { OrderModule } from 'src/order/order.module';
+import { HttpModule } from '@nestjs/axios';
+import { OrderStatusClient } from 'src/infra/http-server/order-status.client';
 
 @Module({
-  imports: [PrismaModule, OrderModule],
+  imports: [PrismaModule, OrderModule, HttpModule],
   controllers: [PaymentsController],
   providers: [
     CreatePaymentUseCase,
@@ -23,6 +25,7 @@ import { OrderModule } from 'src/order/order.module';
     SearchPaymentsUseCase,
     HandlePaymentWebhookUseCase,
     MercadoPagoService,
+    OrderStatusClient,
     {
       provide: PaymentsRepository,
       useClass: PrismaPaymentsRepository,
