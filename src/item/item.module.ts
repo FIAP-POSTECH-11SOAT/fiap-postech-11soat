@@ -23,6 +23,9 @@ import { DeleteItemController } from './http-server/delete-item/delete-item.cont
 import { UpdateItemController } from './http-server/update-item/update-item.controller';
 import { UpdateItemPort } from './domain/ports/update-item.port';
 import { UpdateItemUseCase } from './domain/use-cases/update-item/update-item.service';
+import { ActivateItemController } from './http-server/activate-item/activate-item.controller';
+import { ActivateItemPort } from './domain/ports/activate-item.port';
+import { ActivateItemUseCase } from './domain/use-cases/activate-item/activate-item.service';
 
 @Module({
   imports: [CategoryModule],
@@ -34,6 +37,7 @@ import { UpdateItemUseCase } from './domain/use-cases/update-item/update-item.se
     GetDeletedItemsController,
     DeleteItemController,
     UpdateItemController,
+    ActivateItemController,
   ],
   providers: [
     {
@@ -67,6 +71,10 @@ import { UpdateItemUseCase } from './domain/use-cases/update-item/update-item.se
     {
       provide: UpdateItemPort,
       useClass: UpdateItemUseCase,
+    },
+    {
+      provide: ActivateItemPort,
+      useClass: ActivateItemUseCase,
     },
   ],
   exports: [ItemsRepository], // Exporta o ItemsRepository, se necessário
