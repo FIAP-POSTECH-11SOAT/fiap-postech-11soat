@@ -1,9 +1,11 @@
 import { CreateOrderProps, Order } from '../../order.entity';
 
 import { InMemoryOrdersRepository } from 'src/order/persistence/database/in-memory/in-memory-orders.repository';
+import { InMemoryPaymentsRepository } from 'src/payments/persistence/in-memory/in-memory-payments.repository';
 import { UpdateStatusUseCase } from './update-status.service';
 
 let inMemoryOrdersRepository: InMemoryOrdersRepository;
+let inMemoryPaymentsRepository: InMemoryPaymentsRepository;
 let sut: UpdateStatusUseCase;
 
 describe('Update Order Status Use Case', () => {
@@ -15,7 +17,8 @@ describe('Update Order Status Use Case', () => {
 
   beforeEach(async () => {
     inMemoryOrdersRepository = new InMemoryOrdersRepository();
-    sut = new UpdateStatusUseCase(inMemoryOrdersRepository);
+    inMemoryPaymentsRepository = new InMemoryPaymentsRepository();
+    sut = new UpdateStatusUseCase(inMemoryOrdersRepository, inMemoryPaymentsRepository);
     await inMemoryOrdersRepository.save(order);
     jest
       .spyOn(inMemoryOrdersRepository, 'findById')
