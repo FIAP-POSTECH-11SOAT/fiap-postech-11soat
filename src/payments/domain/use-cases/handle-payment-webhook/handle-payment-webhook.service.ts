@@ -3,14 +3,15 @@ import { PaymentsRepository } from '../../ports/payments.repository';
 import { UpdatePaymentUseCase } from '../update-payment/update-payment.service';
 import { PaymentStatusMapper } from '../../mappers/payment-status.mapper';
 import { OrderStatusClient } from 'src/infra/http-server/order-status.client';
+import { OrdersRepository } from 'src/order/domain/ports/orders.repository';
 
 @Injectable()
 export class HandlePaymentWebhookUseCase {
   constructor(
     private readonly paymentsRepository: PaymentsRepository,
+    private readonly ordersRepository: OrdersRepository,
     private readonly updatePaymentUseCase: UpdatePaymentUseCase,
-    private readonly orderStatusClient: OrderStatusClient,
-  ) {}
+  ) { }
 
   async execute(externalId: string, eventType: string) {
     const payment = await this.paymentsRepository.findByExternalId(externalId);
@@ -34,21 +35,25 @@ export class HandlePaymentWebhookUseCase {
     const newStatus = statusMap[eventType];
 
     if (!newStatus) {
-      console.warn(`Evento ${eventType} não mapeado.`);
-      return { message: 'Evento não processado' };
+      return { message: 'Event not processed' };
     }
 
     await this.updatePaymentUseCase.execute(payment.id, {
       status: PaymentStatusMapper.toDomain(newStatus),
     });
 
+    const order = await this.ordersRepository.findById(payment.orderId);
+    if (!order) throw new Error('Order not found');
+
     if (newStatus === 'APPROVED') {
-      await this.orderStatusClient.updateOrderStatus(
-        payment.orderId,
-        'APPROVED',
-      );
+      order.status = 'TO_PREPARE';
+    }
+    if (newStatus === 'FAILED' || newStatus === 'REFUNDED') {
+      order.status = 'CANCELLED';
     }
 
-    return { message: 'Status atualizado com sucesso' };
+    await this.ordersRepository.update(order);
+
+    return { message: 'Status updated' };
   }
 }

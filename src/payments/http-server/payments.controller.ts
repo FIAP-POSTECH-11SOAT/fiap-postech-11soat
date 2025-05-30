@@ -44,6 +44,13 @@ const updatePaymentBodySchema = z.object({
   status: z.nativeEnum(PrismaPaymentStatus),
 });
 
+const webhookPaymentBodySchema = z.object({
+  data: z.object({
+    id: z.string(),
+  }),
+  type: z.string()
+});
+
 @Controller('/payments')
 @ApiTags('Payments')
 export class PaymentsController {
@@ -76,6 +83,7 @@ export class PaymentsController {
 
   @Post('/webhook')
   @HttpCode(200)
+  @ApiBody({ schema: zodToOpenAPI(webhookPaymentBodySchema) })
   @ApiOperation({
     summary: 'Receives payment updates from MercadoPago',
     description: `
@@ -88,7 +96,7 @@ This endpoint is called by MercadoPago when there are changes in the status of a
 ⚠️ Important: This endpoint is used exclusively for integration with MercadoPago webhooks.`,
   })
   @ApiResponse({ status: 200, description: 'Webhook processado com sucesso' })
-  async handleWebhook(@Body() body: { data: { id: string }; type: string }) {
+  async handleWebhook(@Body() body: z.infer<typeof webhookPaymentBodySchema>) {
     try {
       const { id: externalId } = body.data;
       const eventType = body.type;
