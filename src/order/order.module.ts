@@ -1,3 +1,5 @@
+import { Module, forwardRef } from '@nestjs/common';
+
 import { CreateOrderController } from './http-server/create-order.controller';
 import { CreateOrderItemController } from './http-server/create-order-item.controller';
 import { CreateOrderItemPort } from './domain/ports/create-order-item.port';
@@ -14,15 +16,15 @@ import { GetOrdersByFilterController } from './http-server/get-orders-by-filter.
 import { GetOrdersByFilterPort } from './domain/ports/get-orders-by-filter';
 import { GetOrdersByFilterUseCase } from './domain/use-cases/get-orders-by-filter/get-full-order-by-id.service';
 import { ItemModule } from '../item/item.module';
-import { Module } from '@nestjs/common';
 import { OrdersRepository } from './domain/ports/orders.repository';
+import { PaymentsModule } from 'src/payments/payments.module';
 import { PrismaOrdersRepository } from './persistence/database/prisma/prisma-orders.repository';
 import { UpdateStatusController } from './http-server/update-status.controller';
 import { UpdateStatusPort } from './domain/ports/update-status.port';
 import { UpdateStatusUseCase } from './domain/use-cases/update-status/update-status.service';
 
 @Module({
-  imports: [ItemModule],
+  imports: [ItemModule, forwardRef(() => PaymentsModule)],
   controllers: [
     GetOrdersByFilterController,
     GetFullOrderByIdController,
