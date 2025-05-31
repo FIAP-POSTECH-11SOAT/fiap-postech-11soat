@@ -21,6 +21,7 @@ type GetPaymentByOrderIdParamsSchema = z.infer<typeof getPaymentByOrderIdParamsS
 const getPaymentByOrderIdResponseSchema = z.object({
   id: z.string().uuid(),
   orderId: z.string().uuid(),
+  externalId: z.string().uuid(),
   status: z.nativeEnum(PaymentStatus),
   amount: z.number().positive(),
   qrCode: z.string(),
@@ -50,6 +51,7 @@ export class GetPaymentByOrderIdController {
       return {
         id: payment.id,
         orderId: payment.orderId,
+        externalId: payment.externalId,
         status: payment.status,
         amount: payment.amount,
         qrCode: payment.qrCode,
