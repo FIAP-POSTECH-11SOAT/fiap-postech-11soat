@@ -35,7 +35,6 @@ const webhookPaymentBodySchema = z.object({
 @ApiTags('Payments')
 export class PaymentsController {
   constructor(
-    private readonly searchPaymentsUseCase: SearchPaymentsUseCase,
     private readonly handlePaymentWebhookUseCase: HandlePaymentWebhookUseCase,
   ) { }
 
@@ -71,29 +70,6 @@ This endpoint is called by MercadoPago when there are changes in the status of a
       return result;
     } catch (error) {
       console.error('Erro no webhook:', error);
-      throw new UnprocessableEntityException(error.message);
-    }
-  }
-
-  @Get()
-  @HttpCode(200)
-  @ApiQuery({ name: 'status', required: false })
-  @ApiQuery({ name: 'orderId', required: false })
-  @ApiQuery({ name: 'cpf', required: false })
-  @ApiQuery({ name: 'page', required: false, type: Number })
-  @ApiQuery({ name: 'pageSize', required: false, type: Number })
-  @ApiQuery({ name: 'sortBy', required: false })
-  @ApiQuery({ name: 'sortOrder', required: false })
-  @ApiOperation({
-    summary: 'Search payments',
-    description: 'Search payments with filters, pagination, and sorting.',
-  })
-  async search(@Query() query: any) {
-    try {
-      const result = await this.searchPaymentsUseCase.execute(query);
-      return result;
-    } catch (error) {
-      console.error(error);
       throw new UnprocessableEntityException(error.message);
     }
   }

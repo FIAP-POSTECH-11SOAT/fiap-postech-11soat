@@ -1,4 +1,4 @@
-import { Payment } from '../../payment.entity';
+import { Payment } from "../payment.entity";
 
 export interface SearchPaymentsFilters {
   status?: string;
@@ -11,7 +11,5 @@ export interface SearchPaymentsFilters {
 }
 
 export abstract class SearchPaymentsPort {
-  abstract execute(
-    filters: SearchPaymentsFilters,
-  ): Promise<{ data: Payment[]; total: number }>;
+  abstract execute(filters: SearchPaymentsFilters): Promise<{ data: Payment[]; total: number }>;
 }

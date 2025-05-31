@@ -16,6 +16,8 @@ import { UpdatePaymentController } from './http-server/update-payment/update-pay
 import { GetPaymentByOrderIdPort } from './domain/ports/get-payment-by-order-id.port';
 import { CreatePaymentController } from './http-server/create-payment/create-payment.controller';
 import { CreatePaymentPort } from './domain/ports/create-payment.port';
+import { SearchPaymentsController } from './http-server/search-payments/search-payments.controller';
+import { SearchPaymentsPort } from './domain/ports/search-payments.port';
 
 @Module({
   imports: [OrderModule],
@@ -23,10 +25,10 @@ import { CreatePaymentPort } from './domain/ports/create-payment.port';
     PaymentsController,
     CreatePaymentController,
     UpdatePaymentController,
-    GetPaymentByOrderIdController
+    GetPaymentByOrderIdController,
+    SearchPaymentsController
   ],
   providers: [
-    CreatePaymentUseCase,
     {
       provide: CreatePaymentPort,
       useClass: CreatePaymentUseCase,
@@ -39,7 +41,10 @@ import { CreatePaymentPort } from './domain/ports/create-payment.port';
       provide: GetPaymentByOrderIdPort,
       useClass: GetPaymentByOrderIdUseCase,
     },
-    SearchPaymentsUseCase,
+    {
+      provide: SearchPaymentsPort,
+      useClass: SearchPaymentsUseCase,
+    },
     HandlePaymentWebhookUseCase,
     MercadoPagoService,
     {
