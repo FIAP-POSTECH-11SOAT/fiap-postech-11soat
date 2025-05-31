@@ -7,7 +7,8 @@ import {
   UsePipes,
 } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { zodToOpenAPI, ZodValidationPipe } from 'nestjs-zod';
+import { zodToOpenAPI } from 'nestjs-zod';
+import { ZodValidationPipe } from 'src/infra/http-server/pipes/zod-validation-pipe';
 import { CreatePaymentPort } from 'src/payments/domain/ports/create-payment.port';
 import { z } from 'zod';
 
@@ -34,7 +35,7 @@ export class CreatePaymentController {
     summary: 'Creates a new payment',
     description: 'Creates a new payment for the given orderId.',
   })
-  async create(@Body() body: CreatePaymentBodySchema) {
+  async handle(@Body() body: CreatePaymentBodySchema) {
     try {
       const paymentId = await this.createPaymentPort.execute(body.orderId);
       return { paymentId };

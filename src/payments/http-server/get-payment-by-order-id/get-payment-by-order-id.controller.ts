@@ -7,7 +7,8 @@ import {
   UsePipes,
 } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { zodToOpenAPI, ZodValidationPipe } from 'nestjs-zod';
+import { zodToOpenAPI } from 'nestjs-zod';
+import { ZodValidationPipe } from 'src/infra/http-server/pipes/zod-validation-pipe';
 import { PaymentStatus } from 'src/payments/domain/payment.entity';
 import { GetPaymentByOrderIdPort } from 'src/payments/domain/ports/get-payment-by-order-id.port';
 import { z } from 'zod';
@@ -27,12 +28,12 @@ const getPaymentByOrderIdResponseSchema = z.object({
   updatedAt: z.string().datetime(),
 });
 
-@Controller('/payments')
+@Controller('/payments/order/:orderId')
 @ApiTags('Payments')
 export class GetPaymentByOrderIdController {
   constructor(private getPaymentByOrderIdPort: GetPaymentByOrderIdPort) { }
 
-  @Get('/order/:orderId')
+  @Get()
   @HttpCode(200)
   @UsePipes(new ZodValidationPipe(getPaymentByOrderIdParamsSchema))
   @ApiParam({ name: 'orderId', schema: zodToOpenAPI(z.string().uuid()) })

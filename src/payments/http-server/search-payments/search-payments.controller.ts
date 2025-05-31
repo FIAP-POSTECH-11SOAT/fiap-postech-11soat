@@ -59,13 +59,14 @@ export class SearchPaymentsController {
     summary: 'Search payments',
     description: 'Search payments with filters, pagination, and sorting.',
   })
-  async search(@Query() query: SearchPaymentsQuerySchema) {
+  async handle(@Query() query: SearchPaymentsQuerySchema) {
     try {
       const result = await this.searchPaymentsPort.execute(query);
 
       const data = result.data.map((payment) => ({
         id: payment.id,
         orderId: payment.orderId,
+        externalId: payment.externalId,
         status: payment.status,
         amount: payment.amount,
         qrCode: payment.qrCode,

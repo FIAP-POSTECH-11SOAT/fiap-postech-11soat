@@ -42,7 +42,7 @@ This endpoint is called by MercadoPago when there are changes in the status of a
 
 ⚠️ Important: This endpoint is used exclusively for integration with MercadoPago webhooks.`,
   })
-  async handleWebhook(@Body() body: PaymentWebhookBodySchema) {
+  async handle(@Body() body: PaymentWebhookBodySchema) {
     try {
       await this.paymentWebhookPort.execute({ externalId: body.data.id, status: body.type });
     } catch (error) {
