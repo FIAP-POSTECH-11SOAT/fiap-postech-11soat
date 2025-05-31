@@ -27,17 +27,17 @@ import { GetPaymentByOrderIdUseCase } from '../domain/use-cases/get-payment-by-o
 import { SearchPaymentsUseCase } from '../domain/use-cases/search-payments/search-payments.service';
 import { HandlePaymentWebhookUseCase } from '../domain/use-cases/handle-payment-webhook/handle-payment-webhook.service';
 
-import { Decimal } from '@prisma/client/runtime/library';
+// import { Decimal } from '@prisma/client/runtime/library';
 import { PaymentStatus as PrismaPaymentStatus } from '@prisma/client';
 import { PaymentStatusMapper } from '../domain/mappers/payment-status.mapper';
 
 const createPaymentBodySchema = z.object({
   orderId: z.string().uuid({ message: 'Order ID must be a valid UUID' }),
-  amount: z
-    .number()
-    .positive({ message: 'Amount must be greater than zero' })
-    .transform((value) => new Decimal(value)),
-  qrCode: z.string().min(1, { message: 'QR Code must not be empty' }),
+  // amount: z
+  //   .number()
+  //   .positive({ message: 'Amount must be greater than zero' })
+  //   .transform((value) => new Decimal(value)),
+  // qrCode: z.string().min(1, { message: 'QR Code must not be empty' }),
 });
 
 const updatePaymentBodySchema = z.object({
@@ -48,7 +48,7 @@ const webhookPaymentBodySchema = z.object({
   data: z.object({
     id: z.string(),
   }),
-  type: z.string()
+  type: z.string(),
 });
 
 @Controller('/payments')
@@ -60,7 +60,7 @@ export class PaymentsController {
     private readonly getPaymentByOrderIdUseCase: GetPaymentByOrderIdUseCase,
     private readonly searchPaymentsUseCase: SearchPaymentsUseCase,
     private readonly handlePaymentWebhookUseCase: HandlePaymentWebhookUseCase,
-  ) { }
+  ) {}
 
   @Post()
   @HttpCode(201)
