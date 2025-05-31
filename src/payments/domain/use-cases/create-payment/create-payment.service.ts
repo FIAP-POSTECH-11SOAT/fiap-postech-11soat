@@ -1,26 +1,24 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PaymentsRepository } from '../../ports/payments.repository';
 import { MercadoPagoService } from 'src/infra/mercadopago/mercado-pago.service';
 import { Payment } from '../../payment.entity';
-import { ORDER_QUERY_PORT, OrderQueryPort } from '../../ports/order-query.port';
 import { Decimal } from '@prisma/client/runtime/library';
 import { PaymentStatusMapper } from '../../mappers/payment-status.mapper';
+import { OrdersRepository } from 'src/order/domain/ports/orders.repository';
+import { CreatePaymentPort } from '../../ports/create-payment.port';
 
 @Injectable()
-export class CreatePaymentUseCase {
+export class CreatePaymentUseCase implements CreatePaymentPort {
   constructor(
-    @Inject(ORDER_QUERY_PORT)
-    private readonly orderQueryPort: OrderQueryPort,
+    private readonly orderRepository: OrdersRepository,
     private readonly paymentsRepository: PaymentsRepository,
     private readonly mercadoPagoService: MercadoPagoService,
-  ) {}
+  ) { }
 
   async execute(orderId: string): Promise<string> {
-    const order = await this.orderQueryPort.getOrderStatus(orderId);
+    const order = await this.orderRepository.findById(orderId);
 
-    if (!order) {
-      throw new Error('Order not found');
-    }
+    if (!order) throw new Error('Order not found');
 
     if (order.status !== 'AWAITING') {
       throw new Error(
@@ -28,23 +26,13 @@ export class CreatePaymentUseCase {
       );
     }
 
-    const { qrCode, externalId, status } =
-      await this.mercadoPagoService.createPixPayment(
-        orderId,
-        Number(order.total),
-      );
-
-    if (!qrCode) {
-      throw new Error('QR Code not received from MercadoPago');
-    }
-
-    if (!externalId) {
-      throw new Error('External ID not received from MercadoPago');
-    }
+    const { qrCode, externalId, status } = await this.mercadoPagoService.createPixPayment(orderId, Number(order.total));
+    if (!qrCode) throw new Error('QR Code not received from MercadoPago');
+    if (!externalId) throw new Error('External ID not received from MercadoPago');
 
     const payment = Payment.create({
       orderId,
-      amount: new Decimal(order.total),
+      amount: order.total,
       qrCode,
       externalId,
       status: status ? PaymentStatusMapper.toDomain(status) : undefined,

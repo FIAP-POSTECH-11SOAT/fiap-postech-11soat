@@ -14,12 +14,23 @@ import { UpdatePaymentPort } from './domain/ports/update-payment.port';
 import { GetPaymentByOrderIdController } from './http-server/get-payment-by-order-id/get-payment-by-order-id.controller';
 import { UpdatePaymentController } from './http-server/update-payment/update-payment.controller';
 import { GetPaymentByOrderIdPort } from './domain/ports/get-payment-by-order-id.port';
+import { CreatePaymentController } from './http-server/create-payment/create-payment.controller';
+import { CreatePaymentPort } from './domain/ports/create-payment.port';
 
 @Module({
   imports: [OrderModule],
-  controllers: [PaymentsController, UpdatePaymentController, GetPaymentByOrderIdController],
+  controllers: [
+    PaymentsController,
+    CreatePaymentController,
+    UpdatePaymentController,
+    GetPaymentByOrderIdController
+  ],
   providers: [
     CreatePaymentUseCase,
+    {
+      provide: CreatePaymentPort,
+      useClass: CreatePaymentUseCase,
+    },
     {
       provide: UpdatePaymentPort,
       useClass: UpdatePaymentUseCase,

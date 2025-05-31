@@ -19,26 +19,10 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { z } from 'zod';
-import { ZodValidationPipe, zodToOpenAPI } from 'nestjs-zod';
+import { zodToOpenAPI } from 'nestjs-zod';
 
-import { CreatePaymentUseCase } from '../domain/use-cases/create-payment/create-payment.service';
-import { UpdatePaymentUseCase } from '../domain/use-cases/update-payment/update-payment.service';
-import { GetPaymentByOrderIdUseCase } from '../domain/use-cases/get-payment-by-order-id/get-payment-by-order-id.service';
 import { SearchPaymentsUseCase } from '../domain/use-cases/search-payments/search-payments.service';
 import { HandlePaymentWebhookUseCase } from '../domain/use-cases/handle-payment-webhook/handle-payment-webhook.service';
-
-// import { Decimal } from '@prisma/client/runtime/library';
-import { PaymentStatus as PrismaPaymentStatus } from '@prisma/client';
-import { PaymentStatusMapper } from '../domain/mappers/payment-status.mapper';
-
-const createPaymentBodySchema = z.object({
-  orderId: z.string().uuid({ message: 'Order ID must be a valid UUID' }),
-  // amount: z
-  //   .number()
-  //   .positive({ message: 'Amount must be greater than zero' })
-  //   .transform((value) => new Decimal(value)),
-  // qrCode: z.string().min(1, { message: 'QR Code must not be empty' }),
-});
 
 const webhookPaymentBodySchema = z.object({
   data: z.object({
@@ -51,29 +35,9 @@ const webhookPaymentBodySchema = z.object({
 @ApiTags('Payments')
 export class PaymentsController {
   constructor(
-    private readonly createPaymentUseCase: CreatePaymentUseCase,
     private readonly searchPaymentsUseCase: SearchPaymentsUseCase,
     private readonly handlePaymentWebhookUseCase: HandlePaymentWebhookUseCase,
   ) { }
-
-  @Post()
-  @HttpCode(201)
-  @UsePipes(new ZodValidationPipe(createPaymentBodySchema))
-  @ApiBody({ schema: zodToOpenAPI(createPaymentBodySchema) })
-  @ApiResponse({ status: 201, description: 'Created' })
-  @ApiOperation({
-    summary: 'Creates a new payment',
-    description: 'Creates a new payment for the given orderId.',
-  })
-  async create(@Body() body: z.infer<typeof createPaymentBodySchema>) {
-    try {
-      const paymentId = await this.createPaymentUseCase.execute(body.orderId);
-      return { paymentId };
-    } catch (error) {
-      console.error(error);
-      throw new UnprocessableEntityException(error.message);
-    }
-  }
 
   @Post('/webhook')
   @HttpCode(200)
