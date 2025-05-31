@@ -40,10 +40,6 @@ const createPaymentBodySchema = z.object({
   // qrCode: z.string().min(1, { message: 'QR Code must not be empty' }),
 });
 
-const updatePaymentBodySchema = z.object({
-  status: z.nativeEnum(PrismaPaymentStatus),
-});
-
 const webhookPaymentBodySchema = z.object({
   data: z.object({
     id: z.string(),
@@ -56,11 +52,10 @@ const webhookPaymentBodySchema = z.object({
 export class PaymentsController {
   constructor(
     private readonly createPaymentUseCase: CreatePaymentUseCase,
-    private readonly updatePaymentUseCase: UpdatePaymentUseCase,
     private readonly getPaymentByOrderIdUseCase: GetPaymentByOrderIdUseCase,
     private readonly searchPaymentsUseCase: SearchPaymentsUseCase,
     private readonly handlePaymentWebhookUseCase: HandlePaymentWebhookUseCase,
-  ) {}
+  ) { }
 
   @Post()
   @HttpCode(201)
@@ -113,30 +108,6 @@ This endpoint is called by MercadoPago when there are changes in the status of a
       return result;
     } catch (error) {
       console.error('Erro no webhook:', error);
-      throw new UnprocessableEntityException(error.message);
-    }
-  }
-
-  @Patch(':id')
-  @HttpCode(204)
-  @UsePipes(new ZodValidationPipe(updatePaymentBodySchema))
-  @ApiParam({ name: 'id', type: 'string', description: 'Payment ID (UUID)' })
-  @ApiBody({ schema: zodToOpenAPI(updatePaymentBodySchema) })
-  @ApiResponse({ status: 204, description: 'No Content' })
-  @ApiOperation({
-    summary: 'Updates a payment status',
-    description: 'Updates the status of an existing payment by ID.',
-  })
-  async update(
-    @Param('id') id: string,
-    @Body() body: z.infer<typeof updatePaymentBodySchema>,
-  ) {
-    try {
-      await this.updatePaymentUseCase.execute(id, {
-        status: PaymentStatusMapper.toDomain(body.status),
-      });
-    } catch (error) {
-      console.error(error);
       throw new UnprocessableEntityException(error.message);
     }
   }

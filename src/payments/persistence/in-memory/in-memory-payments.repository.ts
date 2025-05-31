@@ -1,7 +1,7 @@
 import { PaymentsRepository } from '../../domain/ports/payments.repository';
 import { Payment } from '../../domain/payment.entity';
-import { SearchPaymentsFilters } from '../../domain/use-cases/search-payments/search-payments.port';
 import { PaymentStatus } from '../../domain/payment.entity';
+import { SearchPaymentsFilters } from 'src/payments/domain/ports/search-payments.port';
 
 export class InMemoryPaymentsRepository implements PaymentsRepository {
   private payments: Payment[] = [];

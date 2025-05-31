@@ -3,11 +3,11 @@ import { PaymentsRepository } from '../../domain/ports/payments.repository';
 import { Payment } from '../../domain/payment.entity';
 import { PrismaService } from 'src/infra/database/prisma/prisma.service';
 import { PrismaPaymentMapper } from './mappers/prisma-payment-mapper';
-import { SearchPaymentsFilters } from '../../domain/use-cases/search-payments/search-payments.port';
+import { SearchPaymentsFilters } from 'src/payments/domain/ports/search-payments.port';
 
 @Injectable()
 export class PrismaPaymentsRepository implements PaymentsRepository {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async save(payment: Payment): Promise<string> {
     const data = PrismaPaymentMapper.toPrisma(payment);

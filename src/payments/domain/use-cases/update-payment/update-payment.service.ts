@@ -1,20 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { PaymentsRepository } from '../../ports/payments.repository';
+import { UpdatePaymentInput, UpdatePaymentPort } from '../../ports/update-payment.port';
 import { PaymentStatus } from '../../payment.entity';
-import { UpdatePaymentPort } from './update-payment.port';
 
 @Injectable()
 export class UpdatePaymentUseCase implements UpdatePaymentPort {
   constructor(private readonly paymentsRepository: PaymentsRepository) { }
 
-  async execute(
-    id: string,
-    { status }: { status: PaymentStatus },
-  ): Promise<void> {
-    if (!['PENDING', 'COMPLETED', 'APPROVED', 'FAILED'].includes(status)) {
-      throw new Error('Invalid payment status');
-    }
-
-    await this.paymentsRepository.updateStatus(id, status);
+  async execute({ id, payload }: UpdatePaymentInput): Promise<void> {
+    const validStatus = [PaymentStatus.PENDING, PaymentStatus.APPROVED, PaymentStatus.FAILED, PaymentStatus.REFUNDED];
+    if (!validStatus.includes(payload.status)) throw new Error('Invalid payment status');
+    await this.paymentsRepository.updateStatus(id, payload.status);
   }
 }
