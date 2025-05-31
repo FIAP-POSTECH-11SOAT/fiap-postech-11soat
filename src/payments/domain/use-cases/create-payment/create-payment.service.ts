@@ -1,18 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { PaymentsRepository } from '../../ports/payments.repository';
-import { MercadoPagoService } from 'src/infra/mercadopago/mercado-pago.service';
 import { Payment } from '../../payment.entity';
-import { Decimal } from '@prisma/client/runtime/library';
 import { PaymentStatusMapper } from '../../mappers/payment-status.mapper';
 import { OrdersRepository } from 'src/order/domain/ports/orders.repository';
 import { CreatePaymentPort } from '../../ports/create-payment.port';
+import { PaymentGatewayPort } from '../../ports/payment-gateway.port';
 
 @Injectable()
 export class CreatePaymentUseCase implements CreatePaymentPort {
   constructor(
     private readonly orderRepository: OrdersRepository,
     private readonly paymentsRepository: PaymentsRepository,
-    private readonly mercadoPagoService: MercadoPagoService,
+    private readonly PaymentGatewayPort: PaymentGatewayPort,
   ) { }
 
   async execute(orderId: string): Promise<string> {
@@ -26,7 +25,7 @@ export class CreatePaymentUseCase implements CreatePaymentPort {
       );
     }
 
-    const { qrCode, externalId, status } = await this.mercadoPagoService.createPixPayment(orderId, Number(order.total));
+    const { qrCode, externalId, status } = await this.PaymentGatewayPort.createPixPayment(orderId, Number(order.total));
     if (!qrCode) throw new Error('QR Code not received from MercadoPago');
     if (!externalId) throw new Error('External ID not received from MercadoPago');
 
