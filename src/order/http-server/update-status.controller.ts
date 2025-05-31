@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   HttpCode,
+  Logger,
   Put,
   UnprocessableEntityException,
   UsePipes,
@@ -39,7 +40,10 @@ export class UpdateStatusController {
     try {
       await this.updateStatusPort.execute(body.orderId, body.status);
     } catch (error) {
-      throw new UnprocessableEntityException(error.message);
+      Logger.error(error);
+      let message = 'Error retrieving orders';
+      if (error instanceof Error) message = error.message;
+      throw new UnprocessableEntityException(message);
     }
   }
 }
