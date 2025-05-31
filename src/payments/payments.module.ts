@@ -2,10 +2,9 @@ import { Module } from '@nestjs/common';
 
 import { CreatePaymentUseCase } from './domain/use-cases/create-payment/create-payment.service';
 import { GetPaymentByOrderIdUseCase } from './domain/use-cases/get-payment-by-order-id/get-payment-by-order-id.service';
-import { HandlePaymentWebhookUseCase } from './domain/use-cases/handle-payment-webhook/handle-payment-webhook.service';
+import { PaymentWebhookUseCase } from './domain/use-cases/payment-webhook/payment-webhook.service';
 import { MercadoPagoService } from 'src/infra/mercadopago/mercado-pago.service';
 import { OrderModule } from 'src/order/order.module';
-import { PaymentsController } from './http-server/payments.controller';
 import { PaymentsRepository } from './domain/ports/payments.repository';
 import { PrismaPaymentsRepository } from './persistence/prisma/prisma-payments.repository';
 import { SearchPaymentsUseCase } from './domain/use-cases/search-payments/search-payments.service';
@@ -18,15 +17,17 @@ import { CreatePaymentController } from './http-server/create-payment/create-pay
 import { CreatePaymentPort } from './domain/ports/create-payment.port';
 import { SearchPaymentsController } from './http-server/search-payments/search-payments.controller';
 import { SearchPaymentsPort } from './domain/ports/search-payments.port';
+import { PaymentWebhookController } from './http-server/payment-webhook/payment-webhook.controller';
+import { PaymentWebhookPort } from './domain/ports/payment-webhook.port';
 
 @Module({
   imports: [OrderModule],
   controllers: [
-    PaymentsController,
     CreatePaymentController,
+    SearchPaymentsController,
     UpdatePaymentController,
     GetPaymentByOrderIdController,
-    SearchPaymentsController
+    PaymentWebhookController
   ],
   providers: [
     {
@@ -45,7 +46,10 @@ import { SearchPaymentsPort } from './domain/ports/search-payments.port';
       provide: SearchPaymentsPort,
       useClass: SearchPaymentsUseCase,
     },
-    HandlePaymentWebhookUseCase,
+    {
+      provide: PaymentWebhookPort,
+      useClass: PaymentWebhookUseCase,
+    },
     MercadoPagoService,
     {
       provide: PaymentsRepository,
