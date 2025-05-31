@@ -11,17 +11,23 @@ import { PrismaPaymentsRepository } from './persistence/prisma/prisma-payments.r
 import { SearchPaymentsUseCase } from './domain/use-cases/search-payments/search-payments.service';
 import { UpdatePaymentUseCase } from './domain/use-cases/update-payment/update-payment.service';
 import { UpdatePaymentPort } from './domain/ports/update-payment.port';
+import { GetPaymentByOrderIdController } from './http-server/get-payment-by-order-id/get-payment-by-order-id.controller';
+import { UpdatePaymentController } from './http-server/update-payment/update-payment.controller';
+import { GetPaymentByOrderIdPort } from './domain/ports/get-payment-by-order-id.port';
 
 @Module({
   imports: [OrderModule],
-  controllers: [PaymentsController],
+  controllers: [PaymentsController, UpdatePaymentController, GetPaymentByOrderIdController],
   providers: [
     CreatePaymentUseCase,
     {
       provide: UpdatePaymentPort,
       useClass: UpdatePaymentUseCase,
     },
-    GetPaymentByOrderIdUseCase,
+    {
+      provide: GetPaymentByOrderIdPort,
+      useClass: GetPaymentByOrderIdUseCase,
+    },
     SearchPaymentsUseCase,
     HandlePaymentWebhookUseCase,
     MercadoPagoService,

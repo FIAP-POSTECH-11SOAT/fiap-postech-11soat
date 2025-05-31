@@ -11,7 +11,7 @@ export class PrismaPaymentMapper {
       qrCode: raw.qrCode,
       createdAt: raw.createdAt,
       updatedAt: raw.updatedAt,
-      amount: raw.amount,
+      amount: raw.amount.toNumber(),
       externalId: raw.externalId,
     });
   }

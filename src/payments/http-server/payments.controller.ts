@@ -52,7 +52,6 @@ const webhookPaymentBodySchema = z.object({
 export class PaymentsController {
   constructor(
     private readonly createPaymentUseCase: CreatePaymentUseCase,
-    private readonly getPaymentByOrderIdUseCase: GetPaymentByOrderIdUseCase,
     private readonly searchPaymentsUseCase: SearchPaymentsUseCase,
     private readonly handlePaymentWebhookUseCase: HandlePaymentWebhookUseCase,
   ) { }
@@ -108,25 +107,6 @@ This endpoint is called by MercadoPago when there are changes in the status of a
       return result;
     } catch (error) {
       console.error('Erro no webhook:', error);
-      throw new UnprocessableEntityException(error.message);
-    }
-  }
-
-  @Get('order/:orderId')
-  @HttpCode(200)
-  @ApiParam({ name: 'orderId', type: 'string', description: 'Order ID (UUID)' })
-  @ApiResponse({ status: 200, description: 'Payment found' })
-  @ApiOperation({
-    summary: 'Gets a payment by order ID',
-    description: 'Retrieves a payment associated with a given order ID.',
-  })
-  async getByOrderId(@Param('orderId') orderId: string) {
-    try {
-      const payment = await this.getPaymentByOrderIdUseCase.execute(orderId);
-      if (!payment) throw new Error('Payment not found');
-      return payment;
-    } catch (error) {
-      console.error(error);
       throw new UnprocessableEntityException(error.message);
     }
   }

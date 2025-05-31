@@ -21,25 +21,26 @@ type UpdatePaymentBodySchema = z.infer<typeof updatePaymentBodySchema>;
 const updatePaymentParamsSchema = z.object({
   id: z.string().uuid(),
 });
+type UpdatePaymentParamsSchema = z.infer<typeof updatePaymentParamsSchema>;
 
 @Controller('/payments/:id')
 @ApiTags('Payments')
 export class UpdatePaymentController {
   constructor(private updatePaymentPort: UpdatePaymentPort) { }
 
-  @Patch(':id')
+  @Patch()
   @HttpCode(204)
   @UsePipes(new ZodValidationPipe(updatePaymentBodySchema))
   @ApiBody({ schema: zodToOpenAPI(updatePaymentBodySchema) })
-  @ApiParam({ name: 'id', schema: zodToOpenAPI(updatePaymentParamsSchema) })
+  @ApiParam({ name: 'id', schema: zodToOpenAPI(z.string().uuid()) })
   @ApiResponse({ status: 204, description: 'No Content' })
   @ApiOperation({
     summary: 'Updates a payment status',
     description: 'Updates the status of an existing payment by ID.',
   })
-  async handle(@Param('id') id: string, @Body() body: UpdatePaymentBodySchema) {
+  async handle(@Param() params: UpdatePaymentParamsSchema, @Body() body: UpdatePaymentBodySchema) {
     try {
-      await this.updatePaymentPort.execute({ id, payload: { status: body.status } });
+      await this.updatePaymentPort.execute({ id: params.id, payload: { status: body.status } });
     } catch (error) {
       throw new UnprocessableEntityException(error.message);
     }

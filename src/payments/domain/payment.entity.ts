@@ -1,4 +1,3 @@
-import { Decimal } from '@prisma/client/runtime/library';
 import { UniqueEntityID } from 'src/shared/entities/unique-entity-id';
 
 export enum PaymentStatus {
@@ -14,7 +13,7 @@ export type PaymentProps = {
   qrCode: string;
   createdAt: Date;
   updatedAt: Date;
-  amount: Decimal;
+  amount: number;
   externalId?: string;
 };
 
@@ -23,7 +22,7 @@ export type CreatePaymentProps = {
   orderId: string;
   status?: PaymentStatus;
   qrCode: string;
-  amount: Decimal;
+  amount: number;
   createdAt?: Date;
   updatedAt?: Date;
   externalId?: string;
@@ -67,7 +66,7 @@ export class Payment {
     return this.props.updatedAt;
   }
 
-  get amount(): Decimal {
+  get amount(): number {
     return this.props.amount;
   }
 
