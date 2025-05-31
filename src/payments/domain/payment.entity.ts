@@ -76,6 +76,10 @@ export class Payment {
 
   set status(value: PaymentStatus) {
     this.props.status = value;
+    this.touch;
+  }
+
+  touch() {
     this.props.updatedAt = new Date();
   }
 

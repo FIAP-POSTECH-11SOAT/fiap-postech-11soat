@@ -11,7 +11,7 @@ export class CreatePaymentUseCase implements CreatePaymentPort {
   constructor(
     private readonly orderRepository: OrdersRepository,
     private readonly paymentsRepository: PaymentsRepository,
-    private readonly PaymentGatewayPort: PaymentGatewayPort,
+    private readonly paymentGatewayPort: PaymentGatewayPort,
   ) { }
 
   async execute(orderId: string): Promise<string> {
@@ -25,7 +25,7 @@ export class CreatePaymentUseCase implements CreatePaymentPort {
       );
     }
 
-    const { qrCode, externalId, status } = await this.PaymentGatewayPort.createPixPayment(orderId, Number(order.total));
+    const { qrCode, externalId, status } = await this.paymentGatewayPort.createPixPayment(orderId, Number(order.total));
     if (!qrCode) throw new Error('QR Code not received from MercadoPago');
     if (!externalId) throw new Error('External ID not received from MercadoPago');
 

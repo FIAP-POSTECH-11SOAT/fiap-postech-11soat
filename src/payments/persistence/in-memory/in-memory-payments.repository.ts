@@ -4,7 +4,7 @@ import { PaymentStatus } from '../../domain/payment.entity';
 import { SearchPaymentsFilters } from 'src/payments/domain/ports/search-payments.port';
 
 export class InMemoryPaymentsRepository implements PaymentsRepository {
-  private payments: Payment[] = [];
+  payments: Payment[] = [];
 
   async save(payment: Payment): Promise<string> {
     this.payments.push(payment);
