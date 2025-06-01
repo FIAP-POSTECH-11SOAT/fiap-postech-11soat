@@ -11,7 +11,6 @@ import { SearchPaymentsUseCase } from './domain/use-cases/search-payments/search
 import { UpdatePaymentUseCase } from './domain/use-cases/update-payment/update-payment.service';
 import { UpdatePaymentPort } from './domain/ports/update-payment.port';
 import { GetPaymentByOrderIdController } from './http-server/get-payment-by-order-id/get-payment-by-order-id.controller';
-import { UpdatePaymentController } from './http-server/update-payment/update-payment.controller';
 import { GetPaymentByOrderIdPort } from './domain/ports/get-payment-by-order-id.port';
 import { CreatePaymentController } from './http-server/create-payment/create-payment.controller';
 import { CreatePaymentPort } from './domain/ports/create-payment.port';
@@ -26,7 +25,6 @@ import { PaymentGatewayPort } from './domain/ports/payment-gateway.port';
   controllers: [
     CreatePaymentController,
     SearchPaymentsController,
-    UpdatePaymentController,
     GetPaymentByOrderIdController,
     PaymentWebhookController
   ],
