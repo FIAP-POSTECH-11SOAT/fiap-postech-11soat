@@ -10,11 +10,12 @@ datasource db {
 model Customer {
   id        String          @id @default(uuid())
   name      String
-  document  String
-  email     String
+  document  String          @unique
+  email     String          @unique
   createdAt DateTime        @map("created_at")
   updatedAt DateTime        @map("updated_at")
-  orders    CustomerOrder[]
+  deletedAt DateTime?       @map("deleted_at")
+  orders    CustomerOrder[] @relation("CustomerToOrder")
 
   @@map("customers")
 }
@@ -23,15 +24,15 @@ model CustomerOrder {
   customerId String @map("customer_id")
   orderId    String @map("order_id")
 
-  customer Customer @relation(fields: [customerId], references: [id])
+  customer Customer @relation("CustomerToOrder", fields: [customerId], references: [id])
   order    Order    @relation(fields: [orderId], references: [id])
 
   @@id([customerId, orderId])
   @@map("customer_order")
 }
-
 enum OrderStatus {
   AWAITING
+  AWAITING_PAYMENT
   TO_PREPARE
   IN_PREPARE
   FINISHED
@@ -70,7 +71,7 @@ model Item {
   name        String
   description String
   price       Decimal
-  image       String
+  image       String?
   categoryId  String    @map("category_id")
   createdAt   DateTime  @map("created_at")
   updatedAt   DateTime  @map("updated_at")
@@ -84,7 +85,7 @@ model Item {
 
 model Category {
   id        String    @id @default(uuid())
-  name      String
+  name      String    @unique
   createdAt DateTime  @map("created_at")
   updatedAt DateTime  @map("updated_at")
   deletedAt DateTime? @map("deleted_at")
@@ -105,6 +106,7 @@ model Payment {
   orderId    String        @map("order_id")
   externalId String        @map("external_id")
   qrCode     String        @map("qr_code")
+  amount     Decimal        @map("amount")
   status     PaymentStatus
   retries    Int
   createdAt  DateTime      @map("created_at")
@@ -114,3 +116,4 @@ model Payment {
 
   @@map("payments")
 }
+

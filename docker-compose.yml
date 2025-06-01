@@ -11,12 +11,13 @@ services:
     ports:
       - 5432:5432
   app:
-    build: 
+    build:
       context: .
       dockerfile: Dockerfile
     container_name: nest-rms
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/rms?schema=public
+      - MERCADO_PAGO_ACCESS_TOKEN=TEST-8678038003952623-052718-cec5173635e5de390d0586378d533fe9-106819378
     ports:
       - 3000:3000
     depends_on:
