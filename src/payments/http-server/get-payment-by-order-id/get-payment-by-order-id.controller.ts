@@ -29,7 +29,7 @@ const getPaymentByOrderIdResponseSchema = z.object({
   updatedAt: z.string().datetime(),
 });
 
-@Controller('/payments/order/:orderId')
+@Controller('/payments/orders/:orderId')
 @ApiTags('Payments')
 export class GetPaymentByOrderIdController {
   constructor(private getPaymentByOrderIdPort: GetPaymentByOrderIdPort) { }
@@ -42,7 +42,7 @@ export class GetPaymentByOrderIdController {
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @ApiResponse({ status: 422, description: 'Unprocessable Entity' })
   @ApiOperation({
-    summary: 'Gets a payment by order ID',
+    summary: 'Get a payment by order ID',
     description: 'Retrieves a payment associated with a given order ID.',
   })
   async handle(@Param() params: GetPaymentByOrderIdParamsSchema) {
