@@ -2,7 +2,7 @@ import { Controller, Get, HttpCode } from '@nestjs/common'
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
 
 @Controller('/health-check')
-@ApiTags('Health Check')
+@ApiTags('App')
 export class HealthCheckController {
   @Get()
   @HttpCode(200)
