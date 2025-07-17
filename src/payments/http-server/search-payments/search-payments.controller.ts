@@ -12,6 +12,7 @@ import { ZodValidationPipe } from 'src/infra/http-server/pipes/zod-validation-pi
 import { PaymentStatus } from 'src/payments/domain/payment.entity';
 import { SearchPaymentsPort } from 'src/payments/domain/ports/search-payments.port';
 import { z } from 'zod';
+import { PaymentPresenter } from '../payment.presenter';
 
 const searchPaymentsQuerySchema = z.object({
   orderId: z.string().uuid().optional(),
@@ -30,6 +31,7 @@ const searchPaymentsResponseSchema = z.object({
     z.object({
       id: z.string().uuid(),
       orderId: z.string().uuid(),
+      externalId: z.string(),
       status: z.nativeEnum(PaymentStatus),
       amount: z.number().positive(),
       qrCode: z.string(),
@@ -62,21 +64,10 @@ export class SearchPaymentsController {
   async handle(@Query() query: SearchPaymentsQuerySchema) {
     try {
       const result = await this.searchPaymentsPort.execute(query);
-
-      const data = result.data.map((payment) => ({
-        id: payment.id,
-        orderId: payment.orderId,
-        externalId: payment.externalId,
-        status: payment.status,
-        amount: payment.amount,
-        qrCode: payment.qrCode,
-        createdAt: payment.createdAt,
-        updatedAt: payment.updatedAt,
-      }))
-
+      const payments = result.data.map(PaymentPresenter.toHTTP);
       return {
         total: result.total,
-        data,
+        data: payments,
       };
     } catch (error) {
       throw new UnprocessableEntityException(error.message);
