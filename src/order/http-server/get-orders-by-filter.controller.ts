@@ -12,6 +12,7 @@ import { GetOrdersByFilterPort } from '../domain/ports/get-orders-by-filter';
 import { orderStatusValues } from 'src/shared/constants/order-status';
 import { z } from 'zod';
 import { ZodValidationPipe } from 'nestjs-zod';
+import { OrderPresenter } from './presenters/order.presenter';
 
 const filterOrdersBodySchema = z.object({
   orderId: z.string().uuid({ message: 'Order ID must be a valid UUID' }).optional(),
@@ -29,7 +30,10 @@ type FilterOrdersBodySchema = z.infer<typeof filterOrdersBodySchema>;
 @Controller('orders')
 @ApiTags('Orders')
 export class GetOrdersByFilterController {
-  constructor(private getOrdersByFilter: GetOrdersByFilterPort) { }
+  constructor(
+    private getOrdersByFilter: GetOrdersByFilterPort,
+    private orderPresenter: OrderPresenter
+  ) { }
 
   @Get()
   @UsePipes(new ZodValidationPipe(filterOrdersBodySchema))
@@ -40,15 +44,14 @@ export class GetOrdersByFilterController {
   @ApiQuery({ name: 'itemId', required: false, type: String })
   @ApiQuery({ name: 'page', required: false, type: Number })
   @ApiQuery({ name: 'pageSize', required: false, type: Number, minimum: 1 })
-  @ApiQuery({ name: 'sortBy', required: false, type: String })
-  @ApiQuery({ name: 'sortOrder', required: false, type: String, enum: ['asc', 'desc'] })
   @ApiResponse({ status: 200, description: 'Success' })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @ApiResponse({ status: 422, description: 'Unprocessable Entity' })
   @ApiOperation({ summary: 'Get orders by filters' })
   async handle(@Query() query: FilterOrdersBodySchema) {
     try {
-      return await this.getOrdersByFilter.execute(query);
+      const result = await this.getOrdersByFilter.execute(query);
+      return result.map(this.orderPresenter.toHTTP);
     } catch (error) {
       Logger.error(error);
       let message = 'Error retrieving orders';

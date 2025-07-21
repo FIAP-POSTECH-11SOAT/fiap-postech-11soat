@@ -71,14 +71,4 @@ export class Order {
     );
     return order;
   }
-
-  toJSON() {
-    return {
-      id: this.id,
-      total: this.total,
-      status: this.status,
-      createdAt: this.createdAt,
-      updatedAt: this.updatedAt,
-    };
-  }
 }

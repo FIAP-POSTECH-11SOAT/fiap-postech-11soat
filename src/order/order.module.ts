@@ -61,7 +61,9 @@ import { UpdateStatusUseCase } from './domain/use-cases/update-status/update-sta
     {
       provide: OrdersRepository,
       useClass: PrismaOrdersRepository,
-    }
+    },
+    OrderPresenter,
+    FullOrderPresenter
   ],
   exports: [OrdersRepository]
 })
