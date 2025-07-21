@@ -5,7 +5,7 @@ import { Order } from "../../domain/order.entity";
 export class OrderPresenter {
   toHTTP(order: Order) {
     return {
-      id: order.id,
+      orderId: order.id,
       total: order.total,
       status: order.status,
       createdAt: order.createdAt,

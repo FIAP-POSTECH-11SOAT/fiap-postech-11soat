@@ -14,7 +14,7 @@ export class FullOrderPresenter {
         quantity: item.quantity,
         price: item.price
       })),
-      customer: fullOrder.customer ? { customerId: fullOrder.customer } : null
+      customerId: fullOrder.customer
     }
   }
 }
