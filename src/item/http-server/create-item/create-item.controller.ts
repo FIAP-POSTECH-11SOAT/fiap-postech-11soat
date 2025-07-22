@@ -11,6 +11,7 @@ import { CreateItemPort } from '../../domain/ports/create-item.port';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { zodToOpenAPI, ZodValidationPipe } from 'nestjs-zod';
+import { ItemPresenter } from '../item.presenter';
 
 const createItemBodySchema = z.object({
   name: z.string().min(1, { message: 'Name must not be empty' }),
@@ -37,9 +38,12 @@ export class CreateItemController {
     description:
       'This endpoint creates a new item. The name of the item must be unique and category must exist.',
   })
-  async handle(@Body() body: z.infer<typeof createItemBodySchema>) {
+  async handle(
+    @Body() body: z.infer<typeof createItemBodySchema>,
+  ): Promise<ItemPresenter> {
     try {
-      return await this.createItemPort.execute(body);
+      const item = await this.createItemPort.execute(body);
+      return ItemPresenter.toHttp(item);
     } catch (error) {
       Logger.error(error);
       let message = 'Error creating item';

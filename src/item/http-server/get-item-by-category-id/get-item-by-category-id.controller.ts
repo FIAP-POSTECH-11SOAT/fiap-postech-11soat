@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { GetItemByCategoryIdPort } from '../../domain/ports/get-item-by-category-id.port';
+import { ItemPresenter } from '../item.presenter';
 
 @Controller('items')
 @ApiTags('Items')
@@ -45,9 +46,12 @@ export class GetItemByCategoryIdController {
     description: 'Unprocessable Entity',
   })
   @ApiOperation({ summary: 'Get item by Category ID' })
-  async getItemByCategoryId(@Param('categoryId') categoryId: string) {
+  async getItemByCategoryId(
+    @Param('categoryId') categoryId: string,
+  ): Promise<ItemPresenter[]> {
     try {
-      return await this.getItemByCategoryIdPort.execute(categoryId);
+      const items = await this.getItemByCategoryIdPort.execute(categoryId);
+      return items.map((item) => ItemPresenter.toHttp(item));
     } catch (error) {
       Logger.error(error);
       let message = 'Error getting items';

@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { GetItemsPort } from '../../domain/ports/get-items.port';
+import { ItemPresenter } from '../item.presenter';
 
 @Controller('items')
 @ApiTags('Items')
@@ -19,9 +20,10 @@ export class GetItemsController {
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @ApiResponse({ status: 422, description: 'Unprocessable Entity' })
   @ApiOperation({ summary: 'Get all items' })
-  async getItems() {
+  async getItems(): Promise<ItemPresenter[]> {
     try {
-      return await this.getItemsPort.execute();
+      const items = await this.getItemsPort.execute();
+      return items.map((item) => ItemPresenter.toHttp(item));
     } catch (error) {
       Logger.error(error);
       let message = 'Error creating item';

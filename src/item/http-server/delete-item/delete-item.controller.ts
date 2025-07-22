@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { DeleteItemPort } from '../../domain/ports/delete-item.port';
+import { ItemPresenter } from '../item.presenter';
 
 @Controller('items')
 @ApiTags('Items')
@@ -43,9 +44,10 @@ export class DeleteItemController {
     status: 422,
     description: 'Unprocessable Entity',
   })
-  async handle(@Param('id') id: string) {
+  async handle(@Param('id') id: string): Promise<ItemPresenter> {
     try {
-      return await this.deleteItemPort.execute(id);
+      const item = await this.deleteItemPort.execute(id);
+      return ItemPresenter.toHttp(item);
     } catch (error) {
       Logger.error(error);
       let message = 'Error deleting item';

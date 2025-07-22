@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ActivateItemPort } from '../../domain/ports/activate-item.port';
-import { Item } from '../../domain/item.entity';
+import { ItemPresenter } from '../item.presenter';
 
 @Controller('items')
 @ApiTags('Items')
@@ -46,9 +46,10 @@ export class ActivateItemController {
     status: 422,
     description: 'Unprocessable Entity',
   })
-  async activateItem(@Param('id') id: string): Promise<Item> {
+  async activateItem(@Param('id') id: string): Promise<ItemPresenter> {
     try {
-      return await this.activateItemPort.execute(id);
+      const item = await this.activateItemPort.execute(id);
+      return ItemPresenter.toHttp(item);
     } catch (error) {
       Logger.error(error);
       let message = 'Error activating item';
