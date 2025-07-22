@@ -14,6 +14,7 @@ import {
 } from '../../domain/ports/update-item.port';
 import { z } from 'zod';
 import { zodToOpenAPI, ZodValidationPipe } from 'nestjs-zod';
+import { ItemPresenter } from '../item.presenter';
 
 const updateItemBodySchema = z.object({
   id: z.string().uuid().min(1, { message: 'Item ID must not be empty' }),
@@ -62,9 +63,15 @@ export class UpdateItemController {
     status: 422,
     description: 'Unprocessable Entity',
   })
-  async handle(@Body() { id, ...data }: UpdateItemBodySchema) {
+  async handle(
+    @Body() { id, ...data }: UpdateItemBodySchema,
+  ): Promise<ItemPresenter> {
     try {
-      return await this.updateItemPort.execute(id, data as UpdateItemProps);
+      const item = await this.updateItemPort.execute(
+        id,
+        data as UpdateItemProps,
+      );
+      return ItemPresenter.toHttp(item);
     } catch (error) {
       Logger.error(error);
       let message = 'Error updating item';
