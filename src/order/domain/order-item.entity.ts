@@ -48,13 +48,4 @@ export class OrderItem {
     });
     return orderItem;
   }
-
-  toJSON() {
-    return {
-      orderId: this.orderId,
-      itemId: this.itemId,
-      price: this.price,
-      quantity: this.quantity
-    };
-  }
 }

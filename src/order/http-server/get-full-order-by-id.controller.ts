@@ -8,11 +8,15 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { GetFullOrderByIdPort } from '../domain/ports/get-full-order-by-id.port';
+import { FullOrderPresenter } from './presenters/full-order.presenter';
 
 @Controller('orders')
 @ApiTags('Orders')
 export class GetFullOrderByIdController {
-  constructor(private getFullOrderByIdPort: GetFullOrderByIdPort) { }
+  constructor(
+    private getFullOrderByIdPort: GetFullOrderByIdPort,
+    private fullOrderPresenter: FullOrderPresenter
+  ) { }
 
   @Get(':id')
   @HttpCode(200)
@@ -22,7 +26,8 @@ export class GetFullOrderByIdController {
   @ApiOperation({ summary: 'Get full order information by ID' })
   async handle(@Param('id') id: string) {
     try {
-      return await this.getFullOrderByIdPort.execute(id);
+      const result = await this.getFullOrderByIdPort.execute(id);
+      return result ? this.fullOrderPresenter.toHTTP(result) : null;
     } catch (error) {
       Logger.error(error);
       let message = 'Error retrieving order';

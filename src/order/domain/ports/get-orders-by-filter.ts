@@ -8,8 +8,6 @@ export interface GetOrdersByFilterParams {
   itemId?: string;
   page?: number;
   pageSize?: number;
-  sortBy?: string;
-  sortOrder?: 'asc' | 'desc';
 }
 
 export abstract class GetOrdersByFilterPort {
