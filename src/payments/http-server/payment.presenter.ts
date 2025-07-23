@@ -13,4 +13,10 @@ export class PaymentPresenter {
       updatedAt: payment.updatedAt,
     }
   }
+
+  static toCreated(paymentId: string) {
+    return {
+      id: paymentId,
+    }
+  }
 }
