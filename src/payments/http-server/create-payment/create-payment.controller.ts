@@ -11,6 +11,7 @@ import { zodToOpenAPI } from 'nestjs-zod';
 import { ZodValidationPipe } from 'src/infra/http-server/pipes/zod-validation-pipe';
 import { CreatePaymentPort } from 'src/payments/domain/ports/create-payment.port';
 import { z } from 'zod';
+import { PaymentPresenter } from '../payment.presenter';
 
 const createPaymentBodySchema = z.object({
   orderId: z.string().uuid({ message: 'Order ID must be a valid UUID' }),
@@ -18,7 +19,7 @@ const createPaymentBodySchema = z.object({
 type CreatePaymentBodySchema = z.infer<typeof createPaymentBodySchema>;
 
 const createPaymentResponseSchema = z.object({
-  paymentId: z.string().uuid(),
+  id: z.string().uuid(),
 });
 
 @Controller('/payments')
@@ -38,7 +39,7 @@ export class CreatePaymentController {
   async handle(@Body() body: CreatePaymentBodySchema) {
     try {
       const paymentId = await this.createPaymentPort.execute(body.orderId);
-      return { paymentId };
+      return PaymentPresenter.toCreated(paymentId);
     } catch (error) {
       throw new UnprocessableEntityException(error.message);
     }
