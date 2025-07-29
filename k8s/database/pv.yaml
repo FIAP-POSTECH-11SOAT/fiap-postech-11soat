@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: postgres-pv
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain # 'Retain' is safer for database data
+  storageClassName: storageclass-postgres-db
+  hostPath:
+    path: "/data/pgdata" # Using an absolute path is best practice
+    type: DirectoryOrCreate

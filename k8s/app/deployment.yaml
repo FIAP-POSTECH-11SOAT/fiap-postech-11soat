@@ -15,33 +15,45 @@ spec:
         app: rms-app
     spec:
       containers:
-      - name: rms-app
-        image: rms:latest
-        imagePullPolicy: Never
-        ports:
-        - containerPort: 3000
-        envFrom:
-        - configMapRef:
-            name: rms-config
-        env:
-        - name: DATABASE_URL
-          valueFrom:
-            secretKeyRef:
-              name: rms-secrets
-              key: DATABASE_URL
-        - name: MERCADO_PAGO_ACCESS_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: rms-secrets
-              key: MERCADO_PAGO_ACCESS_TOKEN
-        resources:
-          requests:
-            memory: "256Mi"
-            cpu: "250m"
-          limits:
-            memory: "512Gi"
-            cpu: "500m"
+        - name: rms-app
+          image: igorgregorio/rms:1.0
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 3000
+          env:
+            - name: MERCADO_PAGO_ACCESS_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: rms-secrets
+                  key: MERCADO_PAGO_ACCESS_TOKEN
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: rms-secrets
+                  key: DATABASE_URL
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: rms-config
+                  key: APP_PORT
+            - name: NODE_ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: rms-config
+                  key: NODE_ENV
+          resources:
+            requests:
+              memory: '850Mi'
+              cpu: '150m'
+            limits:
+              memory: '1Gi'
+              cpu: '250m'
       initContainers:
-      - name: wait-for-db
-        image: postgres:15-alpine
-        command: ['sh', '-c', 'until pg_isready -h postgres-service -p 5432; do echo waiting for database; sleep 2; done;']
+        - name: wait-for-db
+          image: postgres:17-alpine
+          command:
+            [
+              'sh',
+              '-c',
+              'until pg_isready -h postgres-service -p 5432; do echo waiting for database; sleep 2; done;',
+            ]

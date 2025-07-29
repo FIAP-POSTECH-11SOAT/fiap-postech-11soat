@@ -6,7 +6,8 @@ spec:
   selector:
     app: rms-app
   ports:
-  - protocol: TCP
-    port: 80
-    targetPort: 3000
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
+      nodePort: 31000
   type: NodePort
