@@ -14,8 +14,7 @@ import { FullOrderPresenter } from './presenters/full-order.presenter';
 @ApiTags('Orders')
 export class GetFullOrderByIdController {
   constructor(
-    private getFullOrderByIdPort: GetFullOrderByIdPort,
-    private fullOrderPresenter: FullOrderPresenter
+    private getFullOrderByIdPort: GetFullOrderByIdPort
   ) { }
 
   @Get(':id')
@@ -27,7 +26,7 @@ export class GetFullOrderByIdController {
   async handle(@Param('id') id: string) {
     try {
       const result = await this.getFullOrderByIdPort.execute(id);
-      return result ? this.fullOrderPresenter.toHTTP(result) : null;
+      return result ? FullOrderPresenter.toHTTP(result) : null;
     } catch (error) {
       Logger.error(error);
       let message = 'Error retrieving order';
