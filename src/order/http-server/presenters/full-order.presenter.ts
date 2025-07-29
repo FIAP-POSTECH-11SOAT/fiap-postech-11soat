@@ -1,14 +1,10 @@
 import { FullOrder } from "src/shared/@types/FullOrder";
-import { Injectable } from "@nestjs/common";
 import { OrderPresenter } from "./order.presenter";
 
-@Injectable()
 export class FullOrderPresenter {
-  constructor(private readonly orderPresenter: OrderPresenter) {}
-
-  toHTTP(fullOrder: FullOrder) {
+  static toHTTP(fullOrder: FullOrder) {
     return {
-      order: this.orderPresenter.toHTTP(fullOrder.order),
+      order: OrderPresenter.toHTTP(fullOrder.order),
       items: fullOrder.items.map(item => ({
         itemId: item.itemId,
         quantity: item.quantity,

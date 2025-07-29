@@ -22,8 +22,6 @@ import { PrismaOrdersRepository } from './persistence/database/prisma/prisma-ord
 import { UpdateStatusController } from './http-server/update-status.controller';
 import { UpdateStatusPort } from './domain/ports/update-status.port';
 import { UpdateStatusUseCase } from './domain/use-cases/update-status/update-status.service';
-import { OrderPresenter } from './http-server/presenters/order.presenter';
-import { FullOrderPresenter } from './http-server/presenters/full-order.presenter';
 
 @Module({
   imports: [ItemModule, forwardRef(() => PaymentsModule)],
@@ -63,9 +61,7 @@ import { FullOrderPresenter } from './http-server/presenters/full-order.presente
     {
       provide: OrdersRepository,
       useClass: PrismaOrdersRepository,
-    },
-    OrderPresenter,
-    FullOrderPresenter
+    }
   ],
   exports: [OrdersRepository]
 })

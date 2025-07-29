@@ -31,8 +31,7 @@ type FilterOrdersBodySchema = z.infer<typeof filterOrdersBodySchema>;
 @ApiTags('Orders')
 export class GetOrdersByFilterController {
   constructor(
-    private getOrdersByFilter: GetOrdersByFilterPort,
-    private orderPresenter: OrderPresenter
+    private getOrdersByFilter: GetOrdersByFilterPort
   ) { }
 
   @Get()
@@ -51,7 +50,7 @@ export class GetOrdersByFilterController {
   async handle(@Query() query: FilterOrdersBodySchema) {
     try {
       const result = await this.getOrdersByFilter.execute(query);
-      return result.map(this.orderPresenter.toHTTP);
+      return result.map(OrderPresenter.toHTTP);
     } catch (error) {
       Logger.error(error);
       let message = 'Error retrieving orders';

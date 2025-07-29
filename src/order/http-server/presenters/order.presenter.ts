@@ -1,9 +1,7 @@
-import { Injectable } from "@nestjs/common";
 import { Order } from "../../domain/order.entity";
 
-@Injectable()
 export class OrderPresenter {
-  toHTTP(order: Order) {
+  static toHTTP(order: Order) {
     return {
       orderId: order.id,
       total: order.total,
