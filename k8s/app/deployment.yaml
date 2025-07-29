@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rms-app-deployment
+  labels:
+    app: rms-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rms-app
+  template:
+    metadata:
+      labels:
+        app: rms-app
+    spec:
+      containers:
+      - name: rms-app
+        image: rms:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 3000
+        envFrom:
+        - configMapRef:
+            name: rms-config
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: rms-secrets
+              key: DATABASE_URL
+        - name: MERCADO_PAGO_ACCESS_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: rms-secrets
+              key: MERCADO_PAGO_ACCESS_TOKEN
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Gi"
+            cpu: "500m"
+      initContainers:
+      - name: wait-for-db
+        image: postgres:15-alpine
+        command: ['sh', '-c', 'until pg_isready -h postgres-service -p 5432; do echo waiting for database; sleep 2; done;']
