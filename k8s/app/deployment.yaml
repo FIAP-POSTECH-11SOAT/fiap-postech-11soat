@@ -16,8 +16,8 @@ spec:
     spec:
       containers:
         - name: rms-app
-          image: igorgregorio/rms:1.0
-          imagePullPolicy: Never
+          image: igorgregorio/rms:2.0
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3000
           env:
@@ -48,6 +48,27 @@ spec:
             limits:
               memory: '1Gi'
               cpu: '250m'
+          livenessProbe:
+            httpGet:
+              path: /health-check
+              port: 3000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /health-check
+              port: 3000
+            initialDelaySeconds: 15
+            periodSeconds: 5
+            timeoutSeconds: 3
+          startupProbe:
+            httpGet:
+              path: /health-check
+              port: 3000
+            initialDelaySeconds: 120
+            periodSeconds: 30
+            timeoutSeconds: 10
       initContainers:
         - name: wait-for-db
           image: postgres:17-alpine
@@ -55,5 +76,5 @@ spec:
             [
               'sh',
               '-c',
-              'until pg_isready -h postgres-service -p 5432; do echo waiting for database; sleep 2; done;',
+              'until pg_isready -h postgres-service -p 5432 -U postgres; do echo waiting for database; sleep 2; done;',
             ]
