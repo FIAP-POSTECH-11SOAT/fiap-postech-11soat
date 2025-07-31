@@ -10,5 +10,5 @@ spec:
   persistentVolumeReclaimPolicy: Retain # 'Retain' is safer for database data
   storageClassName: storageclass-postgres-db
   hostPath:
-    path: "/data/pgdata" # Using an absolute path is best practice
+    path: '/Users/igorgregorio/projects/fiap-postech-11soat/k8s/database/data'
     type: DirectoryOrCreate
