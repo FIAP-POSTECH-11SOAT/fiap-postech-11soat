@@ -80,8 +80,10 @@ export class PrismaOrdersRepository implements OrdersRepository {
     if (!status) {
       statusFilter = {
         NOT: [
-          { status: 'FINISHED' },
-          { status: 'PICKUPED' }
+          { status: 'PICKUPED' },
+          { status: 'CANCELLED' },
+          { status: 'AWAITING' },
+          { status: 'AWAITING_PAYMENT' },
         ]
       };
     } else {
@@ -110,8 +112,8 @@ export class PrismaOrdersRepository implements OrdersRepository {
     };
 
     const orders = await this.prisma.order.findMany(query);
-  
-    const statusOrder = ["IN_PREPARE", "TO_PREPARE", "AWAITING_PAYMENT", "AWAITING", "CANCELLED"];
+
+    const statusOrder = ["FINISHED", "IN_PREPARE", "TO_PREPARE"];
     orders.sort((a, b) => {
       const statusA = statusOrder.indexOf(a.status);
       const statusB = statusOrder.indexOf(b.status);

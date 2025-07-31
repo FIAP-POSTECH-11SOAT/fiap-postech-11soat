@@ -3,7 +3,6 @@ import { Module } from '@nestjs/common';
 import { CreatePaymentUseCase } from './domain/use-cases/create-payment/create-payment.service';
 import { GetPaymentByOrderIdUseCase } from './domain/use-cases/get-payment-by-order-id/get-payment-by-order-id.service';
 import { PaymentWebhookUseCase } from './domain/use-cases/payment-webhook/payment-webhook.service';
-import { MercadoPagoService } from 'src/infra/gateways/payments/mercado-pago.service';
 import { OrderModule } from 'src/order/order.module';
 import { PaymentsRepository } from './domain/ports/payments.repository';
 import { PrismaPaymentsRepository } from './persistence/prisma/prisma-payments.repository';
@@ -19,6 +18,8 @@ import { SearchPaymentsPort } from './domain/ports/search-payments.port';
 import { PaymentWebhookController } from './http-server/payment-webhook/payment-webhook.controller';
 import { PaymentWebhookPort } from './domain/ports/payment-webhook.port';
 import { PaymentGatewayPort } from './domain/ports/payment-gateway.port';
+import { MercadoPagoGateway } from 'src/infra/gateways/payments/mercado-pago.gateway';
+import { MercadoPagoService } from 'src/infra/gateways/payments/mercaddo-pago.service';
 
 @Module({
   imports: [OrderModule],
@@ -29,6 +30,7 @@ import { PaymentGatewayPort } from './domain/ports/payment-gateway.port';
     PaymentWebhookController
   ],
   providers: [
+    MercadoPagoService,
     {
       provide: CreatePaymentPort,
       useClass: CreatePaymentUseCase,
@@ -55,7 +57,7 @@ import { PaymentGatewayPort } from './domain/ports/payment-gateway.port';
     },
     {
       provide: PaymentGatewayPort,
-      useClass: MercadoPagoService,
+      useClass: MercadoPagoGateway,
     }
   ],
   exports: [PaymentsRepository]
