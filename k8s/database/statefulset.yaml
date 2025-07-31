@@ -61,7 +61,7 @@ spec:
           startupProbe:
             exec:
               command: ['sh', '-c', 'pg_isready -U $POSTGRES_USER']
-            initialDelaySeconds: 120
+            failureThreshold: 10
             periodSeconds: 30
             timeoutSeconds: 10
   volumeClaimTemplates:
