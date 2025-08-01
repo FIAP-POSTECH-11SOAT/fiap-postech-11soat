@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PaymentsRepository } from '../../ports/payments.repository';
 import { OrdersRepository } from 'src/order/domain/ports/orders.repository';
-import { PaymentStatus } from '../../payment.entity';
 import { UpdatePaymentPort } from '../../ports/update-payment.port';
 import { PaymentWebhookInput, PaymentWebhookPort } from '../../ports/payment-webhook.port';
 import { PaymentGatewayPort } from '../../ports/payment-gateway.port';

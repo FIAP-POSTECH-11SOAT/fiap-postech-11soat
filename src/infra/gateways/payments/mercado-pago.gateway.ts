@@ -1,6 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { MercadoPagoConfig, Payment as MercadoPagoPayment } from 'mercadopago';
 import { PaymentStatus } from 'src/payments/domain/payment.entity';
 import { PaymentGatewayOutput, PaymentGatewayPort } from 'src/payments/domain/ports/payment-gateway.port';
 import { MercadoPagoService } from './mercaddo-pago.service';
