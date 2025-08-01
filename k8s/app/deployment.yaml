@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rms-app-deployment
+  labels:
+    app: rms-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rms-app
+  template:
+    metadata:
+      labels:
+        app: rms-app
+    spec:
+      containers:
+        - name: rms-app
+          image: igorgregorio/rms:2.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
+          env:
+            - name: MERCADO_PAGO_ACCESS_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: rms-secrets
+                  key: MERCADO_PAGO_ACCESS_TOKEN
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: rms-secrets
+                  key: DATABASE_URL
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: rms-config
+                  key: APP_PORT
+            - name: NODE_ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: rms-config
+                  key: NODE_ENV
+          resources:
+            requests:
+              memory: '250Mi'
+              cpu: '100m'
+            limits:
+              memory: '850Mi'
+              cpu: '200m'
+          livenessProbe:
+            httpGet:
+              path: /health-check
+              port: 3000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /health-check
+              port: 3000
+            initialDelaySeconds: 15
+            periodSeconds: 5
+            timeoutSeconds: 3
+          startupProbe:
+            httpGet:
+              path: /health-check
+              port: 3000
+            failureThreshold: 10
+            periodSeconds: 30
+            timeoutSeconds: 10
+      initContainers:
+        - name: wait-for-db
+          image: postgres:17-alpine
+          command:
+            [
+              'sh',
+              '-c',
+              'until pg_isready -h postgres-service -p 5432 -U postgres; do echo waiting for database; sleep 2; done;',
+            ]
