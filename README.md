@@ -43,6 +43,30 @@ _(Opcional, para desenvolvimento local/contribuição):_
 - [Node.js](https://nodejs.org/) (v18 ou superior recomendado)
 - [NPM](https://www.npmjs.com/)
 
+## ⚡ Fluxo de Pedido
+
+```mermaid
+sequenceDiagram
+  participant C as Cliente
+  participant O as Orders Service
+  participant P as Payments Service
+  participant MP as Mercado Pago
+
+  C ->> O: Criar Pedido
+  O -->> C: Pedido Criado (orderId)
+  C ->> O: Adicionar Itens
+  O -->> C: Pedido Atualizado
+  C ->> P: Solicitar Pagamento
+  P -->> O: Obter informações do Pedido
+  O -->> P: Retorna Informações Pedido
+  P ->> MP: Criar Cobrança
+  MP -->> P: Retorna QR Code
+  P -->> C: QR Code Criado
+  C ->> MP: Efetua Pagamento
+  MP ->> P: Webhook Confirmação
+  P ->> O: Pagamento Aprovado
+```
+
 ## 🚀 Executando com Kubernetes (Ambiente Local)
 
 ### 1. Configurar o `PersistentVolume`
@@ -80,7 +104,7 @@ npm run kubernets:off
 
 ![Diagrama de arquitetura](./docs/readme/kubernetes.png)
 
-> ⚠️ O **PersistentVolume (PV)** **não é excluído automaticamente**.  
+> ⚠️ O **PersistentVolume (PV)** **não é excluído automaticamente**.
 > Para removê-lo completamente, é necessário deletar manualmente ou editar o arquivo `pv.yaml`.
 
 ## 🚀 Executando com Docker
