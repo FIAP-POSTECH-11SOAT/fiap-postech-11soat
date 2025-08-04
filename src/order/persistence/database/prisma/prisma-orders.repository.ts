@@ -74,10 +74,25 @@ export class PrismaOrdersRepository implements OrdersRepository {
   }
 
   async findOrdersByFilter(params: GetOrdersByFilterParams): Promise<Order[]> {
-    const { orderId, status, customerId, itemId, page, pageSize, sortBy, sortOrder } = params;
+    const { orderId, status, customerId, itemId, page, pageSize } = params;
+
+    let statusFilter: any = {};
+    if (!status) {
+      statusFilter = {
+        NOT: [
+          { status: 'PICKUPED' },
+          { status: 'CANCELLED' },
+          { status: 'AWAITING' },
+          { status: 'AWAITING_PAYMENT' },
+        ]
+      };
+    } else {
+      statusFilter = { status };
+    }
+
     const where: any = {
       ...(orderId && { id: orderId }),
-      ...(status && { status }),
+      ...statusFilter,
       ...(customerId && {
         customers: {
           some: { customerId },
@@ -92,14 +107,22 @@ export class PrismaOrdersRepository implements OrdersRepository {
 
     const query: any = {
       where,
-      orderBy: {
-        [sortBy || 'createdAt']: sortOrder || 'asc',
-      },
       take: pageSize || 10,
       skip: page ? (page - 1) * (pageSize || 10) : 0,
     };
 
     const orders = await this.prisma.order.findMany(query);
+
+    const statusOrder = ["FINISHED", "IN_PREPARE", "TO_PREPARE"];
+    orders.sort((a, b) => {
+      const statusA = statusOrder.indexOf(a.status);
+      const statusB = statusOrder.indexOf(b.status);
+      if (statusA !== statusB) {
+        return statusA - statusB;
+      }
+      return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+    });
+
     return orders.map(order => PrismaOrderMapper.toDomain(order));
   }
 }

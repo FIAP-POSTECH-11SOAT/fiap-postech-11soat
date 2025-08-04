@@ -17,7 +17,9 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "kubernets:on": "kubectl apply -f k8s/database/pv.yaml && kubectl apply -f k8s/database/storageclass.yaml && kubectl apply -f k8s/database/secrets.yaml && kubectl apply -f k8s/database/statefulset.yaml && kubectl apply -f k8s/database/service.yaml && kubectl apply -f k8s/app/secrets.yaml && kubectl apply -f k8s/app/configmap.yaml && kubectl apply -f k8s/app/deployment.yaml && kubectl apply -f k8s/app/service.yaml && kubectl apply -f k8s/app/hpa.yaml",
+    "kubernets:off": "kubectl delete -f k8s/app/hpa.yaml && kubectl delete -f k8s/app/service.yaml && kubectl delete -f k8s/app/deployment.yaml && kubectl delete -f k8s/app/configmap.yaml && kubectl delete -f k8s/app/secrets.yaml && kubectl delete -f k8s/database/storageclass.yaml && kubectl delete -f k8s/database/secrets.yaml && kubectl delete -f k8s/database/statefulset.yaml && kubectl delete -f k8s/database/service.yaml"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",

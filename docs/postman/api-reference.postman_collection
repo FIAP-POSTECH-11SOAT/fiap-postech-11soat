@@ -1,0 +1,3318 @@
+{
+	"info": {
+		"_postman_id": "c8887220-5e7c-4216-b273-24b879c60520",
+		"name": "RMS - FIAP Pos Tech",
+		"description": "Restaurant Management System",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23334365"
+	},
+	"item": [
+		{
+			"name": "health-check",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/health-check",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"health-check"
+							]
+						},
+						"description": "This endpoint allows you to verify if the server is online."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "customers",
+			"item": [
+				{
+					"name": "{document}",
+					"item": [
+						{
+							"name": "Search customer by document",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/customers/:document",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"customers",
+										":document"
+									],
+									"variable": [
+										{
+											"key": "document",
+											"value": "33851161041",
+											"description": "(Required) Customer document number"
+										}
+									]
+								},
+								"description": "This endpoint search a customer by document number"
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/customers/:document",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"customers",
+												":document"
+											],
+											"variable": [
+												{
+													"key": "document"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"id\": \"urn:uuid:3c1c3eac-9e69-e7c2-b88e-0fe79e3adf47\",\n  \"name\": \"string\",\n  \"document\": \"string\",\n  \"email\": \"string\",\n  \"createdAt\": \"2017-10-16T16:55:45.323Z\",\n  \"updatedAt\": \"1956-03-22T08:18:10.002Z\",\n  \"deletedAt\": \"1973-10-22T01:20:59.752Z\"\n}"
+								},
+								{
+									"name": "Bad Request",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/customers/:document",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"customers",
+												":document"
+											],
+											"variable": [
+												{
+													"key": "document"
+												}
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Customer not found",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/customers/:document",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"customers",
+												":document"
+											],
+											"variable": [
+												{
+													"key": "document"
+												}
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Create a new customer",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"John Doe\",\n  \"document\": \"33851161041\",\n  \"email\": \"john.doe@email.com\"\n}",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/customers",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"customers"
+							]
+						},
+						"description": "This endpoint creates a new customer. The document and email of the customer must be unique."
+					},
+					"response": [
+						{
+							"name": "Created",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"John Doe\",\n  \"document\": \"33851161041\",\n  \"email\": \"john.doe@email.com\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/customers",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"customers"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Bad Request",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"string\",\n  \"document\": \"stringstring\",\n  \"email\": \"mqAjNnjhgcYPN@uwCWSLEnFGTSgaJjIMGNUCmZSf.bewt\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/customers",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"customers"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Unprocessable Entity",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"string\",\n  \"document\": \"stringstring\",\n  \"email\": \"mqAjNnjhgcYPN@uwCWSLEnFGTSgaJjIMGNUCmZSf.bewt\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/customers",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"customers"
+									]
+								}
+							},
+							"status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+							"code": 422,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "Update a customer",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"John Doe\",\n  \"document\": \"33851161041\",\n  \"email\": \"john.doe@email.com\"\n}",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/customers",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"customers"
+							]
+						},
+						"description": "This endpoint update a existente customer"
+					},
+					"response": [
+						{
+							"name": "Bad Request",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"string\",\n  \"document\": \"stringstring\",\n  \"email\": \"mqAjNnjhgcYPN@uwCWSLEnFGTSgaJjIMGNUCmZSf.bewt\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/customers",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"customers"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Unprocessable Entity",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"string\",\n  \"document\": \"stringstring\",\n  \"email\": \"mqAjNnjhgcYPN@uwCWSLEnFGTSgaJjIMGNUCmZSf.bewt\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/customers",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"customers"
+									]
+								}
+							},
+							"status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+							"code": 422,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "categories",
+			"item": [
+				{
+					"name": "Create a new category",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Category 1\"\n}",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/categories",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"categories"
+							]
+						},
+						"description": "This endpoint creates a new category. The name of the category must be unique."
+					},
+					"response": [
+						{
+							"name": "Created",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Category 1\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/categories",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"categories"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Bad Request",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"string\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/categories",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"categories"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Unprocessable Entity",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"string\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/categories",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"categories"
+									]
+								}
+							},
+							"status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+							"code": 422,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "Get all categories",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/categories",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"categories"
+							]
+						},
+						"description": "This endpoint allows you to get all categories. The categories are returned in an array."
+					},
+					"response": [
+						{
+							"name": "OK",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/categories",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"categories"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"categories\": [\n    {\n      \"id\": \"urn:uuid:b2cf8e7f-ab24-1941-22dd-448c45c2ecc7\",\n      \"name\": \"Category 1\"\n    },\n    {\n      \"id\": \"urn:uuid:78ba1915-09ff-393c-80e5-9ee975569e66\",\n      \"name\": \"Category 2\"\n    }\n  ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Update a category",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": \"517ee465-0d40-dc06-af3d-5743d918242f\",\n  \"name\": \"Category 1\"\n}",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/categories",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"categories"
+							]
+						},
+						"description": "This endpoint allows you to update an existing category."
+					},
+					"response": [
+						{
+							"name": "OK",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"id\": \"517ee465-0d40-dc06-af3d-5743d918242f\",\n  \"name\": \"string\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/categories",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"categories"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Bad Request",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"id\": \"517ee465-0d40-dc06-af3d-5743d918242f\",\n  \"name\": \"string\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/categories",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"categories"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Unprocessable Entity",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"id\": \"517ee465-0d40-dc06-af3d-5743d918242f\",\n  \"name\": \"string\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/categories",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"categories"
+									]
+								}
+							},
+							"status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+							"code": 422,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "Soft delete a category",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": \"cf7a4efc-f2c3-ffa5-b26f-d2a8b70af126\"\n}",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/categories",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"categories"
+							]
+						},
+						"description": "This endpoint allows you to soft delete a category by its ID. The category will be marked as deleted in the database, but not physically removed."
+					},
+					"response": [
+						{
+							"name": "OK",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"id\": \"cf7a4efc-f2c3-ffa5-b26f-d2a8b70af126\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/categories",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"categories"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Bad Request",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"id\": \"cf7a4efc-f2c3-ffa5-b26f-d2a8b70af126\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/categories",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"categories"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Unprocessable Entity",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"id\": \"cf7a4efc-f2c3-ffa5-b26f-d2a8b70af126\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/categories",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"categories"
+									]
+								}
+							},
+							"status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+							"code": 422,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "items",
+			"item": [
+				{
+					"name": "{id}",
+					"item": [
+						{
+							"name": "activate",
+							"item": [
+								{
+									"name": "Activate an item",
+									"request": {
+										"method": "PATCH",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/items/:id/activate",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"items",
+												":id",
+												"activate"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "string",
+													"description": "(Required) "
+												}
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "Success",
+											"originalRequest": {
+												"method": "PATCH",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/items/:id/activate",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"items",
+														":id",
+														"activate"
+													],
+													"variable": [
+														{
+															"key": "id"
+														}
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"id\": \"string\",\n  \"name\": \"string\",\n  \"description\": \"string\",\n  \"price\": 6756.53278566574,\n  \"image\": \"string\",\n  \"categoryId\": \"string\",\n  \"createdAt\": \"string\",\n  \"updatedAt\": \"string\",\n  \"deletedAt\": \"string\"\n}"
+										},
+										{
+											"name": "Bad Request",
+											"originalRequest": {
+												"method": "PATCH",
+												"header": [],
+												"url": {
+													"raw": "{{baseUrl}}/items/:id/activate",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"items",
+														":id",
+														"activate"
+													],
+													"variable": [
+														{
+															"key": "id"
+														}
+													]
+												}
+											},
+											"status": "Bad Request",
+											"code": 400,
+											"_postman_previewlanguage": "text",
+											"header": [],
+											"cookie": [],
+											"body": ""
+										},
+										{
+											"name": "Unprocessable Entity",
+											"originalRequest": {
+												"method": "PATCH",
+												"header": [],
+												"url": {
+													"raw": "{{baseUrl}}/items/:id/activate",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"items",
+														":id",
+														"activate"
+													],
+													"variable": [
+														{
+															"key": "id"
+														}
+													]
+												}
+											},
+											"status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+											"code": 422,
+											"_postman_previewlanguage": "text",
+											"header": [],
+											"cookie": [],
+											"body": ""
+										}
+									]
+								}
+							]
+						},
+						{
+							"name": "Get item by ID",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/items/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"items",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "string",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/items/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"items",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "e2d49267-1c0a-409a-aee1-63c0d4b3ec5e"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json",
+											"description": "",
+											"type": "text"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"e2d49267-1c0a-409a-aee1-63c0d4b3ec5e\",\n    \"name\": \"Item X\",\n    \"price\": 10,\n    \"description\": \"Item X\",\n    \"categoryId\": \"string\",\n    \"image\": \"https://localhost:3000/image.png\"\n}"
+								},
+								{
+									"name": "Bad Request",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/items/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"items",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Unprocessable Entity",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/items/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"items",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+									"code": 422,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "Delete an item",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/items/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"items",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "string",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/items/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"items",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"id\": \"string\",\n  \"name\": \"string\",\n  \"description\": \"string\",\n  \"price\": 6756.53278566574,\n  \"image\": \"string\",\n  \"categoryId\": \"string\",\n  \"createdAt\": \"string\",\n  \"updatedAt\": \"string\",\n  \"deletedAt\": \"string\"\n}"
+								},
+								{
+									"name": "Bad Request",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/items/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"items",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Unprocessable Entity",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/items/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"items",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+									"code": 422,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "categories",
+					"item": [
+						{
+							"name": "{categoryId}",
+							"item": [
+								{
+									"name": "Get item by Category ID",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/items/categories/:categoryId",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"items",
+												"categories",
+												":categoryId"
+											],
+											"variable": [
+												{
+													"key": "categoryId",
+													"value": "string",
+													"description": "(Required) "
+												}
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "Success",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/items/categories/:categoryId",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"items",
+														"categories",
+														":categoryId"
+													],
+													"variable": [
+														{
+															"key": "categoryId"
+														}
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "[\n  {\n    \"id\": \"string\",\n    \"name\": \"string\",\n    \"description\": \"string\",\n    \"price\": 9786.37547058128,\n    \"image\": \"string\",\n    \"categoryId\": \"string\",\n    \"createdAt\": \"string\",\n    \"updatedAt\": \"string\",\n    \"deletedAt\": \"string\"\n  },\n  {\n    \"id\": \"string\",\n    \"name\": \"string\",\n    \"description\": \"string\",\n    \"price\": 1997.0523450079968,\n    \"image\": \"string\",\n    \"categoryId\": \"string\",\n    \"createdAt\": \"string\",\n    \"updatedAt\": \"string\",\n    \"deletedAt\": \"string\"\n  }\n]"
+										},
+										{
+											"name": "Bad Request",
+											"originalRequest": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{baseUrl}}/items/categories/:categoryId",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"items",
+														"categories",
+														":categoryId"
+													],
+													"variable": [
+														{
+															"key": "categoryId"
+														}
+													]
+												}
+											},
+											"status": "Bad Request",
+											"code": 400,
+											"_postman_previewlanguage": "text",
+											"header": [],
+											"cookie": [],
+											"body": ""
+										},
+										{
+											"name": "Unprocessable Entity",
+											"originalRequest": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{baseUrl}}/items/categories/:categoryId",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"items",
+														"categories",
+														":categoryId"
+													],
+													"variable": [
+														{
+															"key": "categoryId"
+														}
+													]
+												}
+											},
+											"status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+											"code": 422,
+											"_postman_previewlanguage": "text",
+											"header": [],
+											"cookie": [],
+											"body": ""
+										}
+									]
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "status",
+					"item": [
+						{
+							"name": "deleted",
+							"item": [
+								{
+									"name": "Get deleted items",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/items/status/deleted",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"items",
+												"status",
+												"deleted"
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "Get deleted items",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/items/status/deleted",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"items",
+														"status",
+														"deleted"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "[\n  {\n    \"id\": \"string\",\n    \"name\": \"string\",\n    \"description\": \"string\",\n    \"price\": 9786.37547058128,\n    \"image\": \"string\",\n    \"categoryId\": \"string\",\n    \"createdAt\": \"string\",\n    \"updatedAt\": \"string\",\n    \"deletedAt\": \"string\"\n  },\n  {\n    \"id\": \"string\",\n    \"name\": \"string\",\n    \"description\": \"string\",\n    \"price\": 1997.0523450079968,\n    \"image\": \"string\",\n    \"categoryId\": \"string\",\n    \"createdAt\": \"string\",\n    \"updatedAt\": \"string\",\n    \"deletedAt\": \"string\"\n  }\n]"
+										},
+										{
+											"name": "Bad Request",
+											"originalRequest": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{baseUrl}}/items/status/deleted",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"items",
+														"status",
+														"deleted"
+													]
+												}
+											},
+											"status": "Bad Request",
+											"code": 400,
+											"_postman_previewlanguage": "text",
+											"header": [],
+											"cookie": [],
+											"body": ""
+										},
+										{
+											"name": "Unprocessable Entity",
+											"originalRequest": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{baseUrl}}/items/status/deleted",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"items",
+														"status",
+														"deleted"
+													]
+												}
+											},
+											"status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+											"code": 422,
+											"_postman_previewlanguage": "text",
+											"header": [],
+											"cookie": [],
+											"body": ""
+										}
+									]
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Create a new item",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Item 1\",\n  \"price\": 10,\n  \"description\": \"Item 1\",\n  \"categoryId\": \"string\",\n  \"image\": \"https://localhost:3000/image.png\"\n}",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/items",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"items"
+							]
+						},
+						"description": "This endpoint creates a new item. The name of the item must be unique and category must exist."
+					},
+					"response": [
+						{
+							"name": "Created",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Item X\",\n  \"price\": 10,\n  \"description\": \"Item X\",\n  \"categoryId\": \"string\",\n  \"image\": \"https://localhost:3000/image.png\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/items",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"items"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"e2d49267-1c0a-409a-aee1-63c0d4b3ec5e\",\n    \"name\": \"Item X\",\n    \"price\": 10,\n    \"description\": \"Item X\",\n    \"categoryId\": \"string\",\n    \"image\": \"https://localhost:3000/image.png\"\n}"
+						},
+						{
+							"name": "Bad Request",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"string\",\n  \"price\": 759.797858156269,\n  \"description\": \"string\",\n  \"categoryId\": \"string\",\n  \"image\": \"string\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/items",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"items"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Unprocessable Entity",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"string\",\n  \"price\": 759.797858156269,\n  \"description\": \"string\",\n  \"categoryId\": \"string\",\n  \"image\": \"string\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/items",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"items"
+									]
+								}
+							},
+							"status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+							"code": 422,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "Get all items",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/items",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"items"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/items",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"items"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": \"82cb4feb-fdab-47d2-954f-d157d39999b9\",\n        \"name\": \"Item 1\",\n        \"price\": 10,\n        \"description\": \"Descrição 1\",\n        \"category\": \"8d0d3b87-37d6-458a-97c6-b5cb6572fbb5\",\n        \"image\": null\n    },\n\t{\n        \"id\": \"13b32d58-758a-42d2-8c02-0b087ec63b38\",\n        \"name\": \"Item 2\",\n        \"price\": 10,\n        \"description\": \"Descrição 2\",\n        \"category\": \"8d0d3b87-37d6-458a-97c6-b5cb6572fbb5\",\n        \"image\": null\n    }\n]"
+						},
+						{
+							"name": "Bad Request",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/items",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"items"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Unprocessable Entity",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/items",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"items"
+									]
+								}
+							},
+							"status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+							"code": 422,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "Update an item",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": \"19639000-3b87-37da-8e11-997620ead5c1\",\n  \"image\": \"string\",\n  \"name\": \"string\",\n  \"price\": 4611.299401792175,\n  \"description\": \"string\",\n  \"categoryId\": \"string\"\n}",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/items",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"items"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"id\": \"19639000-3b87-37da-8e11-997620ead5c1\",\n  \"image\": \"string\",\n  \"name\": \"string\",\n  \"price\": 4611.299401792175,\n  \"description\": \"string\",\n  \"categoryId\": \"string\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/items",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"items"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"id\": \"string\",\n  \"name\": \"string\",\n  \"description\": \"string\",\n  \"price\": 6756.53278566574,\n  \"image\": \"string\",\n  \"categoryId\": \"string\",\n  \"createdAt\": \"string\",\n  \"updatedAt\": \"string\",\n  \"deletedAt\": \"string\"\n}"
+						},
+						{
+							"name": "Bad Request",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"id\": \"19639000-3b87-37da-8e11-997620ead5c1\",\n  \"image\": \"string\",\n  \"name\": \"string\",\n  \"price\": 4611.299401792175,\n  \"description\": \"string\",\n  \"categoryId\": \"string\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/items",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"items"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Unprocessable Entity",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"id\": \"19639000-3b87-37da-8e11-997620ead5c1\",\n  \"image\": \"string\",\n  \"name\": \"string\",\n  \"price\": 4611.299401792175,\n  \"description\": \"string\",\n  \"categoryId\": \"string\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/items",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"items"
+									]
+								}
+							},
+							"status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+							"code": 422,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "orders",
+			"item": [
+				{
+					"name": "{id}",
+					"item": [
+						{
+							"name": "Get full order information by ID",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/orders/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"orders",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "string",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/orders/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"orders",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": ""
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json",
+											"name": "Content-Type",
+											"description": "",
+											"type": "text"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"order\": {\n        \"orderId\": \"2d39771a-ad35-43e5-9341-71ac35e9ba6f\",\n        \"total\": 20,\n        \"status\": \"PICKUPED\",\n        \"createdAt\": \"2025-07-31T22:09:13.203Z\",\n        \"updatedAt\": \"2025-07-31T22:13:53.782Z\"\n    },\n    \"items\": [\n        {\n            \"itemId\": \"13b32d58-758a-42d2-8c02-0b087ec63b38\",\n            \"quantity\": 2,\n            \"price\": 10\n        }\n    ],\n    \"customerId\": null\n}"
+								},
+								{
+									"name": "Bad Request",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/orders/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"orders",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Unprocessable Entity",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/orders/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"orders",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+									"code": 422,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "status",
+					"item": [
+						{
+							"name": "Update an order status",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"orderId\": \"f82b7f74-a7de-87fa-ea39-d7f732e1bba1\",\n  \"status\": \"AWAITING_PAYMENT\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/orders/status",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"orders",
+										"status"
+									]
+								},
+								"description": "This endpoint allows you to update the status of an existing order."
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"orderId\": \"f82b7f74-a7de-87fa-ea39-d7f732e1bba1\",\n  \"status\": \"AWAITING_PAYMENT\"\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/orders/status",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"orders",
+												"status"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Bad Request",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"orderId\": \"f82b7f74-a7de-87fa-ea39-d7f732e1bba1\",\n  \"status\": \"AWAITING_PAYMENT\"\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/orders/status",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"orders",
+												"status"
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Unprocessable Entity",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"orderId\": \"f82b7f74-a7de-87fa-ea39-d7f732e1bba1\",\n  \"status\": \"AWAITING_PAYMENT\"\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/orders/status",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"orders",
+												"status"
+											]
+										}
+									},
+									"status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+									"code": 422,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "items",
+					"item": [
+						{
+							"name": "Creates a new order item",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"itemId\": \"2fe01bca-0b7e-006f-3108-d0461ae7f283\",\n  \"orderId\": \"f147aba6-0ef5-e0a9-7249-5e1a4fdbb99e\",\n  \"quantity\": 9807.297408854505\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/orders/items",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"orders",
+										"items"
+									]
+								},
+								"description": "This endpoint creates a new order item. It requires the item ID, order ID and quantity."
+							},
+							"response": [
+								{
+									"name": "Created",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"itemId\": \"2fe01bca-0b7e-006f-3108-d0461ae7f283\",\n  \"orderId\": \"f147aba6-0ef5-e0a9-7249-5e1a4fdbb99e\",\n  \"quantity\": 9807.297408854505\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/orders/items",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"orders",
+												"items"
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Bad Request",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"itemId\": \"2fe01bca-0b7e-006f-3108-d0461ae7f283\",\n  \"orderId\": \"f147aba6-0ef5-e0a9-7249-5e1a4fdbb99e\",\n  \"quantity\": 9807.297408854505\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/orders/items",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"orders",
+												"items"
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Unprocessable Entity",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"itemId\": \"2fe01bca-0b7e-006f-3108-d0461ae7f283\",\n  \"orderId\": \"f147aba6-0ef5-e0a9-7249-5e1a4fdbb99e\",\n  \"quantity\": 9807.297408854505\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/orders/items",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"orders",
+												"items"
+											]
+										}
+									},
+									"status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+									"code": 422,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "Delete a item from an order",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"itemId\": \"b8d22e5a-c942-b0c0-7c7f-69032860f4ca\",\n  \"orderId\": \"8bb84132-5295-6781-ba49-b2994a9c8c1a\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/orders/items",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"orders",
+										"items"
+									]
+								},
+								"description": "This endpoint allows you to delete an item from an order. It requires the item ID and order ID."
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"itemId\": \"b8d22e5a-c942-b0c0-7c7f-69032860f4ca\",\n  \"orderId\": \"8bb84132-5295-6781-ba49-b2994a9c8c1a\"\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/orders/items",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"orders",
+												"items"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Bad Request",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"itemId\": \"b8d22e5a-c942-b0c0-7c7f-69032860f4ca\",\n  \"orderId\": \"8bb84132-5295-6781-ba49-b2994a9c8c1a\"\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/orders/items",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"orders",
+												"items"
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Unprocessable Entity",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"itemId\": \"b8d22e5a-c942-b0c0-7c7f-69032860f4ca\",\n  \"orderId\": \"8bb84132-5295-6781-ba49-b2994a9c8c1a\"\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/orders/items",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"orders",
+												"items"
+											]
+										}
+									},
+									"status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+									"code": 422,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Get orders by filters",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/orders?pageSize=351.14261011897656&page=9210.809562061608&itemId=string&customerId=string&status=FINISHED&orderId=string",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"orders"
+							],
+							"query": [
+								{
+									"key": "pageSize",
+									"value": "351.14261011897656"
+								},
+								{
+									"key": "page",
+									"value": "9210.809562061608"
+								},
+								{
+									"key": "itemId",
+									"value": "string"
+								},
+								{
+									"key": "customerId",
+									"value": "string"
+								},
+								{
+									"key": "status",
+									"value": "FINISHED"
+								},
+								{
+									"key": "orderId",
+									"value": "string"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/orders?pageSize=351.14261011897656&page=9210.809562061608&itemId=string&customerId=string&status=FINISHED&orderId=string",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"orders"
+									],
+									"query": [
+										{
+											"key": "pageSize",
+											"value": "351.14261011897656"
+										},
+										{
+											"key": "page",
+											"value": "9210.809562061608"
+										},
+										{
+											"key": "itemId",
+											"value": "string"
+										},
+										{
+											"key": "customerId",
+											"value": "string"
+										},
+										{
+											"key": "status",
+											"value": "FINISHED"
+										},
+										{
+											"key": "orderId",
+											"value": "string"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"orderId\": \"27795803-4e0e-484c-9a65-5b0e5cfb62be\",\n        \"total\": 40,\n        \"status\": \"FINISHED\",\n        \"createdAt\": \"2025-07-31T20:45:28.581Z\",\n        \"updatedAt\": \"2025-07-31T20:45:28.581Z\"\n    }\n]"
+						},
+						{
+							"name": "Bad Request",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/orders?pageSize=351.14261011897656&page=9210.809562061608&itemId=string&customerId=string&status=FINISHED&orderId=string",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"orders"
+									],
+									"query": [
+										{
+											"key": "pageSize",
+											"value": "351.14261011897656"
+										},
+										{
+											"key": "page",
+											"value": "9210.809562061608"
+										},
+										{
+											"key": "itemId",
+											"value": "string"
+										},
+										{
+											"key": "customerId",
+											"value": "string"
+										},
+										{
+											"key": "status",
+											"value": "FINISHED"
+										},
+										{
+											"key": "orderId",
+											"value": "string"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Unprocessable Entity",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/orders?pageSize=351.14261011897656&page=9210.809562061608&itemId=string&customerId=string&status=FINISHED&orderId=string",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"orders"
+									],
+									"query": [
+										{
+											"key": "pageSize",
+											"value": "351.14261011897656"
+										},
+										{
+											"key": "page",
+											"value": "9210.809562061608"
+										},
+										{
+											"key": "itemId",
+											"value": "string"
+										},
+										{
+											"key": "customerId",
+											"value": "string"
+										},
+										{
+											"key": "status",
+											"value": "FINISHED"
+										},
+										{
+											"key": "orderId",
+											"value": "string"
+										}
+									]
+								}
+							},
+							"status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+							"code": 422,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "Creates a new order",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"customerId\": \"f21b6fb3-1d76-fe80-285c-0e8871127439\"\n}",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/orders",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"orders"
+							]
+						},
+						"description": "This endpoint creates a new order. The customer ID is optional."
+					},
+					"response": [
+						{
+							"name": "Created",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"customerId\": \"f21b6fb3-1d76-fe80-285c-0e8871127439\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/orders",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"orders"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Bad Request",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"customerId\": \"f21b6fb3-1d76-fe80-285c-0e8871127439\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/orders",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"orders"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Unprocessable Entity",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"customerId\": \"f21b6fb3-1d76-fe80-285c-0e8871127439\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/orders",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"orders"
+									]
+								}
+							},
+							"status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+							"code": 422,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "payments",
+			"item": [
+				{
+					"name": "orders",
+					"item": [
+						{
+							"name": "{orderId}",
+							"item": [
+								{
+									"name": "Get a payment by order ID",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/payments/orders/:orderId",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"payments",
+												"orders",
+												":orderId"
+											],
+											"variable": [
+												{
+													"key": "orderId",
+													"value": "urn:uuid:e35d466a-925a-b947-5364-4e58324ac8f0",
+													"description": "(Required) "
+												}
+											]
+										},
+										"description": "Retrieves a payment associated with a given order ID."
+									},
+									"response": [
+										{
+											"name": "OK",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/payments/orders/:orderId",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"payments",
+														"orders",
+														":orderId"
+													],
+													"variable": [
+														{
+															"key": "orderId",
+															"value": ""
+														}
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"id\": \"urn:uuid:c8d1a20d-ea1c-daed-e883-aa26ff6258d1\",\n  \"orderId\": \"urn:uuid:ac9f86fa-8d47-6160-8400-c4b15d64dfaa\",\n  \"externalId\": \"14dd690d-731e-be5a-cd41-e230d5b7f4d3\",\n  \"status\": \"APPROVED\",\n  \"amount\": 10,\n  \"qrCode\": \"asdQWe123\",\n  \"createdAt\": \"2018-02-10T21:43:27.117Z\",\n  \"updatedAt\": \"1999-03-17T15:49:18.027Z\"\n}"
+										},
+										{
+											"name": "Bad Request",
+											"originalRequest": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{baseUrl}}/payments/orders/:orderId",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"payments",
+														"orders",
+														":orderId"
+													],
+													"variable": [
+														{
+															"key": "orderId"
+														}
+													]
+												}
+											},
+											"status": "Bad Request",
+											"code": 400,
+											"_postman_previewlanguage": "text",
+											"header": [],
+											"cookie": [],
+											"body": ""
+										},
+										{
+											"name": "Unprocessable Entity",
+											"originalRequest": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{baseUrl}}/payments/orders/:orderId",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"payments",
+														"orders",
+														":orderId"
+													],
+													"variable": [
+														{
+															"key": "orderId"
+														}
+													]
+												}
+											},
+											"status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+											"code": 422,
+											"_postman_previewlanguage": "text",
+											"header": [],
+											"cookie": [],
+											"body": ""
+										}
+									]
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "webhook",
+					"item": [
+						{
+							"name": "Receives payment updates from MercadoPago",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"data\": {\n    \"id\": \"string\"\n  },\n  \"type\": \"string\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/payments/webhook",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"payments",
+										"webhook"
+									]
+								},
+								"description": "\nThis endpoint is called by MercadoPago when there are changes in the status of a payment.\n\n- The 'data.id' field is used to search for the payment.\n- The 'type' field defines the type of event (e.g. payment.approved).\n- Updates the payment status in the system according to the event.\n\n⚠️ Important: This endpoint is used exclusively for integration with MercadoPago webhooks."
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"data\": {\n    \"id\": \"string\"\n  },\n  \"type\": \"string\"\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/payments/webhook",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"payments",
+												"webhook"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Creates a new payment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"orderId\": \"ceae69b1-23f5-c34b-9c49-bd0c1e77cda6\"\n}",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/payments",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"payments"
+							]
+						},
+						"description": "Creates a new payment for the given orderId."
+					},
+					"response": [
+						{
+							"name": "Created",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"orderId\": \"ceae69b1-23f5-c34b-9c49-bd0c1e77cda6\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/payments",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"payments"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"id\": \"cf7a4efc-f2c3-ffa5-b26f-d2a8b70af126\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Search payments",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/payments?sortOrder=asc&sortBy=string&pageSize=10&page=1&cpf=string&orderId=urn:uuid:e35d466a-925a-b947-5364-4e58324ac8f0&status=REFUNDED",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"payments"
+							],
+							"query": [
+								{
+									"key": "sortOrder",
+									"value": "asc"
+								},
+								{
+									"key": "sortBy",
+									"value": "string"
+								},
+								{
+									"key": "pageSize",
+									"value": "10"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "cpf",
+									"value": "string"
+								},
+								{
+									"key": "orderId",
+									"value": "urn:uuid:e35d466a-925a-b947-5364-4e58324ac8f0"
+								},
+								{
+									"key": "status",
+									"value": "REFUNDED"
+								}
+							]
+						},
+						"description": "Search payments with filters, pagination, and sorting."
+					},
+					"response": [
+						{
+							"name": "OK",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/payments?sortOrder=asc&sortBy=string&pageSize=10&page=1&cpf=string&orderId=urn:uuid:e35d466a-925a-b947-5364-4e58324ac8f0&status=REFUNDED",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"payments"
+									],
+									"query": [
+										{
+											"key": "sortOrder",
+											"value": "asc"
+										},
+										{
+											"key": "sortBy",
+											"value": "string"
+										},
+										{
+											"key": "pageSize",
+											"value": "10"
+										},
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "cpf",
+											"value": "string"
+										},
+										{
+											"key": "orderId",
+											"value": "urn:uuid:e35d466a-925a-b947-5364-4e58324ac8f0"
+										},
+										{
+											"key": "status",
+											"value": "REFUNDED"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"total\": 2,\n  \"data\": [\n    {\n      \"id\": \"urn:uuid:3c0a83fa-d8be-4962-0c8a-ca419d8d1ea0\",\n      \"orderId\": \"6be1daba-668e-302f-0b88-972b788d5c15\",\n      \"externalId\": \"string\",\n      \"status\": \"REFUNDED\",\n      \"amount\": 3931.736922923489,\n      \"qrCode\": \"string\",\n      \"createdAt\": \"2006-10-03T13:02:54.261Z\",\n      \"updatedAt\": \"1948-07-17T22:52:43.961Z\"\n    },\n    {\n      \"id\": \"bce0a8fb-3765-3d5f-fa3f-3387ee5623b1\",\n      \"orderId\": \"urn:uuid:bbc48b8f-81d8-0ea3-31a1-c6afd5d716a5\",\n      \"externalId\": \"string\",\n      \"status\": \"APPROVED\",\n      \"amount\": 5517.147483228752,\n      \"qrCode\": \"string\",\n      \"createdAt\": \"1978-10-07T17:47:40.062Z\",\n      \"updatedAt\": \"1947-11-17T04:21:48.328Z\"\n    }\n  ]\n}"
+						}
+					]
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "/"
+		}
+	]
+}

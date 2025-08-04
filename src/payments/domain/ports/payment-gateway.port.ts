@@ -1,3 +1,5 @@
+import { PaymentStatus } from "../payment.entity"
+
 export interface PaymentGatewayOutput {
   externalId: string
   qrCode: string
@@ -7,4 +9,5 @@ export interface PaymentGatewayOutput {
 
 export abstract class PaymentGatewayPort {
   abstract createPixPayment(orderId: string, amount: number): Promise<PaymentGatewayOutput>
+  abstract getPaymentStatusByExternalId(externalId: string): Promise<PaymentStatus>
 }

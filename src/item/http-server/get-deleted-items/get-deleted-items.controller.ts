@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { GetDeletedItemsPort } from '../../domain/ports/get-deleted-items.port';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ItemPresenter } from '../item.presenter';
 
 @Controller('items')
 @ApiTags('Items')
@@ -45,9 +46,10 @@ export class GetDeletedItemsController {
     status: 422,
     description: 'Unprocessable Entity',
   })
-  async handle() {
+  async handle(): Promise<ItemPresenter[]> {
     try {
-      return await this.getDeletedItemsPort.execute();
+      const items = await this.getDeletedItemsPort.execute();
+      return items.map((item) => ItemPresenter.toHttp(item));
     } catch (error) {
       Logger.error(error);
       let message = 'Error creating item';

@@ -5,22 +5,24 @@ import { Payment } from 'src/payments/domain/payment.entity'
 import { Order } from 'src/order/domain/order.entity'
 import { UpdatePaymentPort } from 'src/payments/domain/ports/update-payment.port'
 import { PaymentStatus } from 'src/payments/domain/payment.entity'
+import { FakePaymentGateway } from 'test/gateways/fake-payment-gateway'
 
 let paymentsRepository: InMemoryPaymentsRepository
 let ordersRepository: InMemoryOrdersRepository
 let updatePaymentPort: UpdatePaymentPort
+let paymentGateway: FakePaymentGateway
 let sut: PaymentWebhookUseCase
 
 describe('Payment Webhook UseCase', () => {
   beforeEach(() => {
     paymentsRepository = new InMemoryPaymentsRepository()
     ordersRepository = new InMemoryOrdersRepository()
-
+    paymentGateway = new FakePaymentGateway();
     updatePaymentPort = {
       execute: jest.fn().mockResolvedValue(undefined),
     }
 
-    sut = new PaymentWebhookUseCase(paymentsRepository, ordersRepository, updatePaymentPort)
+    sut = new PaymentWebhookUseCase(paymentsRepository, ordersRepository, updatePaymentPort, paymentGateway)
   })
 
   it('should process approved payment and update order status to TO_PREPARE', async () => {
@@ -35,6 +37,8 @@ describe('Payment Webhook UseCase', () => {
       status: PaymentStatus.PENDING,
     })
     await paymentsRepository.save(payment)
+
+    paymentGateway.setPaymentStatus('ext-123', PaymentStatus.APPROVED)
 
     await sut.execute({
       externalId: 'ext-123',
@@ -63,6 +67,8 @@ describe('Payment Webhook UseCase', () => {
     })
     await paymentsRepository.save(payment)
 
+    paymentGateway.setPaymentStatus('ext-456', PaymentStatus.REFUNDED)
+
     await sut.execute({ externalId: 'ext-456', status: 'payment.refunded' })
 
     const updatedOrder = await ordersRepository.findById(order.id)
@@ -83,6 +89,8 @@ describe('Payment Webhook UseCase', () => {
       externalId: 'ext-789',
       status: PaymentStatus.PENDING,
     })
+
+    paymentGateway.setPaymentStatus('ext-789', PaymentStatus.APPROVED)
 
     await paymentsRepository.save(payment)
 
@@ -107,6 +115,6 @@ describe('Payment Webhook UseCase', () => {
 
     await expect(
       sut.execute({ externalId: 'ext-000', status: 'invalid_status' }),
-    ).rejects.toThrow('Ivalid payment status')
+    ).rejects.toThrow('Invalid payment status')
   })
 })

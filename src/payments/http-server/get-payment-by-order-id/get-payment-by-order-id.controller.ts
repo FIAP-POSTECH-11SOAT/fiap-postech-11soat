@@ -12,6 +12,7 @@ import { ZodValidationPipe } from 'src/infra/http-server/pipes/zod-validation-pi
 import { PaymentStatus } from 'src/payments/domain/payment.entity';
 import { GetPaymentByOrderIdPort } from 'src/payments/domain/ports/get-payment-by-order-id.port';
 import { z } from 'zod';
+import { PaymentPresenter } from '../payment.presenter';
 
 const getPaymentByOrderIdParamsSchema = z.object({
   orderId: z.string().uuid(),
@@ -47,17 +48,8 @@ export class GetPaymentByOrderIdController {
   })
   async handle(@Param() params: GetPaymentByOrderIdParamsSchema) {
     try {
-      const payment = await this.getPaymentByOrderIdPort.execute(params.orderId);
-      return {
-        id: payment.id,
-        orderId: payment.orderId,
-        externalId: payment.externalId,
-        status: payment.status,
-        amount: payment.amount,
-        qrCode: payment.qrCode,
-        createdAt: payment.createdAt,
-        updatedAt: payment.updatedAt,
-      };
+      const result = await this.getPaymentByOrderIdPort.execute(params.orderId);
+      return PaymentPresenter.toHTTP(result)
     } catch (error) {
       throw new UnprocessableEntityException(error.message);
     }
