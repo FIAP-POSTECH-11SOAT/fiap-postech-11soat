@@ -76,6 +76,10 @@ Para destruir os recursos criados, execute:
 npm run kubernets:off
 ```
 
+### 4. Arquitetura
+
+![Diagrama de arquitetura](./docs/readme/kubernetes.png)
+
 > ⚠️ O **PersistentVolume (PV)** **não é excluído automaticamente**.  
 > Para removê-lo completamente, é necessário deletar manualmente ou editar o arquivo `pv.yaml`.
 
