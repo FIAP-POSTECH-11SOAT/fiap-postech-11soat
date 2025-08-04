@@ -10,28 +10,28 @@ services:
       - ./pgdata:/var/lib/postgresql/data
     ports:
       - 5432:5432
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: nest-rms
-    environment:
-      - DATABASE_URL=postgresql://postgres:postgres@db:5432/rms?schema=public
-      - MERCADO_PAGO_ACCESS_TOKEN=TEST-8678038003952623-052718-cec5173635e5de390d0586378d533fe9-106819378
-    ports:
-      - 3000:3000
-    depends_on:
-      - db
-    volumes:
-      - .:/usr/src/app
-  pg-admin:
-    image: dpage/pgadmin4
-    container_name: pgadmin-rms
-    restart: always
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: admin
-    ports:
-      - 5050:80
-    depends_on:
-      - db
+  # app:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   container_name: nest-rms
+  #   environment:
+  #     - DATABASE_URL=postgresql://postgres:postgres@db:5432/rms?schema=public
+  #     - MERCADO_PAGO_ACCESS_TOKEN=TEST-8678038003952623-052718-cec5173635e5de390d0586378d533fe9-106819378
+  #   ports:
+  #     - 3000:3000
+  #   depends_on:
+  #     - db
+  #   volumes:
+  #     - .:/usr/src/app
+  # pg-admin:
+  #   image: dpage/pgadmin4
+  #   container_name: pgadmin-rms
+  #   restart: always
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: admin@admin.com
+  #     PGADMIN_DEFAULT_PASSWORD: admin
+  #   ports:
+  #     - 5050:80
+  #   depends_on:
+  #     - db
