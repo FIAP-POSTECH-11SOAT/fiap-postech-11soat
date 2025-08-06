@@ -66,6 +66,13 @@ sequenceDiagram
   MP ->> P: Webhook Confirmação
   P ->> O: Pagamento Aprovado
 ```
+### 📍 Ordem de execução dos EndPoints
+1. POST `/orders` >> criar pedido
+2. POST `/orders/items` >> adicionar itens
+3. POST `/payments` >> realizar pagamento
+4. GET  `/payments/orders/:orderId` >> obter pagamento (QRCode)
+5. POST `/payments/webhook` >> Atualizar status pagamento e atualizar status pedido (para aguardando preparação ou cancelado)
+6. PUT  `/orders/status` >> atualizar status pedido (na cozinha)
 
 ## 🚀 Executando com Kubernetes (Ambiente Local)
 
