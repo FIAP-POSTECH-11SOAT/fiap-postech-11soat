@@ -18,6 +18,7 @@ model Customer {
   orders    CustomerOrder[] @relation("CustomerToOrder")
 
   @@map("customers")
+  @@index([document])
 }
 
 model CustomerOrder {
@@ -29,6 +30,8 @@ model CustomerOrder {
 
   @@id([customerId, orderId])
   @@map("customer_order")
+  @@index([customerId])
+  @@index([orderId])
 }
 enum OrderStatus {
   AWAITING
@@ -51,6 +54,8 @@ model Order {
   payments  Payment[]
 
   @@map("orders")
+  @@index([status])
+  @@index([createdAt])
 }
 
 model OrderItem {
@@ -64,6 +69,8 @@ model OrderItem {
 
   @@id([orderId, itemId])
   @@map("order_item")
+  @@index([orderId])
+  @@index([itemId])
 }
 
 model Item {
@@ -81,6 +88,7 @@ model Item {
   orders   OrderItem[]
 
   @@map("items")
+  @@index([categoryId])
 }
 
 model Category {
@@ -115,5 +123,7 @@ model Payment {
   order Order @relation(fields: [orderId], references: [id])
 
   @@map("payments")
+  @@index([orderId])
+  @@index([status])
 }
 
